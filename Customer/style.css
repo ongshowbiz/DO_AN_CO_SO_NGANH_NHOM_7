@@ -145,8 +145,9 @@ body {
     position: sticky;
     top: 75px;
     /* Chiều cao header */
-    z-index: 99;
+    z-index: 200;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: visible;
 }
 
 .nav-links {
@@ -154,6 +155,7 @@ body {
     list-style: none;
     justify-content: center;
     padding: 0;
+    overflow: visible;
 }
 
 .nav-links li a {
@@ -713,5 +715,1378 @@ body {
 
     .chatbox-header {
         border-radius: 0;
+    }
+}
+
+/* =========================================
+   CSS RIÊNG CHO TRANG CHI TIẾT TRUYỆN
+   manga/detail.php
+========================================= */
+
+/* --- BREADCRUMB --- */
+.breadcrumb {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 10px 5%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #747d8c;
+}
+
+.breadcrumb a {
+    color: #747d8c;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: #ff4757;
+}
+
+.breadcrumb .fa-chevron-right {
+    font-size: 0.7rem;
+}
+
+/* --- LAYOUT TRANG DETAIL --- */
+.detail-page {
+    padding: 30px 5%;
+}
+
+.detail-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 25px;
+    align-items: start;
+}
+
+/* Card nền trắng dùng chung */
+.card-box {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* --- SECTION HEADER --- */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.section-header h2 {
+    font-size: 1.3rem;
+    color: #2f3542;
+    border-left: 5px solid #ff4757;
+    padding-left: 12px;
+}
+
+.section-header h2 i {
+    color: #ff4757;
+    margin-right: 8px;
+}
+
+.badge-count {
+    background: #ff4757;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+}
+
+/* --- CARD CHI TIẾT TRUYỆN --- */
+.manga-detail-card {
+    display: flex;
+    gap: 25px;
+}
+
+.manga-cover {
+    flex-shrink: 0;
+    width: 200px;
+    text-align: center;
+}
+
+.manga-cover img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+}
+
+.rating-stars {
+    color: #f39c12;
+    margin-bottom: 5px;
+}
+
+.rating-text {
+    font-size: 0.82rem;
+    color: #747d8c;
+}
+
+.manga-detail-info {
+    flex: 1;
+}
+
+.manga-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #2f3542;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+/* --- THỐNG KÊ & TRẠNG THÁI --- */
+.manga-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #747d8c;
+}
+
+.stat-item i {
+    color: #ff4757;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.status-badge.ongoing {
+    background: rgba(46, 213, 115, 0.1);
+    color: #2ed573;
+}
+
+.status-badge.completed {
+    background: rgba(84, 160, 255, 0.1);
+    color: #54a0ff;
+}
+
+/* --- MÔ TẢ TRUYỆN --- */
+.manga-description {
+    margin-bottom: 15px;
+}
+
+.desc-collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#desc-text {
+    font-size: 0.93rem;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 6px;
+}
+
+.btn-toggle-desc {
+    background: none;
+    border: none;
+    color: #ff4757;
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+}
+
+.btn-toggle-desc:hover {
+    text-decoration: underline;
+}
+
+/* --- THÔNG TIN META --- */
+.manga-meta-info {
+    margin-bottom: 15px;
+}
+
+.meta-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+}
+
+.meta-label {
+    color: #747d8c;
+    min-width: 110px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.meta-label i {
+    color: #ff4757;
+    margin-right: 4px;
+}
+
+.genre-tag {
+    display: inline-block;
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    margin: 2px;
+    transition: all 0.2s;
+}
+
+.genre-tag:hover {
+    background: #ff4757;
+    color: white;
+}
+
+/* --- NÚT HÀNH ĐỘNG --- */
+.manga-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-read {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 20px;
+    border-radius: 25px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #ff4757;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.btn-primary:hover {
+    background: #ff6b6b;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #2f3542;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #57606f;
+    transform: translateY(-2px);
+}
+
+.btn-follow {
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+}
+
+.btn-follow:hover {
+    background: rgba(255, 71, 87, 0.2);
+}
+
+.btn-follow.followed {
+    background: #ff4757;
+    color: white;
+}
+
+/* --- TÌM CHƯƠNG --- */
+.chapter-search-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.chapter-search-bar input {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 16px;
+    border: 2px solid #f1f2f6;
+    border-radius: 25px;
+    font-size: 0.93rem;
+    outline: none;
+    transition: all 0.3s;
+    background: #f1f2f6;
+}
+
+.chapter-search-bar input:focus {
+    border-color: #ff4757;
+    background: white;
+}
+
+.chapter-search-bar button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ff4757;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 0.95rem;
+}
+
+.chapter-search-bar button:hover {
+    background: #ff6b6b;
+}
+
+.btn-read-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 25px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: #f1f2f6;
+    color: #2f3542;
+    transition: all 0.3s;
+}
+
+.btn-read-action:hover {
+    background: #dfe4ea;
+}
+
+.btn-read-action.btn-new {
+    background: #ff4757;
+    color: white;
+}
+
+.btn-read-action.btn-new:hover {
+    background: #ff6b6b;
+}
+
+/* --- DANH SÁCH CHƯƠNG --- */
+.chapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.chapter-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #2f3542;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.chapter-item:hover {
+    background: rgba(255, 71, 87, 0.05);
+    border-color: rgba(255, 71, 87, 0.2);
+    color: #ff4757;
+}
+
+.chap-num {
+    min-width: 100px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #ff4757;
+}
+
+.chap-title {
+    flex: 1;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chap-date {
+    font-size: 0.8rem;
+    color: #a4b0be;
+    white-space: nowrap;
+}
+
+/* --- BÌNH LUẬN --- */
+.comment-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.comment-avatar {
+    font-size: 2.2rem;
+    color: #dfe4ea;
+    flex-shrink: 0;
+}
+
+.comment-avatar img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-input-wrap {
+    flex: 1;
+}
+
+.comment-input-wrap textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid #f1f2f6;
+    border-radius: 10px;
+    resize: vertical;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.3s;
+    background: #f8f9fa;
+}
+
+.comment-input-wrap textarea:focus {
+    border-color: #ff4757;
+    background: white;
+}
+
+.btn-submit-comment {
+    margin-top: 8px;
+    padding: 9px 18px;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.3s;
+}
+
+.btn-submit-comment:hover {
+    background: #ff6b6b;
+}
+
+.comment-login-prompt {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: #747d8c;
+}
+
+.comment-login-prompt i {
+    font-size: 1.3rem;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.comment-login-prompt a {
+    color: #ff4757;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comment-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.comment-body {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.comment-header strong {
+    color: #2f3542;
+    font-size: 0.92rem;
+}
+
+.comment-time {
+    font-size: 0.8rem;
+    color: #a4b0be;
+}
+
+.comment-body p {
+    font-size: 0.88rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* --- SIDEBAR --- */
+.detail-sidebar {
+    position: sticky;
+    top: 90px;
+}
+
+.rank-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    background: #f1f2f6;
+    padding: 4px;
+    border-radius: 20px;
+}
+
+.rank-tab {
+    flex: 1;
+    padding: 6px 8px;
+    border: none;
+    background: transparent;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #747d8c;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.rank-tab.active {
+    background: white;
+    color: #ff4757;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rank-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #2f3542;
+    transition: background 0.2s;
+}
+
+.rank-item:hover {
+    background: #f8f9fa;
+}
+
+.rank-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: #f1f2f6;
+    color: #747d8c;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #e67e22, #d35400);
+    color: white;
+}
+
+.rank-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.rank-name {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #2f3542;
+    margin-bottom: 3px;
+}
+
+.rank-views {
+    font-size: 0.76rem;
+    color: #a4b0be;
+}
+
+.rank-views i {
+    color: #ff4757;
+    margin-right: 3px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .detail-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 600px) {
+    .manga-detail-card {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .manga-cover {
+        width: 160px;
+    }
+
+    .manga-title {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .manga-actions {
+        flex-direction: column;
+    }
+
+    .btn-read {
+        justify-content: center;
+    }
+
+    .chap-date {
+        display: none;
+    }
+}
+
+/* =========================================
+   CSS RIÊNG CHO TRANG ĐỌC CHƯƠNG
+   manga/read.php
+========================================= */
+
+/* --- TRANG ĐỌC --- */
+.read-page {
+    padding: 0 0 40px;
+    background: #1a1a2e;
+    min-height: 80vh;
+}
+
+/* Breadcrumb tối theo nền trang đọc */
+.read-page ~ .breadcrumb,
+.breadcrumb {
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+}
+
+.breadcrumb a {
+    color: #a4b0be;
+}
+
+.breadcrumb span {
+    color: #e2e8f0;
+}
+
+/* --- THANH ĐIỀU KHIỂN --- */
+.read-controls {
+    background: #16213e;
+    padding: 12px 5%;
+    border-bottom: 1px solid #0f3460;
+    position: sticky;
+    top: 75px; /* Bằng chiều cao header */
+    z-index: 50;
+}
+
+.read-controls-bottom {
+    position: static;
+    border-top: 1px solid #0f3460;
+    border-bottom: none;
+    margin-top: 0;
+}
+
+.read-controls-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.chap-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.ctrl-btn:hover {
+    background: #ff4757;
+    border-color: #ff4757;
+    color: white;
+}
+
+.ctrl-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ctrl-btn.disabled:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+}
+
+.chap-select {
+    padding: 9px 14px;
+    background: #0f3460;
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.chap-select:hover {
+    border-color: #ff4757;
+}
+
+/* --- TIÊU ĐỀ CHƯƠNG --- */
+.chapter-title-bar {
+    text-align: center;
+    padding: 30px 5% 20px;
+    color: white;
+}
+
+.chapter-title-bar h1 {
+    font-size: 1.1rem;
+    color: #a4b0be;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.chapter-title-bar h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+
+/* --- NỘI DUNG ẢNH CHƯƠNG --- */
+.chapter-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.chapter-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .read-controls-inner {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .chapter-title-bar h2 {
+        font-size: 1.1rem;
+    }
+
+    .ctrl-btn {
+        padding: 8px 12px;
+        font-size: 0.82rem;
+    }
+}
+
+/* =========================================
+   CSS RIÊNG CHO TRANG DANH SÁCH TRUYỆN
+   manga/list.php
+========================================= */
+
+/* --- KHU VỰC LỌC --- */
+.list-filter-section {
+    background: white;
+    padding: 25px 5%;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 30px;
+}
+
+.filter-header {
+    margin-bottom: 20px;
+}
+
+.filter-header h2 {
+    font-size: 1.4rem;
+    color: #2f3542;
+    border-left: 5px solid #ff4757;
+    padding-left: 12px;
+}
+
+.filter-header h2 i {
+    color: #ff4757;
+    margin-right: 8px;
+}
+
+/* Thanh lọc */
+.filter-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.filter-search {
+    display: flex;
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+}
+
+.filter-search input {
+    width: 100%;
+    padding: 11px 45px 11px 18px;
+    border: 2px solid #f1f2f6;
+    border-radius: 25px;
+    font-size: 0.92rem;
+    outline: none;
+    transition: all 0.3s;
+    background: #f1f2f6;
+}
+
+.filter-search input:focus {
+    border-color: #ff4757;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
+}
+
+.filter-search button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.filter-search button:hover {
+    background: #ff6b6b;
+}
+
+.filter-bar select {
+    padding: 11px 16px;
+    border: 2px solid #f1f2f6;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    background: #f1f2f6;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #2f3542;
+}
+
+.filter-bar select:hover,
+.filter-bar select:focus {
+    border-color: #ff4757;
+    background: white;
+}
+
+/* Tags thể loại */
+.genre-tags-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.genre-tag-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: #f1f2f6;
+    color: #747d8c;
+    transition: all 0.2s;
+}
+
+.genre-tag-btn:hover {
+    background: #ff4757;
+    color: white;
+}
+
+.genre-tag-btn.active {
+    background: #ff4757;
+    color: white;
+}
+
+/* --- KẾT QUẢ TÌM KIẾM --- */
+.search-result-info {
+    margin-bottom: 20px;
+    padding: 12px 18px;
+    background: rgba(255, 71, 87, 0.07);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    color: #444;
+    border-left: 4px solid #ff4757;
+}
+
+.search-result-info i {
+    color: #ff4757;
+    margin-right: 6px;
+}
+
+/* --- NHÃN TRẠNG THÁI TRÊN CARD --- */
+.manga-card {
+    position: relative;
+}
+
+.manga-status-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.manga-status-label.ongoing {
+    background: rgba(46, 213, 115, 0.9);
+    color: white;
+}
+
+.manga-status-label.completed {
+    background: rgba(84, 160, 255, 0.9);
+    color: white;
+}
+
+/* --- PHÂN TRANG --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    color: #2f3542;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s;
+}
+
+.page-btn:hover {
+    background: #ff4757;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.page-btn.active {
+    background: #ff4757;
+    color: white;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-search {
+        min-width: unset;
+    }
+}
+
+/* --- DROPDOWN THỂ LOẠI TRONG NAVBAR --- */
+.navbar .dropdown {
+    position: relative;
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    margin-left: 5px;
+    transition: transform 0.3s;
+}
+
+.dropdown-menu {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+    min-width: 360px;
+    z-index: 999;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    transition: all 0.2s;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 9px 18px;
+    color: #2f3542;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent !important;
+}
+
+.dropdown-menu a:hover {
+    background: rgba(255, 71, 87, 0.08);
+    color: #ff4757;
+    padding-left: 22px;
+}
+
+.dropdown:hover .dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+}
+
+.dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        grid-template-columns: 1fr;
+        background: #f8f9fa;
+        border-radius: 0;
+        padding: 0;
+        min-width: unset;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .dropdown-menu a {
+        padding: 12px 35px;
+        border-bottom: 1px solid #eee !important;
+    }
+}
+
+/* =========================================
+   CSS RIÊNG CHO TRANG ĐĂNG NHẬP / ĐĂNG KÝ
+   auth/login.php, auth/register.php
+========================================= */
+
+/* --- LAYOUT TRANG AUTH --- */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 5%;
+    min-height: 70vh;
+}
+
+.auth-container-box {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+/* --- LOGO & TIÊU ĐỀ --- */
+.auth-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-logo h2 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #2f3542;
+    margin-bottom: 6px;
+}
+
+.auth-logo p {
+    color: #747d8c;
+    font-size: 0.95rem;
+}
+
+/* --- THÔNG BÁO LỖI / THÀNH CÔNG --- */
+.auth-error {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    color: #ff4757;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.auth-success {
+    background: rgba(46, 213, 115, 0.1);
+    border: 1px solid rgba(46, 213, 115, 0.3);
+    color: #2ed573;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* --- FORM --- */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2f3542;
+}
+
+.form-group label i {
+    color: #ff4757;
+    margin-right: 6px;
+}
+
+.form-group input {
+    padding: 12px 16px;
+    border: 2px solid #f1f2f6;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s;
+    background: #f8f9fa;
+}
+
+.form-group input:focus {
+    border-color: #ff4757;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.08);
+}
+
+/* Input mật khẩu có nút hiện/ẩn */
+.input-password {
+    position: relative;
+}
+
+.input-password input {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.btn-toggle-pw {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #a4b0be;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.btn-toggle-pw:hover {
+    color: #ff4757;
+}
+
+/* Tùy chọn ghi nhớ & quên mật khẩu */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #747d8c;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    accent-color: #ff4757;
+    width: 15px;
+    height: 15px;
+}
+
+.forgot-link {
+    color: #ff4757;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* --- NÚT SUBMIT --- */
+.btn-auth {
+    padding: 14px;
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.btn-auth:hover {
+    background: #ff6b6b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 71, 87, 0.4);
+}
+
+/* --- DIVIDER --- */
+.auth-divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.auth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #eee;
+}
+
+.auth-divider span {
+    background: white;
+    padding: 0 15px;
+    color: #a4b0be;
+    font-size: 0.88rem;
+    position: relative;
+}
+
+/* --- CHUYỂN TRANG ĐĂNG NHẬP/ĐĂNG KÝ --- */
+.auth-switch {
+    text-align: center;
+    font-size: 0.92rem;
+    color: #747d8c;
+}
+
+.auth-switch a {
+    color: #ff4757;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 480px) {
+    .auth-container-box {
+        padding: 25px 20px;
+    }
+
+    .auth-logo h2 {
+        font-size: 1.4rem;
     }
 }
