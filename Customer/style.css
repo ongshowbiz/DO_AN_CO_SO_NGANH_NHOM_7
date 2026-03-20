@@ -1848,7 +1848,23 @@ body {
     .dropdown-menu a {
         padding: 12px 35px;
         border-bottom: 1px solid #eee !important;
+        visibility: visible;  /* THÊM DÒNG NÀY */
+        opacity: 1;           /* THÊM DÒNG NÀY */
     }
+}
+
+/* Fix: ngăn style nav-links override dropdown-menu */
+.nav-links li.dropdown .dropdown-menu a {
+    color: #2f3542 !important;
+    padding: 9px 18px !important;
+    border-bottom: 3px solid transparent !important;
+    background: none;
+}
+
+.nav-links li.dropdown .dropdown-menu a:hover {
+    color: #ff4757 !important;
+    background: rgba(255, 71, 87, 0.08) !important;
+    padding-left: 22px !important;
 }
 
 /* =========================================
