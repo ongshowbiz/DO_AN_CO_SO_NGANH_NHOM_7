@@ -1,1 +1,5 @@
-.vscode/
+.vs/
+*.user
+*.suo
+bin/
+obj/
