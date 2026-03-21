@@ -29,8 +29,8 @@
         </div>
         
         <div class="auth-container">
-            <a href="#" class="btn-login">Đăng nhập</a>
-            <a href="#" class="btn-register">Đăng ký</a>
+            <a href="login.php" class="btn-login">Đăng nhập</a>
+            <a href="register.php" class="btn-register">Đăng ký</a>
         </div>
         
         <!-- Nút mở menu trên giao diện mobile -->
