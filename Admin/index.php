@@ -20,7 +20,7 @@
                 <!-- Bạn có thể thay bằng thẻ img src="logo.png" khi có ảnh thật -->
                 <h1>TH</h1>
             </div>
-            <span class="site-name">Truyện Hay</span>
+            <span class="site-name">Quản lý truyện tranh</span>
         </div>
         
         <div class="search-container">
@@ -43,10 +43,10 @@
     <nav class="navbar" id="navbar">
         <ul class="nav-links">
             <li><a href="index.php"><i class="fas fa-home"></i> Trang chủ</a></li>
-            <li><a href="#"><i class="fas fa-list"></i> Thể loại truyện</a></li>
-            <li><a href="#"><i class="fas fa-search"></i> Tìm truyện</a></li>
-            <li><a href="#"><i class="fas fa-filter"></i> Lọc truyện</a></li>
-            <li><a href="#"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+            <li><a href="#"><i class="fas fa-list"></i> Quản lý truyện</a></li>
+            <li><a href="#"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
+            <li><a href="#"><i class="fas fa-credit-card"></i> Quản lý thẻ tháng</a></li>
+            <li><a href="#"><i class="fas fa-user"></i> Quản lý người dùng</a></li>
         </ul>
         <!-- Nút đóng menu trên mobile -->
         <div class="close-menu-btn" id="close-menu-btn">
