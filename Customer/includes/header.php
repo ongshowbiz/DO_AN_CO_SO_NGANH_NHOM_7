@@ -31,7 +31,7 @@ if (!isset($base_url))     $base_url     = '/';
     <div class="search-container">
         <form action="<?php echo $base_url; ?>manga/list.php" method="GET" style="display:flex;width:100%;">
             <input type="text" name="search" placeholder="Tìm kiếm truyện..."
-                   value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
+                value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
             <button type="submit"><i class="fas fa-search"></i></button>
         </form>
     </div>
@@ -84,6 +84,9 @@ if (!isset($base_url))     $base_url     = '/';
         <li><a href="<?php echo $base_url; ?>manga/list.php?filter=1"
                class="<?php echo $current_page==='filter'?'active-nav':''; ?>">
             <i class="fas fa-filter"></i> Lọc truyện</a></li>
+        <li><a href="<?php echo $base_url; ?>shop/index.php"
+               class="<?php echo $current_page==='shop'?'active-nav':''; ?>">
+            <i class="fas fa-store"></i> Shop</a></li>
         <li><a href="<?php echo $base_url; ?>shop/cart.php"
                class="<?php echo $current_page==='cart'?'active-nav':''; ?>">
             <i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>

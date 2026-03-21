@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+RewriteBase /DO_AN_CO_SO_NGANH_NHOM_7/Customer/
+
+RewriteRule ^truyen/([^/]+)/?$ manga/detail.php?slug=$1 [L,QSA]
+RewriteRule ^doc/([^/]+)/chuong-([0-9]+)/?$ manga/read.php?slug=$1&chap=$2 [L,QSA]
+RewriteRule ^the-loai/([^/]+)/?$ manga/list.php?genre=$1 [L,QSA]
