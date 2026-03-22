@@ -1,18 +1,24 @@
 <?php
-// Bạn có thể thêm code PHP kết nối database ở đây
-// $conn = new mysqli('localhost', 'root', '', 'readmanga');
+session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Truyện Hay - Quản lý web</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome cho các icon (dùng CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+<<<<<<< HEAD
     <!-- PHẦN HEADER -->
     <header class="header">
         <div class="logo-container">
@@ -56,93 +62,71 @@
     
     <!-- Lớp phủ tối khi mở menu mobile -->
     <div class="overlay" id="overlay"></div>
+=======
+    <body class="hold-transition sidebar-mini layout-fixed">
 
-    <!-- PHẦN BODY (Nội dung chính) -->
-    <main class="main-content">
-        <section class="manga-section">
-            <div class="section-header">
-                <h2><i class="fas fa-book-open"></i> Truyện mới cập nhật</h2>
-            </div>
-            <div class="manga-grid">
-                <!-- Vòng lặp PHP đỗ dữ liệu có thể đặt ở đây -->
-                <?php for($i=1; $i<=8; $i++): ?>
-                <div class="manga-card">
-                    <!-- Ảnh placeholder, thay thế bằng dữ liệu từ DB -->
-                    <img src="https://via.placeholder.com/200x280?text=Truyen+<?php echo $i; ?>" alt="Truyện <?php echo $i; ?>">
-                    <div class="manga-info">
-                        <h3>Tên Truyện Mẫu <?php echo $i; ?></h3>
-                        <p class="genres">Thể loại: Hành động, Hài Hước</p>
-                        <div class="manga-meta">
-                            <span><i class="fas fa-eye"></i> 10.5K</span>
-                            <span><i class="fas fa-star"></i> 4.5</span>
-                        </div>
+    <div class="wrapper">
+>>>>>>> 412e17b1d88b7ea9a137c7fc9c0b06a9f01f24c9
+
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?page=admincart-view" title="Giỏ hàng cá nhân">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count-badge" class="badge badge-danger navbar-badge">
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <img src=""
+                            class="img-circle"
+                            alt="User Image"
+                            style="width: 25px; height: 25px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
+                        <span></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <a href="index.php?page=profile" class="dropdown-item">
+                            <i class="fas fa-user-cog mr-2"></i> Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="logout.php" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
                     </div>
-                </div>
-                <?php endfor; ?>
-            </div>
-        </section>
-    </main>
+                </li>
+            </ul>
+        </nav>
+        <?php
+        require_once 'sidebar.php';
+        ?>
+<script>
+document.querySelectorAll('.dropdown').forEach(item => {
+    item.addEventListener('click', () => {
+        const menu = item.querySelector('.dropdown-menu');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    });
+});
 
-    <!-- PHẦN FOOTER -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-about">
-                <h3><i class="fas fa-info-circle"></i> Về Truyện Hay</h3>
-                <p>Website đọc truyện tranh online miễn phí cập nhật liên tục các bộ truyện mới nhất. Giao diện thân thiện, dễ nhìn với chất lượng cao nhất.</p>
-            </div>
-            <div class="footer-links">
-                <h3>Liên kết nhanh</h3>
-                <ul>
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Liên hệ gửi phản hồi</a></li>
-                    <li><a href="#">Quy định bản quyền</a></li>
-                </ul>
-            </div>
-            <div class="footer-social">
-                <h3>Theo dõi chúng tôi</h3>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-discord"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2023 Truyện Hay. All rights reserved.</p>
-        </div>
-    </footer>
+document.querySelectorAll('.nav-item > .nav-link').forEach(link => {
+    link.addEventListener('click', function (e) {
+        const parent = this.parentElement;
+        const submenu = parent.querySelector('.nav-treeview');
 
-    <!-- CON CHATBOX AI GÓC DƯỚI BÊN PHẢI -->
-    <div class="chatbox-container">
-        <!-- Nút bấm để mở/đóng -->
-        <button class="chatbox-toggle" id="chatbox-toggle">
-            <i class="fas fa-robot"></i>
-        </button>
-        
-        <!-- Cửa sổ chat -->
-        <div class="chatbox-window" id="chatbox-window">
-            <div class="chatbox-header">
-                <span><i class="fas fa-robot"></i> Trợ lý Truyện Hay AI</span>
-                <button id="chatbox-close"><i class="fas fa-times"></i></button>
-            </div>
-            
-            <div class="chatbox-messages" id="chatbox-messages">
-                <div class="message ai-message">
-                    Xin chào! Tôi là trợ lý AI chuyên hỗ trợ độc giả. Bạn có câu hỏi nào về trang web hoặc muốn tìm truyện gì không?
-                </div>
-                <!-- Tin nhắn sẽ được thêm bằng Javascript -->
-            </div>
-            
-            <div class="chatbox-input">
-                <input type="text" id="chat-input" placeholder="Nhập câu hỏi của bạn...">
-                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script Javascript -->
-    <script src="script.js"></script>
+        if (submenu) {
+            e.preventDefault();
+            parent.classList.toggle('open');
+        }
+    });
+});
+</script>
 </body>
 </html>
