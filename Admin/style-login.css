@@ -81,3 +81,27 @@ input {
 	margin-top: 10px;
 	cursor: pointer;
 }
+.divider {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	margin: 15px 0; 
+	color: #999; 
+	font-size: 11px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+	.divider::before,
+	.divider::after {
+		content: "";
+		flex: 1;
+		border-bottom: 1px solid #CCFFFF;
+	}
+	.divider::before {
+		margin-right: 15px;
+	}
+
+	.divider::after {
+		margin-left: 15px;
+	}

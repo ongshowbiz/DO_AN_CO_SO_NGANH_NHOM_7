@@ -1,6 +1,10 @@
 <?php
-// Bạn có thể thêm code PHP kết nối database ở đây
-// $conn = new mysqli('localhost', 'root', '', 'readmanga');
+session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -48,7 +52,7 @@
                             <i class="fas fa-user-cog mr-2"></i> Profile
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="login.php" class="dropdown-item">
+                        <a href="logout.php" class="dropdown-item">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                     </div>

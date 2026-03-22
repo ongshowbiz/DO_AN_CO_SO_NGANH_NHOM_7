@@ -17,15 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Cơ sở dữ liệu: `readmanga`
---
+CREATE DATABASE IF NOT EXISTS readmanga;
 
--- --------------------------------------------------------
-
---
--- Cấu trúc bảng cho bảng `chap`
---
+-- THÊM DÒNG NÀY VÀO:
+USE readmanga; 
 
 CREATE TABLE `chap` (
   `id_chap` int(11) NOT NULL,
