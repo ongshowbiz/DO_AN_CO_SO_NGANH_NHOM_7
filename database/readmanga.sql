@@ -103,7 +103,7 @@ CREATE TABLE `manga` (
   `mota` varchar(255) DEFAULT NULL,
   `tacgia` varchar(255) DEFAULT NULL,
   `anh` varchar(255) NOT NULL,
-  `sratus` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `create_day` datetime(4) NOT NULL DEFAULT current_timestamp(4)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
