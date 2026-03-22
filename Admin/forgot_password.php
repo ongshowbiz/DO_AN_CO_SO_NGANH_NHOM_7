@@ -1,16 +1,16 @@
 ﻿<?php
 session_start();
-require_once 'config.php';
-require_once 'include/db.php';
+require_once '../config.php';
+require_once '../include/db.php';
 
 // NHÚNG THƯ VIỆN PHPMAILER
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require 'include/PHPMailer/Exception.php';
-require 'include/PHPMailer/PHPMailer.php';
-require 'include/PHPMailer/SMTP.php';
+require '../include/PHPMailer/Exception.php';
+require '../include/PHPMailer/PHPMailer.php';
+require '../include/PHPMailer/SMTP.php';
 
 $db = new Database();
 $error = '';

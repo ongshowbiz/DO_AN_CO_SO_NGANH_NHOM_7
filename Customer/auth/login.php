@@ -1,20 +1,50 @@
 <?php
-// auth/login.php
-// require_once '../config/db.php';
+// Customer/auth/login.php
+session_start();
+
+// Gọi file class Database
+require_once '../../include/db.php';
+
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // $username = trim($_POST['username'] ?? '');
-    // $password = $_POST['password'] ?? '';
-    // $stmt = $conn->prepare("SELECT * FROM taikhoan WHERE TENTAIKHOAN=? AND TRANGTHAI=1");
-    // $stmt->bind_param('s',$username); $stmt->execute();
-    // $user = $stmt->get_result()->fetch_assoc();
-    // if($user && password_verify($password, $user['MATKHAU'])) {
-    //     session_start();
-    //     $_SESSION['user_id'] = $user['ID_TAIKHOAN'];
-    //     $_SESSION['username'] = $user['TENTAIKHOAN'];
-    //     header('Location: ../index.php'); exit;
-    // } else { $error = 'Tên đăng nhập hoặc mật khẩu không đúng!'; }
-    $error = 'Chức năng đăng nhập chưa kết nối DB.';
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (empty($username) || empty($password)) {
+        $error = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!';
+    } else {
+        try {
+            // Khởi tạo đối tượng Database từ class trong include/db.php
+            $db = new Database();
+            
+            // Sử dụng các hàm do nhóm bạn tự định nghĩa
+            $db->query("SELECT * FROM taikhoan WHERE TENTAIKHOAN = :username AND TRANGTHAI = 1");
+            $db->bind(':username', $username);
+            
+            // Hàm single() sẽ trả về 1 dòng dữ liệu (fetch)
+            $user = $db->single();
+
+            // Kiểm tra mật khẩu
+            if ($user && password_verify($password, $user['MATKHAU'])) {
+                
+                $_SESSION['user_id']   = $user['ID_TAIKHOAN'];
+                $_SESSION['username']  = $user['TENTAIKHOAN'];
+                $_SESSION['role_id']   = $user['ID_VAITRO'];
+
+                // Chuyển hướng theo phân quyền
+                if ($user['ID_VAITRO'] == 1) {
+                    header('Location: ../../Admin/index.php');
+                } else {
+                    header('Location: ../index.php'); // Về trang chủ
+                }
+                exit;
+            } else { 
+                $error = 'Tên đăng nhập hoặc mật khẩu không đúng!'; 
+            }
+        } catch (Exception $e) {
+            $error = "Lỗi hệ thống: " . $e->getMessage();
+        }
+    }
 }
 
 $base_url     = '../';
@@ -57,7 +87,7 @@ require_once '../includes/header.php';
                 <label class="checkbox-label">
                     <input type="checkbox" name="remember"> Ghi nhớ đăng nhập
                 </label>
-                <a href="#" class="forgot-link">Quên mật khẩu?</a>
+                <a href="../../Admin/forgot_password.php" class="forgot-link">Quên mật khẩu?</a>
             </div>
             <button type="submit" class="btn-auth">
                 <i class="fas fa-sign-in-alt"></i> Đăng nhập

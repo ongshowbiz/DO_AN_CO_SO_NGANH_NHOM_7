@@ -1,22 +1,67 @@
 <?php
-// auth/register.php
-// require_once '../config/db.php';
-$error = ''; $success = '';
+// Customer/auth/register.php
+session_start();
+
+// Gọi file class Database
+require_once '../../include/db.php';
+
+$error = ''; 
+$success = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // $username = trim($_POST['username'] ?? '');
-    // $email    = trim($_POST['email'] ?? '');
-    // $password = $_POST['password'] ?? '';
-    // $confirm  = $_POST['confirm'] ?? '';
-    // if($password !== $confirm) { $error = 'Mật khẩu xác nhận không khớp!'; }
-    // elseif(strlen($password) < 6) { $error = 'Mật khẩu tối thiểu 6 ký tự!'; }
-    // else {
-    //     $hash = password_hash($password, PASSWORD_DEFAULT);
-    //     $stmt = $conn->prepare("INSERT INTO taikhoan (ID_VAITRO,TENTAIKHOAN,MATKHAU,EMAIL) VALUES (2,?,?,?)");
-    //     $stmt->bind_param('sss',$username,$hash,$email);
-    //     if($stmt->execute()) { $success='Đăng ký thành công! Hãy đăng nhập.'; }
-    //     else { $error='Tên đăng nhập đã tồn tại!'; }
-    // }
-    $error = 'Chức năng đăng ký chưa kết nối DB.';
+    $username = trim($_POST['username'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm  = $_POST['confirm'] ?? '';
+
+    // 1. Kiểm tra nhập liệu cơ bản
+    if (empty($username) || empty($email) || empty($password) || empty($confirm)) {
+        $error = 'Vui lòng nhập đầy đủ thông tin!';
+    } elseif ($password !== $confirm) { 
+        $error = 'Mật khẩu xác nhận không khớp!'; 
+    } elseif (strlen($password) < 6) { 
+        $error = 'Mật khẩu tối thiểu 6 ký tự!'; 
+    } else {
+        try {
+            // Khởi tạo class Database
+            $db = new Database();
+
+            // 2. Kiểm tra xem Tên đăng nhập hoặc Email đã tồn tại chưa
+            $db->query("SELECT ID_TAIKHOAN FROM taikhoan WHERE TENTAIKHOAN = :username OR EMAIL = :email");
+            $db->bind(':username', $username);
+            $db->bind(':email', $email);
+            $db->execute();
+
+            // Hàm rowCount() để đếm số dòng kết quả trả về
+            if ($db->rowCount() > 0) {
+                $error = 'Tên đăng nhập hoặc Email này đã được sử dụng!';
+            } else {
+                // 3. Mã hóa mật khẩu và tạo thời gian
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $ngaylap = date('Y-m-d H:i:s');
+                
+                // 4. Thêm tài khoản mới (Quyền Customer: ID_VAITRO = 2, TRANGTHAI = 1)
+                $db->query("INSERT INTO taikhoan (ID_VAITRO, TENTAIKHOAN, MATKHAU, EMAIL, NGAYLAP, TRANGTHAI) 
+                            VALUES (2, :username, :matkhau, :email, :ngaylap, 1)");
+                
+                $db->bind(':username', $username);
+                $db->bind(':matkhau', $hash);
+                $db->bind(':email', $email);
+                $db->bind(':ngaylap', $ngaylap);
+
+                if ($db->execute()) { 
+                    $success = 'Đăng ký thành công! Hãy chuyển sang trang đăng nhập.'; 
+                    // Reset lại form để người dùng không bấm đăng ký 2 lần
+                    $_POST['username'] = '';
+                    $_POST['email'] = '';
+                } else { 
+                    $error = 'Có lỗi xảy ra trong quá trình đăng ký, vui lòng thử lại!'; 
+                }
+            }
+        } catch (Exception $e) {
+            $error = "Lỗi hệ thống: " . $e->getMessage();
+        }
+    }
 }
 
 $base_url     = '../';
@@ -40,7 +85,9 @@ require_once '../includes/header.php';
         <div class="auth-error"><i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
         <?php if($success): ?>
-        <div class="auth-success"><i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?></div>
+        <div class="auth-success" style="color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
+        </div>
         <?php endif; ?>
 
         <form class="auth-form" method="POST" action="register.php">

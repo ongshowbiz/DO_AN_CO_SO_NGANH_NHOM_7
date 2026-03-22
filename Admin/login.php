@@ -1,7 +1,7 @@
 ﻿<?php 
 session_start();
-require_once 'config.php';
-require_once 'include/db.php';
+require_once '../config.php';
+require_once '../include/db.php';
 
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     header('Location: index.php');
