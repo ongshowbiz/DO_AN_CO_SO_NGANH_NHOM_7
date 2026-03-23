@@ -11,7 +11,7 @@ if (empty($userMessage)) {
 }
 
 // 1. DÁN CHÌA KHÓA BẮT ĐẦU BẰNG AIza CỦA BẠN VÀO ĐÂY:
-$apiKey = 'AIzaSyA-JaPxFnQ9wsLcXmcoZad7GZAkHjLvuOM'; 
+$apiKey = 'AIzaSyD93uXUytaBzDgkkTVpwzTXYwc3n-tNzMo'; 
 
 // 2. Link gọi API sử dụng gemini-1.5-flash chuẩn nhất
 $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey;
