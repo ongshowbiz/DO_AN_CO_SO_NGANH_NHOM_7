@@ -1,7 +1,7 @@
 ﻿<?php
 session_start();
-require_once 'config.php';
-require_once 'include/db.php';
+require_once '../config.php';
+require_once '../include/db.php';
 $db = new Database();
 $token = $_GET['token'] ?? '';
 $error = ''; $success = '';

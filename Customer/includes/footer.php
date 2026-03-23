@@ -1,4 +1,4 @@
-<?php // includes/footer.php ?>
+<?php require_once __DIR__ . '/../../include/db.php'; ?>
 
 <!-- PHẦN FOOTER -->
 <footer class="footer">
@@ -53,11 +53,70 @@
     </div>
 </div>
 
-<!-- SCRIPT CHUNG -->
-<script src="<?php echo $base_url; ?>script.js"></script>
-<?php if (!empty($extra_js)): foreach ((array)$extra_js as $js): ?>
-<script src="<?php echo htmlspecialchars($js); ?>"></script>
-<?php endforeach; endif; ?>
 
-</body>
-</html>
+<script src="<?php echo $base_url; ?>script.js"></script>
+
+<script>
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatMessages = document.getElementById('chatbox-messages');
+
+    // Mở/đóng chatbox
+    document.getElementById('chatbox-toggle').addEventListener('click', () => {
+        document.getElementById('chatbox-window').style.display = 'flex';
+    });
+    document.getElementById('chatbox-close').addEventListener('click', () => {
+        document.getElementById('chatbox-window').style.display = 'none';
+    });
+
+    // Gửi tin nhắn
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        // 1. In tin nhắn của người dùng ra màn hình
+        chatMessages.innerHTML += `
+            <div class="message user-message" style="background:#e3f2fd; margin: 8px 0; padding: 10px; border-radius: 10px; text-align: right; margin-left: auto; max-width: 80%;">
+                ${message}
+            </div>`;
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // 2. Hiện trạng thái AI đang gõ
+        const loadingId = 'loading-' + Date.now();
+        chatMessages.innerHTML += `
+            <div id="${loadingId}" class="message ai-message" style="background:#f1f1f1; margin: 8px 0; padding: 10px; border-radius: 10px; max-width: 80%;">
+                <i class="fas fa-circle-notch fa-spin"></i> Đang gõ...
+            </div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // 3. Gọi API (Fetch data)
+        try {
+            // SỬ DỤNG $base_url ĐỂ ĐƯỜNG DẪN LUÔN CHUẨN XÁC
+            const response = await fetch('<?php echo $base_url; ?>chat_api.php', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Lỗi máy chủ');
+            }
+
+            const data = await response.json();
+
+            // 4. Thay thế chữ "Đang gõ..." bằng câu trả lời thật
+            document.getElementById(loadingId).innerHTML = data.reply;
+        } catch (error) {
+            document.getElementById(loadingId).innerHTML = '<span style="color:red">Lỗi kết nối API. Vui lòng kiểm tra lại!</span>';
+            console.error(error);
+        }
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+</script>
