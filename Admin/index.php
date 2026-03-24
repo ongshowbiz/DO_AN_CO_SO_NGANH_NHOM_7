@@ -17,57 +17,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
 </head>
-<body>
-<<<<<<< HEAD
-    <!-- PHẦN HEADER -->
-    <header class="header">
-        <div class="logo-container">
-            <div class="logo">
-                <!-- Bạn có thể thay bằng thẻ img src="logo.png" khi có ảnh thật -->
-                <h1>TH</h1>
-            </div>
-            <span class="site-name">Quản lý truyện tranh</span>
-        </div>
-        
-        <div class="search-container">
-            <input type="text" placeholder="Tìm kiếm truyện...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
-        
-        <div class="auth-container">
-            <a href="login.php" class="btn-login">Đăng nhập</a>
-            <a href="register.php" class="btn-register">Đăng ký</a>
-        </div>
-        
-        <!-- Nút mở menu trên giao diện mobile -->
-        <button class="mobile-menu-btn" id="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
-    </header>
-
-    <!-- PHẦN NAV (Menu) -->
-    <nav class="navbar" id="navbar">
-        <ul class="nav-links">
-            <li><a href="index.php"><i class="fas fa-home"></i> Trang chủ</a></li>
-            <li><a href="#"><i class="fas fa-list"></i> Quản lý truyện</a></li>
-            <li><a href="#"><i class="fas fa-shopping-cart"></i> Quản lý đơn hàng</a></li>
-            <li><a href="#"><i class="fas fa-credit-card"></i> Quản lý thẻ tháng</a></li>
-            <li><a href="#"><i class="fas fa-user"></i> Quản lý người dùng</a></li>
-        </ul>
-        <!-- Nút đóng menu trên mobile -->
-        <div class="close-menu-btn" id="close-menu-btn">
-            <i class="fas fa-times"></i> Đóng
-        </div>
-    </nav>
-    
-    <!-- Lớp phủ tối khi mở menu mobile -->
-    <div class="overlay" id="overlay"></div>
-=======
-    <body class="hold-transition sidebar-mini layout-fixed">
-
+<body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
->>>>>>> 412e17b1d88b7ea9a137c7fc9c0b06a9f01f24c9
-
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -106,7 +57,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </ul>
         </nav>
         <?php
-        require_once 'sidebar.php';
+        require_once './method/sidebar.php';
         ?>
 <script>
 document.querySelectorAll('.dropdown').forEach(item => {

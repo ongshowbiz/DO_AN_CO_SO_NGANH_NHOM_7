@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div style="position: relative;">
     <a href="index.php" style="text-decoration: none;">
-        <img src="zzz.png" class="cat-login">
+        <img src="./anh/zzz.png" class="cat-login">
         </a>
     <div class="login-card">
     <?php if (!empty($error)): ?>
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="button" class="btn-register" href="register.php">Đăng ký</button>
             </a>
             <div class="divider">
-            <a href="forgot_password.php">
+            <a class = "forgot_password" href="./method/forgot_password.php">
             Quên mật khẩu?
                 </a>
             </div>
