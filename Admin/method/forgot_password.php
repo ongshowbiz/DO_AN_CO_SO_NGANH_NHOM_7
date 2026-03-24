@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Quên mật khẩu</title>
-    <link rel="stylesheet" href="../style-login.css">
+    <link rel="stylesheet" href="../css/style-login.css">
 </head>
 <body>
 <div style="position: relative;">

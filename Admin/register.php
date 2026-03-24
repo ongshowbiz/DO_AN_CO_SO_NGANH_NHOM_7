@@ -82,12 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Đăng Kí</title>
-    <link rel="stylesheet" href="style-login.css">
+    <link rel="stylesheet" href="./css/style-login.css">
 </head>
 <body>
     <div style="position: relative;">
     <a href="index.php" style="text-decoration: none;">
-        <img src="zzz.png" class="cat-login">
+        <img src="./anh/zzz.png" class="cat-login">
         </a>
     <div class="login-card">
         <h2>Đăng Kí</h2>
