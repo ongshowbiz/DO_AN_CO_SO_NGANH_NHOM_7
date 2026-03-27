@@ -47,3 +47,29 @@ INSERT INTO `taikhoan` (`ID_TAIKHOAN`, `ID_VAITRO`, `TENTAIKHOAN`, `MATKHAU`, `E
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+ALTER TABLE manga 
+ADD COLUMN slug VARCHAR(255) NULL AFTER manga_name,
+ADD UNIQUE KEY uq_slug (slug);
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 1. TRUYỆN (insert manga trước, id_chap tạm để 1)
+INSERT INTO `manga` (`id_theloaimanga`, `id_taikhoan`, `id_chap`, `manga_name`, `slug`, `mota`, `tacgia`, `anh`, `sratus`) VALUES
+(1, 2, 1, 'Naruto', 'naruto', 'Naruto Uzumaki là một ninja trẻ tuổi với ước mơ trở thành Hokage.', 'Masashi Kishimoto', 'https://picsum.photos/seed/naruto/200/280', 1);
+
+-- 2. CHƯƠNG (giờ manga id=1 đã tồn tại)
+INSERT INTO `chap` (`id_manga`, `so_chuong`, `tieu_de_chuong`, `danh_sach_anh`, `ngay_dang`) VALUES
+(1, 1, 'Chương mở đầu', '["https://picsum.photos/seed/p1/800/1200","https://picsum.photos/seed/p2/800/1200","https://picsum.photos/seed/p3/800/1200"]', NOW()),
+(1, 2, 'Kẻ thù xuất hiện', '["https://picsum.photos/seed/p4/800/1200","https://picsum.photos/seed/p5/800/1200"]', NOW()),
+(1, 3, 'Trận chiến lớn', '["https://picsum.photos/seed/p6/800/1200","https://picsum.photos/seed/p7/800/1200"]', NOW());
+
+-- 3. GÁN THỂ LOẠI
+INSERT INTO `manga_theloai` (`id_manga`, `id_theloaimanga`) VALUES (1, 1), (1, 3);
+
+-- 4. LƯỢT XEM
+INSERT INTO `luot_doc` (`id_manga`, `ngay`, `so_luot_doc`) VALUES
+(1, CURDATE(), 150),
+(1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 200);
+
+SET FOREIGN_KEY_CHECKS = 1;
