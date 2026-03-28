@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../include/db.php';
 $db = new Database();
-
+$role_id = $_SESSION['ID_VAITRO'] ?? 0;
 // --- 1. THỐNG KÊ TỔNG QUÁT ---
 $db->query("SELECT COUNT(*) as total_manga FROM manga");
 $total_manga = $db->single()['total_manga'];
@@ -80,6 +80,7 @@ $latestComments = $db->resultSet();
                 <p>Tổng Truyện</p>
             </div>
         </div>
+        <?php if ($role_id != 3): ?>
         <div class="stat-box green">
             <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
             <div class="stat-info">
@@ -87,6 +88,7 @@ $latestComments = $db->resultSet();
                 <p>Đơn Hàng</p>
             </div>
         </div>
+        <?php endif; ?>
         <div class="stat-box red">
             <div class="stat-icon"><i class="fas fa-users"></i></div>
             <div class="stat-info">
@@ -124,7 +126,7 @@ $latestComments = $db->resultSet();
             <?php endforeach; ?>
             <?php if(empty($latestChaps)) echo "<p style='color:#777;'>Chưa có dữ liệu cập nhật.</p>"; ?>
         </div>
-
+        <?php if ($role_id != 3): ?>
         <!-- Bên PHẢI chiếm 1/3: Comment mới -->
         <div class="activity-card">
             <h4><i class="fas fa-comments" style="color: #e74c3c; margin-right: 6px;"></i> Đánh Giá Mới</h4>
@@ -142,6 +144,7 @@ $latestComments = $db->resultSet();
             <?php endforeach; ?>
             <?php if(empty($latestComments)) echo "<p style='color:#777;'>Khách hàng chưa bình luận gì.</p>"; ?>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 

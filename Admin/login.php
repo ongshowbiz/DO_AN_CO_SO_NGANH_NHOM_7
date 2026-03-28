@@ -41,11 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             switch ($taikhoan['ID_VAITRO']) {
             case 1: // Admin
-            case 2: // Staff
+            case 3: // Staff
                 header('Location: index.php');
                 break;
-            case 3: // Customer
-                header('Location: user_index.php');
+            case 2: // Customer
+                header('Location: ../Customer/index.php');
                 break;
             default:
                 header('Location: login.php?error=role_not_found');
