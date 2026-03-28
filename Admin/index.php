@@ -5,6 +5,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('Location: login.php');
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -16,6 +17,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="./css/user_management.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -56,28 +59,29 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 </li>
             </ul>
         </nav>
+        <div class="content">
+            <?php
+            // Lấy tham số page từ giao diện, mặc định là dashboard
+            $page = $_GET['page'] ?? 'dashboard';
+            
+            // Xử lý routing (điều hướng) các trang
+            if ($page == 'dashboard') {
+                require_once './method/dashboard.php';
+            } elseif ($page == 'user-list') {
+                require_once './method/user_list.php';
+            } elseif ($page == 'role-list') {
+                require_once './method/role_list.php';
+            } else {
+                echo '<div style="background:#fff; padding:20px; border-radius:10px;">
+                        <h2>Đang phát triển...</h2>
+                        <p>Trang này chưa được xây dựng hoặc đường dẫn không hợp lệ.</p>
+                      </div>';
+            }
+            ?>
+        </div>
         <?php
         require_once './method/sidebar.php';
         ?>
-<script>
-document.querySelectorAll('.dropdown').forEach(item => {
-    item.addEventListener('click', () => {
-        const menu = item.querySelector('.dropdown-menu');
-        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-    });
-});
-
-document.querySelectorAll('.nav-item > .nav-link').forEach(link => {
-    link.addEventListener('click', function (e) {
-        const parent = this.parentElement;
-        const submenu = parent.querySelector('.nav-treeview');
-
-        if (submenu) {
-            e.preventDefault();
-            parent.classList.toggle('open');
-        }
-    });
-});
-</script>
+    <script src="script.js"></script>
 </body>
 </html>

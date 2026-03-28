@@ -75,6 +75,31 @@
               </li>
             </ul>
           </li>
+          <li class="nav-header">QUẢN LÝ ĐƠN HÀNG</li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Quản lý Đơn Hàng
+                <i class="right fas fa-angle-right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="index.php?page=order-list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Danh sách Đơn Hàng</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="index.php?page=order-list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Quản lý Đơn Hàng</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
            <li class="nav-header">QUẢN LÝ COMMENT</li>
           <li class="nav-item">
             <a href="#" class="nav-link">
