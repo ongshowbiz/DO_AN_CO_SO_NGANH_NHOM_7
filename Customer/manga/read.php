@@ -100,7 +100,7 @@ if (empty($_SESSION[$view_key])) {
 // -------------------------------------------------------
 // HEADER
 // -------------------------------------------------------
-$base_url     = '../';
+$base_url = '../../';
 $page_title   = 'Chương ' . $chap_num . ' - ' . htmlspecialchars($manga['manga_name']) . ' - Truyện Hay';
 $current_page = '';
 require_once '../includes/header.php';
@@ -110,7 +110,7 @@ require_once '../includes/header.php';
 <div class="breadcrumb">
     <a href="../index.php"><i class="fas fa-home"></i> Trang chủ</a>
     <i class="fas fa-chevron-right"></i>
-    <a href="../truyen/<?php echo htmlspecialchars($slug); ?>">
+    <a href="<?php echo $base_url; ?>truyen/<?php echo htmlspecialchars($slug); ?>">
         <?php echo htmlspecialchars($manga['manga_name']); ?>
     </a>
     <i class="fas fa-chevron-right"></i>
@@ -125,7 +125,7 @@ require_once '../includes/header.php';
             <a href="../truyen/<?php echo htmlspecialchars($slug); ?>" class="ctrl-btn">
                 <i class="fas fa-list"></i> Danh sách chương
             </a>
-            <?php echo render_chap_nav($slug, $chap_num, $prev_chap, $next_chap, $all_chaps); ?>
+            <?php echo render_chap_nav($slug, $chap_num, $prev_chap, $next_chap, $all_chaps, $base_url); ?>
             <button class="ctrl-btn" id="btn-font-size">
                 <i class="fas fa-text-height"></i> Cỡ chữ
             </button>
@@ -169,7 +169,7 @@ require_once '../includes/header.php';
             <a href="../truyen/<?php echo htmlspecialchars($slug); ?>" class="ctrl-btn">
                 <i class="fas fa-list"></i> Danh sách chương
             </a>
-            <?php echo render_chap_nav($slug, $chap_num, $prev_chap, $next_chap, $all_chaps); ?>
+            <?php echo render_chap_nav($slug, $chap_num, $prev_chap, $next_chap, $all_chaps, $base_url); ?>
         </div>
     </div>
 
@@ -192,10 +192,10 @@ if (btnFont) {
 // Phím tắt ← → chuyển chương
 document.addEventListener('keydown', e => {
     <?php if ($prev_chap): ?>
-    if (e.key === 'ArrowLeft')  window.location.href = '../doc/<?php echo $slug; ?>/chuong-<?php echo $prev_chap; ?>';
+    if (e.key === 'ArrowLeft')  window.location.href = '/DO_AN_CO_SO_NGANH_NHOM_7/Customer/doc/<?php echo $slug; ?>/chuong-<?php echo $prev_chap; ?>';
     <?php endif; ?>
     <?php if ($next_chap): ?>
-    if (e.key === 'ArrowRight') window.location.href = '../doc/<?php echo $slug; ?>/chuong-<?php echo $next_chap; ?>';
+    if (e.key === 'ArrowRight') window.location.href = '/DO_AN_CO_SO_NGANH_NHOM_7/Customer/doc/<?php echo $slug; ?>/chuong-<?php echo $next_chap; ?>';
     <?php endif; ?>
 });
 </script>
@@ -204,12 +204,13 @@ document.addEventListener('keydown', e => {
 // -------------------------------------------------------
 // HELPER: render thanh điều hướng chương (dùng 2 lần)
 // -------------------------------------------------------
-function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $all): string {
+function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $all, string $base): string {
+    $doc  = '/DO_AN_CO_SO_NGANH_NHOM_7/Customer/doc/';
     $html = '<div class="chap-nav">';
 
     // Nút chương trước
     if ($prev !== null) {
-        $html .= "<a href='../doc/{$slug}/chuong-{$prev}' class='ctrl-btn'>
+        $html .= "<a href='{$doc}{$slug}/chuong-{$prev}' class='ctrl-btn'>
                       <i class='fas fa-chevron-left'></i> Chương trước</a>";
     } else {
         $html .= "<button class='ctrl-btn disabled' disabled>
@@ -218,7 +219,7 @@ function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $
 
     // Dropdown chọn chương
     $html .= "<select class='chap-select'
-                      onchange=\"window.location.href='../doc/{$slug}/chuong-'+this.value\">";
+                      onchange=\"window.location.href='{$doc}{$slug}/chuong-'+this.value\">";
     foreach ($all as $c) {
         $sel   = $c['so_chuong'] == $cur ? 'selected' : '';
         $title = htmlspecialchars($c['tieu_de_chuong']);
@@ -228,7 +229,7 @@ function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $
 
     // Nút chương sau
     if ($next !== null) {
-        $html .= "<a href='../doc/{$slug}/chuong-{$next}' class='ctrl-btn'>
+        $html .= "<a href='{$doc}{$slug}/chuong-{$next}' class='ctrl-btn'>
                       Chương sau <i class='fas fa-chevron-right'></i></a>";
     } else {
         $html .= "<button class='ctrl-btn disabled' disabled>
