@@ -129,7 +129,7 @@ require_once '../includes/header.php';
                     <div class="type-notice digital">
                         <i class="fas fa-university"></i>
                         <div>
-                            <strong style="color:#e0e0e0;">Thông tin chuyển khoản:</strong><br>
+                            <strong style="color:#8f8f8f;">Thông tin chuyển khoản:</strong><br>
                             Ngân hàng: <strong>Vietcombank</strong> — Chi nhánh HCM<br>
                             Số TK: <strong>1234 5678 9012</strong> — Chủ TK: <strong>TRUYEN HAY</strong><br>
                             Nội dung CK: <em>Họ tên + SĐT</em>
