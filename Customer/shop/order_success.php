@@ -1,17 +1,75 @@
 <?php
-// shop/order_success.php — Trang đặt hàng thành công
-// Thực tế: lấy order_id từ session/GET sau khi INSERT vào DB
+require_once '../../include/db.php'; // Gọi kết nối DB
+$db = new Database();
 
-$order_id   = 'TH' . strtoupper(substr(md5(time()), 0, 8));
-$order_date = date('d/m/Y H:i');
+$id_from_db = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+// Nếu không có ID, đẩy về trang chủ
+if ($id_from_db === 0) {
+    header('Location: ../index.php');
+    exit;
+}
+
+// Truy vấn lấy thông tin đơn hàng vừa đặt
+$db->query("SELECT tong_tien, dia_chi_giao_hang, ngay_dat FROM don_hang WHERE id_order = :id");
+$db->bind(':id', $id_from_db);
+$order = $db->single();
+
+if (!$order) {
+    die("Đơn hàng không tồn tại!");
+}
+
+// Khởi tạo các biến để dùng cho HTML bên dưới
+$order_id   = 'DH' . str_pad($id_from_db, 5, '0', STR_PAD_LEFT);
+$order_date = date('d/m/Y H:i', strtotime($order['ngay_dat']));
+$tong_tien  = $order['tong_tien'];
+
+// Tìm chữ "Chuyển khoản" trong chuỗi địa chỉ giao hàng để xác định phương thức
+$is_bank = strpos($order['dia_chi_giao_hang'], 'PTTT: Chuyển khoản') !== false;
+
+// --- GỌI API VIETQR NẾU LÀ CHUYỂN KHOẢN ---
+$qr_url = "";
+if ($is_bank) {
+    $bank_id       = "vietcombank"; 
+    $account_no    = "0123456789";  
+    $account_name  = "NGUYEN VAN A"; 
+    $transfer_text = "Thanh toan don hang " . $order_id;
+    $qr_url = "https://img.vietqr.io/image/{$bank_id}-{$account_no}-compact2.png?amount={$tong_tien}&addInfo=" . urlencode($transfer_text) . "&accountName=" . urlencode($account_name);
+}
 
 $base_url     = '../';
 $page_title   = 'Đặt hàng thành công - Truyện Hay';
 $current_page = 'shop';
-$extra_css = ['../shop.css'];
+$extra_css    = ['../shop.css'];
 require_once '../includes/header.php';
 ?>
-
+<?php if ($is_bank): ?>
+        <div class="qr-payment-box">
+            <h2><i class="fas fa-qrcode"></i> Vui lòng quét mã QR để thanh toán</h2>
+            <p class="qr-payment-desc">
+                Mở App Ngân hàng hoặc Momo để quét mã QR dưới đây. Nội dung và số tiền sẽ được điền tự động!
+            </p>
+            
+            <div class="qr-image-wrapper">
+                <img src="<?php echo $qr_url; ?>" alt="QR Code">
+            </div>
+            
+            <div class="qr-info-details">
+                <p>Ngân hàng: <strong>VIETCOMBANK</strong></p>
+                <p>Số tài khoản: <span class="text-highlight">0123456789</span></p>
+                <p>Chủ tài khoản: <strong>NGUYEN VAN A</strong></p>
+                <p>Số tiền: <strong><?php echo number_format($tong_tien, 0, ',', '.'); ?>đ</strong></p>
+                <p>Nội dung CK: <strong><?php echo $transfer_text; ?></strong></p>
+            </div>
+            <p class="qr-note">* Đơn hàng sẽ được xử lý ngay sau khi nhận được thanh toán.</p>
+        </div>
+    <?php else: ?>
+        <div class="qr-payment-box" style="border-color: #2ecc71;">
+            <h2><i class="fas fa-money-bill-wave" style="color:#2ecc71;"></i> Thanh toán khi nhận hàng</h2>
+            <p>Bạn đã chọn phương thức thanh toán <strong>Tiền mặt khi nhận hàng (COD)</strong>.</p>
+            <p>Vui lòng chuẩn bị sẵn số tiền <strong style="color: #e74c3c; font-size: 1.2rem;"><?php echo number_format($tong_tien, 0, ',', '.'); ?>đ</strong> khi Shipper gọi nhé!</p>
+        </div>
+    <?php endif; ?>
 
 <!-- Confetti -->
 <div class="confetti-wrap" id="confetti"></div>
@@ -21,7 +79,7 @@ require_once '../includes/header.php';
     <!-- Icon -->
     <div class="success-icon"><i class="fas fa-check"></i></div>
 
-    <h1>Đặt hàng thành công! 🎉</h1>
+    <h1>Đặt hàng thành công! </h1>
     <p>Cảm ơn bạn đã mua hàng tại Truyện Hay. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất!</p>
 
     <!-- Thông tin đơn hàng -->
