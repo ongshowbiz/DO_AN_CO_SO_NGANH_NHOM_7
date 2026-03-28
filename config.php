@@ -4,4 +4,5 @@
 	define('DB_USER','root');
 	define("DB_PASS", '');
 	define('DB_NAME', 'readmanga');
+	define('API_KEY', 'AIzaSyCxIGkbOlW9e1jFF8oK_pWFKjOtuX4Y8P4');
 ?>

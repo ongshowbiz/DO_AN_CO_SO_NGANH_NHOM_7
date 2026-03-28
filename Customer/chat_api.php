@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-
+require_once '../include/db.php';// lấy mã api đã dc định nghĩa
 // Lấy dữ liệu JSON từ yêu cầu POST
 $data = json_decode(file_get_contents('php://input'), true);
 $userMessage = $data['message'] ?? '';
@@ -11,11 +11,11 @@ if (empty($userMessage)) {
 }
 
 // 1. DÁN CHÌA KHÓA BẮT ĐẦU BẰNG AIza CỦA BẠN VÀO ĐÂY:
-$apiKey = 'AIzaSyD93uXUytaBzDgkkTVpwzTXYwc3n-tNzMo'; 
+$apiKey = API_KEY; 
 
 // 2. Link gọi API sử dụng gemini-1.5-flash chuẩn nhất
 $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey;
-// Cấu hình "Nhân vật"
+// Cấu hình hệ thống và cách trả lời
 $systemPrompt = "Bạn là nhân viên CSKH của web Truyện Hay. Hãy trả lời ngắn gọn, súc tích và nhiệt tình. Câu hỏi: ";
 
 $payload = [
@@ -27,7 +27,7 @@ $payload = [
         ]
     ]
 ];
-
+// gọi API bằng cURL bảo mật
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -54,7 +54,7 @@ if ($response === false) {
     }
 }
 curl_close($ch);
-
+//câu trả lời ai gửi lại footer
 echo json_encode(['reply' => $reply]);
 exit;
 ?>

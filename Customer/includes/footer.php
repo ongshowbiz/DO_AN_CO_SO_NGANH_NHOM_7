@@ -81,9 +81,7 @@
 
         // 1. In tin nhắn của người dùng ra màn hình
         chatMessages.innerHTML += `
-            <div class="message user-message" style="background:#e3f2fd; margin: 8px 0; padding: 10px; border-radius: 10px; text-align: right; margin-left: auto; max-width: 80%;">
-                ${message}
-            </div>`;
+            <div class="message user-message">${message}</div>`;
         chatInput.value = '';
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
