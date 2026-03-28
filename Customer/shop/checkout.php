@@ -1,5 +1,5 @@
 <?php
-    session_start();
+session_start();
 
 // 1. KIỂM TRA GIỎ HÀNG TỪ SESSION
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
@@ -9,6 +9,7 @@ if (empty($cart)) {
     header('Location: cart.php');
     exit;
 }
+
 // 2. TÍNH TIỀN 
 $subtotal = 0;
 foreach ($cart as $item) {
@@ -49,11 +50,12 @@ require_once '../includes/header.php';
             Hoàn tất
         </div>
     </div>
+    
     <form action="process_checkout.php" method="POST" id="checkout-form">
-        
         <div class="checkout-layout">
+            
             <div>
-                <div class="form-section" id="shipping-section">
+                <div class="checkout-section" id="shipping-section">
                     <h2><i class="fas fa-map-marker-alt"></i> Thông tin giao hàng</h2>
                     <div class="form-group">
                         <label>Họ và tên <span style="color:red">*</span></label>
@@ -82,67 +84,58 @@ require_once '../includes/header.php';
                     </div>
                 </div>
 
-                <div class="form-section">
+                <div class="checkout-section">
                     <h2><i class="fas fa-wallet"></i> Phương thức thanh toán</h2>
                     
-                    <label class="payment-option selected" onclick="selectPayment(this)">
+                    <label class="payment-option selected" onclick="selectPayment(this)" style="display:block; padding:15px; border:1px solid #ddd; border-radius:6px; margin-bottom:10px; cursor:pointer;">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <input type="radio" name="payment_method" value="cod" checked>
+                            <input type="radio" name="payment_method" value="cod" checked style="display:none;">
                             <i class="fas fa-money-bill-wave" style="color:#2ecc71; font-size:1.2rem;"></i>
                             <strong>Thanh toán khi nhận hàng (COD)</strong>
                         </div>
                     </label>
 
-                    <label class="payment-option" onclick="selectPayment(this)">
+                    <label class="payment-option" onclick="selectPayment(this)" style="display:block; padding:15px; border:1px solid #ddd; border-radius:6px; cursor:pointer;">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <input type="radio" name="payment_method" value="bank">
+                            <input type="radio" name="payment_method" value="bank" style="display:none;">
                             <i class="fas fa-university" style="color:#3498db; font-size:1.2rem;"></i>
                             <strong>Chuyển khoản ngân hàng</strong>
                         </div>
                     </label>
 
-                    <div id="bank-info" style="display:none; margin-top:15px; padding:15px; background:#f8f9fa; border:1px solid #ddd; border-radius:8px;">
-                        <p><strong>Ngân hàng:</strong> Vietcombank</p>
-                        <p><strong>Số tài khoản:</strong> 1234567890</p>
-                        <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
-                        <p style="color:#e74c3c; font-size:0.9rem; margin-top:10px;">
-                            * Vui lòng chờ sau khi bấm Đặt Hàng để lấy Mã Đơn Hàng ghi vào nội dung chuyển khoản.
+                    <div id="bank-info" style="display:none; margin-top:15px; padding:15px; background:#f8f9fa; border:1px dashed #3498db; border-radius:8px;">
+                        <p style="margin:0 0 5px 0;"><strong>Ngân hàng:</strong> Vietcombank</p>
+                        <p style="margin:0 0 5px 0;"><strong>Số tài khoản:</strong> 1234567890</p>
+                        <p style="margin:0 0 5px 0;"><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
+                        <p style="color:#e74c3c; font-size:0.9rem; margin-top:10px; font-style:italic;">
+                            * Vui lòng chờ sau khi bấm Đặt Hàng để lấy Mã Đơn Hàng quét mã QR tự động.
                         </p>
                     </div>
                 </div>
             </div>
 
-                <!-- Thông tin chuyển khoản (hiện khi chọn bank) -->
-                <div id="bank-info" style="display:none; margin-top:16px;">
-                    <div class="type-notice digital">
-                        <i class="fas fa-university"></i>
-                        <div>
-                            <strong style="color:#e0e0e0;">Thông tin chuyển khoản:</strong><br>
-                            Ngân hàng: <strong>Vietcombank</strong> — Chi nhánh HCM<br>
-                            Số TK: <strong>1234 5678 9012</strong> — Chủ TK: <strong>TRUYEN HAY</strong><br>
-                            Nội dung CK: <em>Họ tên + SĐT</em>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <div class="summary-row">
-                        <span>Tạm tính:</span>
-                        <span id="co-subtotal"><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Phí vận chuyển:</span>
-                        <span id="co-ship" style="color: <?php echo $ship == 0 ? '#2ecc71' : 'inherit'; ?>">
-                            <?php echo $ship == 0 ? 'Miễn phí' : number_format($ship, 0, ',', '.') . 'đ'; ?>
-                        </span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Tổng cộng:</span>
-                        <span id="co-total"><?php echo number_format($total, 0, ',', '.'); ?>đ</span>
-                    </div>
-                    
-                    <button type="submit" class="btn-checkout">Đặt hàng</button>
+            <div class="checkout-section" style="background:#fff;">
+                <h2>Đơn hàng của bạn</h2>
+                <div class="summary-row" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>Tạm tính:</span>
+                    <span id="co-subtotal"><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</span>
                 </div>
+                <div class="summary-row" style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>Phí vận chuyển:</span>
+                    <span id="co-ship" style="color: <?php echo $ship == 0 ? '#2ecc71' : 'inherit'; ?>">
+                        <?php echo $ship == 0 ? 'Miễn phí' : number_format($ship, 0, ',', '.') . 'đ'; ?>
+                    </span>
+                </div>
+                <div class="summary-row total" style="display:flex; justify-content:space-between; margin-top:15px; padding-top:15px; border-top:1px solid #eee; font-weight:bold; font-size:1.2rem;">
+                    <span>Tổng cộng:</span>
+                    <span id="co-total" style="color:#e74c3c;"><?php echo number_format($total, 0, ',', '.'); ?>đ</span>
+                </div>
+                
+                <button type="submit" class="btn-checkout" style="width:100%; padding:15px; background:#e74c3c; color:#fff; font-weight:bold; font-size:1.1rem; border:none; border-radius:6px; margin-top:20px; cursor:pointer;">
+                    ĐẶT HÀNG
+                </button>
             </div>
+
         </div>
     </form>
 </div>
@@ -152,10 +145,26 @@ require_once '../includes/header.php';
 <script>
 // Chuyển đổi lựa chọn phương thức thanh toán
 function selectPayment(el) {
-    document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+    // Bỏ chọn tất cả
+    document.querySelectorAll('.payment-option').forEach(o => {
+        o.classList.remove('selected');
+        o.style.borderColor = '#ddd';
+    });
+    
+    // Đánh dấu cái được chọn
     el.classList.add('selected');
-    el.querySelector('input').checked = true;
+    el.style.borderColor = '#3498db';
+    
+    // Check ngầm thẻ input radio bên trong
+    const radio = el.querySelector('input[type="radio"]');
+    radio.checked = true;
+    
+    // Ẩn/hiện thông tin ngân hàng
     const bankInfo = document.getElementById('bank-info');
-    bankInfo.style.display = el.querySelector('input').value === 'bank' ? 'block' : 'none';
+    if (radio.value === 'bank') {
+        bankInfo.style.display = 'block';
+    } else {
+        bankInfo.style.display = 'none';
+    }
 }
 </script>
