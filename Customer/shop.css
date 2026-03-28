@@ -1084,7 +1084,7 @@
 .form-group label {
     display: block;
     font-size: 13px;
-    color: #c61717;
+    color: #888;
     margin-bottom: 6px;
 }
 
@@ -1093,10 +1093,10 @@
 .form-group textarea {
     width: 100%;
     padding: 11px 14px;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, .05);
     border: 1px solid rgba(255, 255, 255, .1);
     border-radius: 10px;
-    color: #000;
+    color: #e0e0e0;
     font-size: 14px;
     outline: none;
     transition: border-color .2s;
@@ -1565,4 +1565,73 @@ body:has(.shop-content) {
 
 .shop-grid {
     width: 100% !important;
+}
+
+.qr-payment-box {
+    background: #fff;
+    border: 2px dashed #3498db;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
+}
+
+.qr-payment-box h2 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.qr-payment-desc {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.qr-image-wrapper {
+    display: inline-block;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 1px solid #eee;
+}
+
+.qr-image-wrapper img {
+    max-width: 250px;
+    border-radius: 8px;
+}
+
+.qr-info-details {
+    margin-top: 20px;
+    text-align: left;
+    background: #f4faff;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #444;
+    display: inline-block;
+}
+
+.qr-info-details p {
+    margin: 0 0 8px 0;
+}
+
+.qr-info-details p:last-child {
+    margin: 0;
+    /* Xóa margin của dòng cuối cùng cho gọn */
+}
+
+.text-highlight {
+    color: #e74c3c;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.qr-note {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
 }

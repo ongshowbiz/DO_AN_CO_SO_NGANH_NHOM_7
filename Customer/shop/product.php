@@ -1,35 +1,39 @@
 <?php
-// shop/product.php — Trang chi tiết sản phẩm
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
+session_start();
+require_once '../../include/db.php'; 
+$db = new Database();
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// --- DỮ LIỆU MẪU DEMO ---
-// Thực tế: SELECT sp.*, m.* FROM sanpham_manga sp JOIN manga m ON sp.id_manga=m.id_manga WHERE sp.id_spmanga=?
-$product = [
-    'id_spmanga'   => $id,
-    'manga_name'   => 'Tên Truyện Mẫu ' . $id,
-    'slug'         => 'ten-truyen-mau-' . $id,
-    'tacgia'       => 'Tác Giả Mẫu',
-    'nha_xuat_ban' => 'NXB Kim Đồng',
-    'mota'         => 'Đây là bộ truyện tranh hành động đỉnh cao với nội dung hấp dẫn, kịch tính. Nhân vật chính phải vượt qua vô số thử thách để bảo vệ những người thân yêu. Được xuất bản bởi NXB Kim Đồng với chất lượng in ấn tuyệt vời, màu sắc sắc nét và giấy in cao cấp.',
-    'anh'          => "https://picsum.photos/seed/{$id}/300/420",
-    'gia_ban'      => 85000,
-    'so_luong_kho' => 23,
-    'the_loai'     => 'Hành Động, Phiêu Lưu',
-    'type'         => ($id % 2 === 0) ? 'digital' : 'physical',
-    'so_tap'       => 12,
-    'nam_xb'       => 2023,
-];
-$related = [];
-for ($i = 1; $i <= 5; $i++) {
-    $ri = ($id + $i - 1) % 12 + 1;
-    $related[] = [
-        'id_spmanga' => $ri,
-        'manga_name' => 'Truyện Liên Quan ' . $ri,
-        'anh'        => "https://picsum.photos/seed/" . ($ri + 30) . "/200/280",
-        'gia_ban'    => rand(45, 130) * 1000,
-        'type'       => $ri % 2 === 0 ? 'digital' : 'physical',
-    ];
+if ($id === 0) {
+    die("Sản phẩm không hợp lệ!");
 }
+
+//lấy dl sản phẩm
+$sql = "SELECT sp.id_spmanga, sp.gia_ban, sp.nha_xuat_ban, sp.so_luong_kho,
+               m.manga_name, m.slug, m.anh, m.tacgia, m.mota, m.id_theloaimanga, m.create_day
+        FROM sanpham_manga sp
+        Left JOIN manga m ON sp.id_manga = m.id_manga
+        WHERE sp.id_spmanga = :id";
+$db->query($sql);
+$db->bind(':id', $id);
+$product = $db->single();
+
+if (!$product) {
+    die("Không tìm thấy sản phẩm này trong kho!");
+}
+$sql_related = "SELECT sp.id_spmanga, sp.gia_ban, m.manga_name, m.anh 
+                FROM sanpham_manga sp
+                JOIN manga m ON sp.id_manga = m.id_manga
+                WHERE m.id_theloaimanga = :id_theloai
+                AND sp.id_spmanga != :id_sp_hien_tai
+                LIMIT 4"; 
+
+$db->query($sql_related);
+// Truyền trực tiếp id_theloaimanga đã lấy được từ sản phẩm chính
+$db->bind(':id_theloai', $product['id_theloaimanga'] ?? 0); 
+$db->bind(':id_sp_hien_tai', $id);
+$related = $db->resultSet(); // Lấy danh sách
+$product['type'] = 'physical';
 
 $base_url     = '../';
 $page_title   = htmlspecialchars($product['manga_name']) . ' - Shop Truyện Hay';
@@ -72,10 +76,10 @@ require_once '../includes/header.php';
             <div class="meta-tags">
                 <div class="meta-tag"><i class="fas fa-user-edit"></i> <span>Tác giả: <strong><?php echo htmlspecialchars($product['tacgia']); ?></strong></span></div>
                 <div class="meta-tag"><i class="fas fa-building"></i> <span>NXB: <strong><?php echo htmlspecialchars($product['nha_xuat_ban']); ?></strong></span></div>
-                <div class="meta-tag"><i class="fas fa-tags"></i> <span><?php echo htmlspecialchars($product['the_loai']); ?></span></div>
-                <div class="meta-tag"><i class="fas fa-calendar"></i> <span><?php echo $product['nam_xb']; ?></span></div>
+                <div class="meta-tag"><i class="fas fa-tags"></i> <span>Thể loại: <strong><?php echo htmlspecialchars($product['id_theloaimanga']); ?></strong></span></div>
+                <div class="meta-tag"><i class="fas fa-calendar"></i> <span>Ngày tạo: <strong><?php echo $product['create_day']; ?></strong></span></div>
                 <?php if ($product['type'] === 'physical'): ?>
-                <div class="meta-tag"><i class="fas fa-layer-group"></i> <span><?php echo $product['so_tap']; ?> tập</span></div>
+                <div class="meta-tag"><i class="fas fa-box"></i> <span>Kho: <strong><?php echo $product['so_luong_kho']; ?></strong> cuốn</span></div>
                 <?php endif; ?>
             </div>
 
@@ -188,21 +192,65 @@ function changeQty(delta) {
 function getCart() { return JSON.parse(localStorage.getItem('truyen_hay_cart') || '[]'); }
 function saveCart(c) { localStorage.setItem('truyen_hay_cart', JSON.stringify(c)); }
 
-function addToCart() {
+   function addToCart() {
     const qty = parseInt(document.getElementById('qty')?.value || 1);
-    const cart = getCart();
-    const id = <?php echo $product['id_spmanga']; ?>;
-    const idx = cart.findIndex(i => i.id === id);
-    if (idx >= 0) cart[idx].qty += qty;
-    else cart.push({ id, name: <?php echo json_encode($product['manga_name']); ?>, price: <?php echo $product['gia_ban']; ?>, qty });
-    saveCart(cart);
-    const toast = document.getElementById('cart-toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-}
+    const id_spmanga = <?php echo isset($product['id_spmanga']) ? (int)$product['id_spmanga'] : 0; ?>;
 
+    if (id_spmanga === 0) {
+        alert("Lỗi: Không tìm thấy ID sản phẩm.");
+        return;
+    }
+
+    // Dùng đường dẫn tương đối để gọi file cart_action.php nằm cùng thư mục
+    fetch('cart_action.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add', id_spmanga: id_spmanga, qty: qty })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const toast = document.getElementById('cart-toast');
+            if(toast) {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            } else {
+                alert("Đã thêm vào giỏ hàng!"); // Fallback nếu không có toast
+            }
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Lỗi Fetch:", err);
+        alert("Có lỗi xảy ra khi thêm vào giỏ hàng!");
+    });
+}
 function buyNow() {
-    addToCart();
-    window.location.href = 'cart.php';
+    const qty = parseInt(document.getElementById('qty')?.value || 1);
+    const id_spmanga = <?php echo isset($product['id_spmanga']) ? (int)$product['id_spmanga'] : 0; ?>;
+
+    if (id_spmanga === 0) {
+        alert("Lỗi: Không tìm thấy ID sản phẩm.");
+        return;
+    }
+
+    fetch('cart_action.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'add', id_spmanga: id_spmanga, qty: qty })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.href = 'checkout.php';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Lỗi Fetch:", err);
+        alert("Có lỗi xảy ra khi xử lý mua ngay!");
+    });
 }
 </script>

@@ -9,7 +9,7 @@ $total_manga = $db->single()['total_manga'];
 $db->query("SELECT COUNT(*) as total_order FROM don_hang");
 $total_order = $db->single()['total_order'];
 
-$db->query("SELECT COUNT(*) as total_user FROM taikhoan");
+$db->query("SELECT COUNT(*) as total_user FROM taikhoan WHERE ID_VAITRO = 2");
 $total_user = $db->single()['total_user'];
 
 // --- 2. DỮ LIỆU BIỂU ĐỒ CỘT (Đơn hàng 7 ngày gần đây) ---

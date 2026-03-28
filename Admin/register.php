@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->bind(':TENTAIKHOAN', $full_name);
                 $db->bind(':EMAIL', $email);
                 $db->bind(':MATKHAU', $password_hashed);
-                $db->bind(':ID_VAITRO', 2);
+                $db->bind(':ID_VAITRO', 1);
 
                 if ($db->execute()) {
                     $success = "Đăng ký thành công! Chuyển đến trang đăng nhập...";

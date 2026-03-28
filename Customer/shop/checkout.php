@@ -1,17 +1,33 @@
 <?php
-// shop/checkout.php — Trang thanh toán (demo)
+    session_start();
+
+// 1. KIỂM TRA GIỎ HÀNG TỪ SESSION
+$cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+
+// Nếu giỏ trống, ép quay về trang cart.php
+if (empty($cart)) {
+    header('Location: cart.php');
+    exit;
+}
+// 2. TÍNH TIỀN 
+$subtotal = 0;
+foreach ($cart as $item) {
+    $subtotal += $item['gia_ban'] * $item['qty'];
+}
+$ship = ($subtotal >= 300000) ? 0 : 30000;
+$total = $subtotal + $ship;
+
+// Khai báo giao diện
 $base_url     = '../';
 $page_title   = 'Thanh toán - Shop Truyện Hay';
 $current_page = 'shop';
-$extra_css = ['../shop.css'];
+$extra_css    = ['../shop.css'];
 require_once '../includes/header.php';
 ?>
-
 
 <div class="checkout-page">
     <h1><i class="fas fa-lock"></i> Thanh toán</h1>
 
-    <!-- BƯỚC -->
     <div class="checkout-steps">
         <div class="step done">
             <div class="step-num"><i class="fas fa-check"></i></div>
@@ -33,162 +49,108 @@ require_once '../includes/header.php';
             Hoàn tất
         </div>
     </div>
+    <form action="process_checkout.php" method="POST" id="checkout-form">
+        
+        <div class="checkout-layout">
+            <div>
+                <div class="form-section" id="shipping-section">
+                    <h2><i class="fas fa-map-marker-alt"></i> Thông tin giao hàng</h2>
+                    <div class="form-group">
+                        <label>Họ và tên <span style="color:red">*</span></label>
+                        <input type="text" id="fullname" name="fullname" required placeholder="Nhập họ tên người nhận">
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label>Số điện thoại <span style="color:red">*</span></label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Nhập số điện thoại">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="email" name="email" placeholder="Nhập email (để nhận hóa đơn)">
+                        </div>
+                    </div>
 
-    <div class="checkout-layout">
+                    <div class="form-group">
+                        <label>Địa chỉ nhận hàng <span style="color:red">*</span></label>
+                        <input type="text" id="address" name="address" required placeholder="Số nhà, Tên đường, Phường, Quận/Huyện, Tỉnh/TP">
+                    </div>
 
-        <!-- FORM BÊN TRÁI -->
-        <div>
-            <!-- Thông tin giao hàng (ẩn nếu toàn KTS) -->
-            <div class="form-section" id="shipping-section">
-                <h2><i class="fas fa-map-marker-alt"></i> Thông tin giao hàng</h2>
-                <div class="type-notice physical">
-                    <i class="fas fa-info-circle"></i>
-                    Điền địa chỉ nhận hàng cho sản phẩm truyện giấy. Sản phẩm kỹ thuật số sẽ được kích hoạt ngay sau thanh toán.
-                </div>
-                <div class="form-row">
                     <div class="form-group">
-                        <label>Họ và tên *</label>
-                        <input type="text" placeholder="Nguyễn Văn A" id="fullname">
-                    </div>
-                    <div class="form-group">
-                        <label>Số điện thoại *</label>
-                        <input type="tel" placeholder="0901 234 567" id="phone">
+                        <label>Ghi chú đơn hàng</label>
+                        <textarea id="note" name="note" rows="3" placeholder="Giao giờ hành chính, gọi trước khi giao..."></textarea>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Email *</label>
-                    <input type="email" placeholder="email@example.com" id="email">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Tỉnh / Thành phố *</label>
-                        <select id="province">
-                            <option value="">-- Chọn tỉnh/thành --</option>
-                            <option>TP. Hồ Chí Minh</option>
-                            <option>Hà Nội</option>
-                            <option>Đà Nẵng</option>
-                            <option>Cần Thơ</option>
-                            <option>Hải Phòng</option>
-                        </select>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-wallet"></i> Phương thức thanh toán</h2>
+                    
+                    <label class="payment-option selected" onclick="selectPayment(this)">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <input type="radio" name="payment_method" value="cod" checked>
+                            <i class="fas fa-money-bill-wave" style="color:#2ecc71; font-size:1.2rem;"></i>
+                            <strong>Thanh toán khi nhận hàng (COD)</strong>
+                        </div>
+                    </label>
+
+                    <label class="payment-option" onclick="selectPayment(this)">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <input type="radio" name="payment_method" value="bank">
+                            <i class="fas fa-university" style="color:#3498db; font-size:1.2rem;"></i>
+                            <strong>Chuyển khoản ngân hàng</strong>
+                        </div>
+                    </label>
+
+                    <div id="bank-info" style="display:none; margin-top:15px; padding:15px; background:#f8f9fa; border:1px solid #ddd; border-radius:8px;">
+                        <p><strong>Ngân hàng:</strong> Vietcombank</p>
+                        <p><strong>Số tài khoản:</strong> 1234567890</p>
+                        <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
+                        <p style="color:#e74c3c; font-size:0.9rem; margin-top:10px;">
+                            * Vui lòng chờ sau khi bấm Đặt Hàng để lấy Mã Đơn Hàng ghi vào nội dung chuyển khoản.
+                        </p>
                     </div>
-                    <div class="form-group">
-                        <label>Quận / Huyện *</label>
-                        <input type="text" placeholder="Quận 1" id="district">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Địa chỉ cụ thể *</label>
-                    <input type="text" placeholder="Số nhà, tên đường, phường/xã..." id="address">
-                </div>
-                <div class="form-group">
-                    <label>Ghi chú đơn hàng</label>
-                    <textarea rows="2" placeholder="Ghi chú thêm cho người giao hàng (không bắt buộc)..." id="note"></textarea>
                 </div>
             </div>
-
-            <!-- Phương thức thanh toán -->
-            <div class="form-section">
-                <h2><i class="fas fa-credit-card"></i> Phương thức thanh toán</h2>
-                <div class="payment-options" id="payment-options">
-                    <label class="payment-option selected" onclick="selectPayment(this)">
-                        <input type="radio" name="payment" value="cod" checked>
-                        <span class="payment-icon" style="color:#e67e22;">💵</span>
-                        <div class="payment-info">
-                            <strong>Tiền mặt (COD)</strong>
-                            <span>Thanh toán khi nhận hàng</span>
-                        </div>
-                    </label>
-                    <label class="payment-option" onclick="selectPayment(this)">
-                        <input type="radio" name="payment" value="bank">
-                        <span class="payment-icon" style="color:#3498db;">🏦</span>
-                        <div class="payment-info">
-                            <strong>Chuyển khoản</strong>
-                            <span>Ngân hàng nội địa</span>
-                        </div>
-                    </label>
-                    <label class="payment-option" onclick="selectPayment(this)">
-                        <input type="radio" name="payment" value="momo">
-                        <span class="payment-icon">💜</span>
-                        <div class="payment-info">
-                            <strong>Ví MoMo</strong>
-                            <span>Thanh toán qua MoMo</span>
-                        </div>
-                    </label>
-                    <label class="payment-option" onclick="selectPayment(this)">
-                        <input type="radio" name="payment" value="vnpay">
-                        <span class="payment-icon" style="color:#e74c3c;">💳</span>
-                        <div class="payment-info">
-                            <strong>VNPay</strong>
-                            <span>Thẻ ATM / Visa / Master</span>
-                        </div>
-                    </label>
-                </div>
 
                 <!-- Thông tin chuyển khoản (hiện khi chọn bank) -->
                 <div id="bank-info" style="display:none; margin-top:16px;">
                     <div class="type-notice digital">
                         <i class="fas fa-university"></i>
                         <div>
-                            <strong style="color:#8f8f8f;">Thông tin chuyển khoản:</strong><br>
+                            <strong style="color:#e0e0e0;">Thông tin chuyển khoản:</strong><br>
                             Ngân hàng: <strong>Vietcombank</strong> — Chi nhánh HCM<br>
                             Số TK: <strong>1234 5678 9012</strong> — Chủ TK: <strong>TRUYEN HAY</strong><br>
                             Nội dung CK: <em>Họ tên + SĐT</em>
                         </div>
+                        <?php endforeach; ?>
                     </div>
+
+                    <div class="summary-row">
+                        <span>Tạm tính:</span>
+                        <span id="co-subtotal"><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Phí vận chuyển:</span>
+                        <span id="co-ship" style="color: <?php echo $ship == 0 ? '#2ecc71' : 'inherit'; ?>">
+                            <?php echo $ship == 0 ? 'Miễn phí' : number_format($ship, 0, ',', '.') . 'đ'; ?>
+                        </span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Tổng cộng:</span>
+                        <span id="co-total"><?php echo number_format($total, 0, ',', '.'); ?>đ</span>
+                    </div>
+                    
+                    <button type="submit" class="btn-checkout">Đặt hàng</button>
                 </div>
             </div>
         </div>
-
-        <!-- ĐƠN HÀNG BÊN PHẢI -->
-        <div class="order-summary">
-            <h2><i class="fas fa-shopping-bag"></i> Đơn hàng của bạn</h2>
-            <div id="order-items-list">
-                <!-- Render bởi JS -->
-            </div>
-            <hr class="summary-divider">
-            <div class="summary-row"><span>Tạm tính</span><span id="co-subtotal">0₫</span></div>
-            <div class="summary-row"><span>Phí vận chuyển</span><span id="co-ship">30.000₫</span></div>
-            <div class="summary-row total"><span>Tổng cộng</span><span id="co-total">0₫</span></div>
-
-            <button class="btn-place-order" onclick="placeOrder()">
-                <i class="fas fa-lock"></i> Đặt hàng ngay
-            </button>
-            <div class="secure-note">
-                <i class="fas fa-shield-alt"></i> Thông tin được mã hóa & bảo mật
-            </div>
-        </div>
-    </div>
+    </form>
 </div>
 
 <?php require_once '../includes/footer.php'; ?>
+
 <script>
-function fmt(n) { return n.toLocaleString('vi-VN') + '₫'; }
-function getCart() { return JSON.parse(localStorage.getItem('truyen_hay_cart') || '[]'); }
-
-function renderOrderSummary() {
-    const cart = getCart();
-    if (cart.length === 0) { window.location.href = 'cart.php'; return; }
-
-    const listEl = document.getElementById('order-items-list');
-    listEl.innerHTML = cart.map(item => `
-        <div class="order-item">
-            <img src="https://picsum.photos/seed/${item.id}/200/280" alt="${item.name}">
-            <div class="order-item-name">
-                ${item.name}
-                <div class="order-item-sub">x${item.qty}</div>
-            </div>
-            <div class="order-item-price">${fmt(item.price * item.qty)}</div>
-        </div>
-    `).join('');
-
-    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const ship     = subtotal >= 300000 ? 0 : 30000;
-    document.getElementById('co-subtotal').textContent = fmt(subtotal);
-    document.getElementById('co-ship').textContent     = ship === 0 ? 'Miễn phí' : fmt(ship);
-    document.getElementById('co-ship').style.color     = ship === 0 ? '#2ecc71' : '';
-    document.getElementById('co-total').textContent    = fmt(subtotal + ship);
-}
-
+// Chuyển đổi lựa chọn phương thức thanh toán
 function selectPayment(el) {
     document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
@@ -196,22 +158,4 @@ function selectPayment(el) {
     const bankInfo = document.getElementById('bank-info');
     bankInfo.style.display = el.querySelector('input').value === 'bank' ? 'block' : 'none';
 }
-
-function placeOrder() {
-    const name    = document.getElementById('fullname')?.value.trim();
-    const phone   = document.getElementById('phone')?.value.trim();
-    const email   = document.getElementById('email')?.value.trim();
-    const address = document.getElementById('address')?.value.trim();
-
-    if (!name || !phone || !email || !address) {
-        alert('Vui lòng điền đầy đủ thông tin giao hàng!');
-        return;
-    }
-
-    // Thực tế: gửi POST tới PHP xử lý INSERT don_hang + chi_tiet_don_hang rồi redirect
-    localStorage.removeItem('truyen_hay_cart');
-    window.location.href = 'order_success.php';
-}
-
-renderOrderSummary();
 </script>

@@ -1,46 +1,87 @@
 <?php
-// shop/index.php — Trang danh sách sản phẩm bán truyện
+session_start();
+require_once '../../include/db.php'; 
+$db = new Database();
 
-// require_once '../config/db.php';
-$search  = trim($_GET['search'] ?? '');
-$sort    = trim($_GET['sort'] ?? 'new');
-$type    = trim($_GET['type'] ?? '');  // 'physical' | 'digital' | ''
-$page    = max(1, (int)($_GET['page'] ?? 1));
+$search   = trim($_GET['search'] ?? '');
+$sort     = trim($_GET['sort'] ?? 'new');
+$type     = trim($_GET['type'] ?? '');       
+$cat_id   = trim($_GET['cat_id'] ?? '');    
+$page     = max(1, (int)($_GET['page'] ?? 1));
 $per_page = 12;
+$offset   = ($page - 1) * $per_page;
 
-// --- DỮ LIỆU MẪU DEMO ---
-// Thực tế: JOIN sanpham_manga + manga + manga_theloai + theloai
-$products = [];
-$types = ['physical', 'digital'];
-for ($i = 1; $i <= 12; $i++) {
-    $ptype = $types[$i % 2];
-    $products[] = [
-        'id_spmanga'   => $i,
-        'id_manga'     => $i,
-        'manga_name'   => 'Tên Truyện Mẫu ' . $i,
-        'slug'         => 'ten-truyen-mau-' . $i,
-        'anh'          => "https://picsum.photos/seed/{$i}/200/280",
-        'tacgia'       => 'Tác giả ' . $i,
-        'nha_xuat_ban' => 'NXB Kim Đồng',
-        'gia_ban'      => rand(45, 150) * 1000,
-        'so_luong_kho' => rand(0, 50),
-        'the_loai'     => 'Hành Động',
-        'type'         => $ptype, // physical | digital
-        'luot_xem'     => rand(1000, 99000),
-    ];
+$db->query("SELECT id_theloaimanga, ten_theloai FROM theloai"); 
+$categories = $db->resultSet();
+
+// 1. TẠO CÂU LỆNH SQL CHÍNH
+$sql = "SELECT sp.id_spmanga, sp.gia_ban, sp.nha_xuat_ban, sp.so_luong_kho,
+               m.id_manga, m.manga_name, m.slug, m.anh, m.tacgia,
+               'physical' AS type
+        FROM sanpham_manga sp
+        JOIN manga m ON sp.id_manga = m.id_manga
+        WHERE 1=1";
+
+// 2. TẠO CÂU LỆNH ĐẾM TỔNG SỐ 
+$sql_count = "SELECT COUNT(*) as total 
+              FROM sanpham_manga sp 
+              JOIN manga m ON sp.id_manga = m.id_manga 
+              WHERE 1=1";
+
+// ĐIỀU KIỆN TÌM KIẾM
+if ($search !== '') {
+    $sql       .= " AND m.manga_name LIKE :search";
+    $sql_count .= " AND m.manga_name LIKE :search_count";
 }
-$total       = 36;
-$total_pages = ceil($total / $per_page);
+
+// ĐIỀU KIỆN THỂ LOẠI 
+if ($cat_id !== '') {
+    $sql       .= " AND m.id_theloaimanga = :cat_id";
+    $sql_count .= " AND m.id_theloaimanga = :cat_count";
+}
+
+// SẮP XẾP
+if ($sort === 'price_asc') {
+    $sql .= " ORDER BY sp.gia_ban ASC";
+} elseif ($sort === 'price_desc') {
+    $sql .= " ORDER BY sp.gia_ban DESC";
+} else {
+    $sql .= " ORDER BY sp.id_spmanga DESC"; 
+}
+
+// PHÂN TRANG (LIMIT & OFFSET)
+$sql .= " LIMIT $per_page OFFSET $offset";
+
+// THỰC THI SQL CHÍNH
+$db->query($sql);
+if ($search !== '') {
+    $db->bind(':search', "%$search%");
+}
+if ($cat_id !== '') {
+    $db->bind(':cat_id', $cat_id);
+}
+$products = $db->resultSet();
+
+// THỰC THI SQL ĐẾM SỐ LƯỢNG
+$db->query($sql_count);
+if ($search !== '') {
+    $db->bind(':search_count', "%$search%");
+}
+if ($cat_id !== '') {
+    $db->bind(':cat_count', $cat_id);
+}
+$total_row = $db->single();
+$total_products = $total_row['total']; 
+$total_pages = ceil($total_products / $per_page);
+
 
 $base_url     = '../';
-$page_title   = 'Shop Truyện - Truyện Hay';
+$page_title   = 'Cửa hàng - Shop Truyện Hay';
 $current_page = 'shop';
-$extra_css = ['../shop.css'];
+$extra_css    = ['../shop.css'];
 require_once '../includes/header.php';
 ?>
 
-
-<!-- HERO -->
 <div class="shop-hero">
     <h1><i class="fas fa-store"></i> Shop <span>Truyện Hay</span></h1>
     <p>Mua truyện giấy chính hãng hoặc mở khoá đọc truyện kỹ thuật số</p>
@@ -86,7 +127,21 @@ require_once '../includes/header.php';
         — <?php echo $total; ?> sản phẩm
     </p>
     <?php endif; ?>
+    <div class="category-tags" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+        <a href="?cat_id=&type=<?php echo $type; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" 
+        class="tag <?php echo $cat_id === '' ? 'active' : ''; ?>"
+        style="padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; text-decoration: none; color: #333; font-size: 14px; transition: 0.2s;">
+        Tất cả Thể Loại
+        </a>
 
+        <?php foreach ($categories as $cat): ?>
+            <a href="?cat_id=<?php echo $cat['id_theloaimanga']; ?>&type=<?php echo $type; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" 
+            class="tag <?php echo $cat_id == $cat['id_theloaimanga'] ? 'active' : ''; ?>"
+            style="padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; text-decoration: none; color: #333; font-size: 14px; transition: 0.2s;">
+            <?php echo htmlspecialchars($cat['ten_theloai']); ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
     <div class="shop-grid">
         <?php foreach ($products as $p): ?>
         <?php $outOfStock = ($p['type'] === 'physical' && $p['so_luong_kho'] <= 0); ?>
@@ -165,43 +220,5 @@ require_once '../includes/header.php';
 
 <?php require_once '../includes/footer.php'; ?>
 
-<script>
-// Giỏ hàng lưu vào localStorage
-function getCart() {
-    return JSON.parse(localStorage.getItem('truyen_hay_cart') || '[]');
-}
-function saveCart(cart) {
-    localStorage.setItem('truyen_hay_cart', JSON.stringify(cart));
-}
 
-function addToCart(id, name, price) {
-    const cart = getCart();
-    const idx = cart.findIndex(i => i.id === id);
-    if (idx >= 0) {
-        cart[idx].qty++;
-    } else {
-        cart.push({ id, name, price, qty: 1 });
-    }
-    saveCart(cart);
-    updateCartCount();
-    showToast();
-}
 
-function updateCartCount() {
-    const cart = getCart();
-    const total = cart.reduce((s, i) => s + i.qty, 0);
-    const badge = document.getElementById('cart-count-badge');
-    if (badge) {
-        badge.textContent = total;
-        badge.style.display = total > 0 ? 'flex' : 'none';
-    }
-}
-
-function showToast() {
-    const toast = document.getElementById('cart-toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-}
-
-updateCartCount();
-</script>

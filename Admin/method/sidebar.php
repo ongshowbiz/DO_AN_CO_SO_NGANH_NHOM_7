@@ -1,4 +1,4 @@
-
+<?php $role_id = $_SESSION['ID_VAITRO'] ?? 0; ?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <a href="index.php" class="brand-link">
     <img src="./anh/admin.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
@@ -51,6 +51,7 @@
               </li>
             </ul>
           </li>
+          <?php if ($role_id == 1): ?>
           <li class="nav-header">QUẢN LÝ HỆ THỐNG</li>
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -75,6 +76,8 @@
               </li>
             </ul>
           </li>
+          <?php endif; ?>
+          <?php if ($role_id != 3): ?>
           <li class="nav-header">QUẢN LÝ ĐƠN HÀNG</li>
           <li class="nav-item">
             <a href="#" class="nav-link">
@@ -99,6 +102,7 @@
               </li>
             </ul>
           </li>
+          <?php endif; ?>
 
            <li class="nav-header">QUẢN LÝ COMMENT</li>
           <li class="nav-item">
@@ -111,13 +115,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?page=user-list" class="nav-link">
+                <a href="index.php?page=cmt-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>bình luận của truyện</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=role-list" class="nav-link">
+                <a href="index.php?page=cmt-chapter-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>bình luận từng chap của truyện</p>
                 </a>

@@ -32,19 +32,12 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </ul>
 
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?page=admincart-view" title="Giỏ hàng cá nhân">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cart-count-badge" class="badge badge-danger navbar-badge">
-                        </span>
-                    </a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <img src=""
+                        <img src="./anh/admin.png"
                             class="img-circle"
                             alt="User Image"
-                            style="width: 25px; height: 25px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
+                            style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
                         <span></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
