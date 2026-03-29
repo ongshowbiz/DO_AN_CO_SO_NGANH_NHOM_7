@@ -6,7 +6,6 @@ $current_page = 'cart';
 $extra_css = ['../shop.css'];
 require_once '../includes/header.php';
 
-// Lấy giỏ hàng từ Session
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 $subtotal = 0;
 $totalQty = 0;
@@ -25,50 +24,62 @@ $totalQty = 0;
         <div class="cart-layout">
             <div>
                 <div class="cart-table">
-                    <div class="cart-table-head" style="display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr; align-items: center; font-weight: bold; padding-bottom: 12px; border-bottom: 2px solid #eee; color: #888; text-transform: uppercase; font-size: 0.85rem;">
+                    <div class="cart-table-head">
                         <span>Sản phẩm</span>
-                        <span style="text-align:center;">Đơn giá</span>
-                        <span style="text-align:center;">Số lượng</span>
-                        <span style="text-align:right;">Thành tiền</span>
+                        <span>Đơn giá</span>
+                        <span>Số lượng</span>
+                        <span>Thành tiền</span>
                     </div>
 
-                    <?php foreach ($cart as $id => $item): 
+                    <?php foreach ($cart as $id => $item):
                         $item_total = $item['gia_ban'] * $item['qty'];
-                        $subtotal += $item_total;
-                        $totalQty += $item['qty'];
+                        $subtotal  += $item_total;
+                        $totalQty  += $item['qty'];
+                        $max_qty    = (int)($item['so_luong_kho'] ?? 999);
                     ?>
-                    <div class="cart-item" style="display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr; align-items: center; padding: 20px 0; border-bottom: 1px solid #eee;">
-                        
-                        <div style="display: flex; gap: 15px; align-items: center;">
-                            <img src="<?php echo htmlspecialchars($item['anh']); ?>" alt="Cover" style="width: 70px; height: 100px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <div class="cart-item"
+                         data-id="<?php echo $id; ?>"
+                         data-price="<?php echo (int)$item['gia_ban']; ?>"
+                         data-max="<?php echo $max_qty; ?>">
+
+                        <div class="cart-item-product">
+                            <img src="<?php echo htmlspecialchars($item['anh']); ?>" alt="Cover">
                             <div class="cart-item-info">
-                                <h3 style="margin: 0 0 6px 0; font-size: 1rem; color: #333; line-height: 1.3;"><?php echo htmlspecialchars($item['manga_name']); ?></h3>
-                                <p style="margin: 0; font-size: 0.85rem; color: #888;">NXB: <?php echo htmlspecialchars($item['nha_xuat_ban'] ?? 'Đang cập nhật'); ?></p>
+                                <h3><?php echo htmlspecialchars($item['manga_name']); ?></h3>
+                                <p>NXB: <?php echo htmlspecialchars($item['nha_xuat_ban'] ?? 'Đang cập nhật'); ?></p>
                             </div>
                         </div>
-                        
-                        <div class="cart-item-price" style="font-weight: 600; text-align:center; color: #444;">
+
+                        <div class="cart-item-price">
                             <?php echo number_format($item['gia_ban'], 0, ',', '.'); ?>đ
                         </div>
-                        
-                        <div class="cart-item-qty" style="display: flex; justify-content: center;">
-                            <form action="cart_action.php" method="POST" style="display:flex; align-items:center; gap:5px; background: #f9f9f9; padding: 4px; border-radius: 6px; border: 1px solid #ddd;">
-                                <input type="hidden" name="action" value="update">
-                                <input type="hidden" name="id_spmanga" value="<?php echo $id; ?>">
-                                <input type="number" name="qty" value="<?php echo $item['qty']; ?>" min="1" max="<?php echo $item['so_luong_kho'] ?? 999; ?>" style="width: 45px; text-align:center; border: none; background: transparent; font-weight: bold; outline: none;">
-                                <button type="submit" title="Cập nhật" style="padding: 6px 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s;">
-                                    <i class="fas fa-sync-alt"></i>
+
+                        <div class="cart-item-qty">
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="changeQty(this, -1)">
+                                    <i class="fas fa-minus"></i>
                                 </button>
-                            </form>
+                                <input class="qty-input"
+                                       type="number"
+                                       value="<?php echo (int)$item['qty']; ?>"
+                                       min="1"
+                                       max="<?php echo $max_qty; ?>"
+                                       onchange="onQtyInput(this)">
+                                <button class="qty-btn" onclick="changeQty(this, 1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <div style="display:flex; align-items:center; justify-content:flex-end; gap: 20px;">
-                            <span class="cart-item-total" style="font-weight: bold; color: #e74c3c; font-size: 1.1rem;"><?php echo number_format($item_total, 0, ',', '.'); ?>đ</span>
-                            <a href="cart_action.php?action=remove&id_spmanga=<?php echo $id; ?>" class="btn-remove" title="Xóa khỏi giỏ" style="color: #bbb; text-decoration: none; font-size: 1.2rem; transition: 0.2s;" onmouseover="this.style.color='#e74c3c'" onmouseout="this.style.color='#bbb'">
+                        <div class="cart-item-actions">
+                            <span class="cart-item-total">
+                                <?php echo number_format($item_total, 0, ',', '.'); ?>đ
+                            </span>
+                            <a href="cart_action.php?action=remove&id_spmanga=<?php echo $id; ?>"
+                               class="btn-remove" title="Xóa khỏi giỏ">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                         </div>
-                        
                     </div>
                     <?php endforeach; ?>
                 </div>
@@ -79,24 +90,26 @@ $totalQty = 0;
                     <h2>Tóm tắt đơn hàng</h2>
                     <div class="summary-row">
                         <span>Tổng sản phẩm:</span>
-                        <span><?php echo $totalQty; ?> sản phẩm</span>
+                        <span id="summary-qty"><?php echo $totalQty; ?> sản phẩm</span>
                     </div>
                     <div class="summary-row">
                         <span>Tạm tính:</span>
-                        <span><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</span>
+                        <span id="summary-subtotal"><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</span>
                     </div>
                     <?php $ship = ($subtotal >= 300000) ? 0 : 30000; ?>
                     <div class="summary-row">
                         <span>Phí vận chuyển:</span>
-                        <span style="color: <?php echo $ship == 0 ? '#2ecc71' : 'inherit'; ?>">
+                        <span id="summary-ship">
                             <?php echo $ship == 0 ? 'Miễn phí' : number_format($ship, 0, ',', '.') . 'đ'; ?>
                         </span>
                     </div>
-                    <div class="summary-row total" style="font-size: 1.2rem; font-weight: bold; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                    <div class="summary-row total">
                         <span>Tổng cộng:</span>
-                        <span style="color: #e74c3c;"><?php echo number_format($subtotal + $ship, 0, ',', '.'); ?>đ</span>
+                        <span id="summary-total">
+                            <?php echo number_format($subtotal + $ship, 0, ',', '.'); ?>đ
+                        </span>
                     </div>
-                    <a href="checkout.php" class="btn-checkout" style="display: block; text-align: center; background: #e74c3c; color: white; padding: 12px; text-decoration: none; border-radius: 8px; margin-top: 20px; font-weight: bold;">
+                    <a href="checkout.php" class="btn-checkout">
                         Tiến hành thanh toán
                     </a>
                 </div>
@@ -106,3 +119,57 @@ $totalQty = 0;
 </div>
 
 <?php require_once '../includes/footer.php'; ?>
+
+<script>
+function formatVND(num) {
+    return num.toLocaleString('vi-VN') + 'đ';
+}
+
+function updateServer(id, qty) {
+    const formData = new FormData();
+    formData.append('action', 'update');
+    formData.append('id_spmanga', id);
+    formData.append('qty', qty);
+    fetch('cart_action.php', { method: 'POST', body: formData });
+}
+
+function recalcSummary() {
+    let subtotal = 0;
+    let totalQty = 0;
+
+    document.querySelectorAll('.cart-item').forEach(row => {
+        const price = parseInt(row.dataset.price);
+        const qty   = parseInt(row.querySelector('.qty-input').value) || 1;
+        row.querySelector('.cart-item-total').textContent = formatVND(price * qty);
+        subtotal += price * qty;
+        totalQty += qty;
+    });
+
+    const ship = subtotal >= 300000 ? 0 : 30000;
+    document.getElementById('summary-qty').textContent      = totalQty + ' sản phẩm';
+    document.getElementById('summary-subtotal').textContent = formatVND(subtotal);
+    document.getElementById('summary-ship').textContent     = ship === 0 ? 'Miễn phí' : formatVND(ship);
+    document.getElementById('summary-total').textContent    = formatVND(subtotal + ship);
+}
+
+function changeQty(btn, delta) {
+    const row   = btn.closest('.cart-item');
+    const input = row.querySelector('.qty-input');
+    const max   = parseInt(row.dataset.max) || 999;
+    let val     = parseInt(input.value) + delta;
+    val = Math.max(1, Math.min(max, val));
+    input.value = val;
+    recalcSummary();
+    updateServer(row.dataset.id, val);
+}
+
+function onQtyInput(input) {
+    const row = input.closest('.cart-item');
+    const max = parseInt(row.dataset.max) || 999;
+    let val   = parseInt(input.value) || 1;
+    val = Math.max(1, Math.min(max, val));
+    input.value = val;
+    recalcSummary();
+    updateServer(row.dataset.id, val);
+}
+</script>

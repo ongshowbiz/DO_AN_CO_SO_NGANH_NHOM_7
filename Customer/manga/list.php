@@ -60,7 +60,7 @@ $list_sql = "
         m.slug,
         m.tacgia,
         m.anh,
-        m.sratus,
+        m.status,
         m.create_day,
         GROUP_CONCAT(DISTINCT tl.ten_theloai ORDER BY tl.ten_theloai SEPARATOR ', ') AS the_loai,
         COALESCE(SUM(ld.so_luot_doc), 0) AS tong_view,
@@ -169,8 +169,8 @@ require_once '../includes/header.php';
                      alt="<?php echo htmlspecialchars($m['manga_name']); ?>"
                      loading="lazy"
                      onerror="this.src='../assets/img/no-cover.jpg'">
-                <span class="manga-status-label <?php echo $m['sratus'] ? 'ongoing' : 'completed'; ?>">
-                    <?php echo $m['sratus'] ? 'Đang ra' : 'Hoàn thành'; ?>
+                <span class="manga-status-label <?php echo $m['status'] ? 'ongoing' : 'completed'; ?>">
+                    <?php echo $m['status'] ? 'Đang ra' : 'Hoàn thành'; ?>
                 </span>
                 <div class="manga-info">
                     <h3><?php echo htmlspecialchars($m['manga_name']); ?></h3>

@@ -15,7 +15,7 @@ $db = new Database();
 $db->query("
     SELECT
         m.id_manga, m.manga_name, m.slug, m.tacgia, m.mota,
-        m.anh, m.sratus, m.create_day,
+        m.anh, m.status, m.create_day,
         COALESCE(SUM(ld.so_luot_doc), 0) AS tong_view,
         GROUP_CONCAT(DISTINCT tl.ten_theloai ORDER BY tl.ten_theloai SEPARATOR ', ') AS the_loai
     FROM   manga m
@@ -154,9 +154,9 @@ require_once '../includes/header.php';
                             <i class="fas fa-eye"></i> Lượt xem:
                             <strong><?php echo number_format((int)$manga['tong_view']); ?></strong>
                         </span>
-                        <span class="status-badge <?php echo $manga['sratus'] ? 'ongoing' : 'completed'; ?>">
+                        <span class="status-badge <?php echo $manga['status'] ? 'ongoing' : 'completed'; ?>">
                             <i class="fas fa-circle"></i>
-                            <?php echo $manga['sratus'] ? 'Đang tiến hành' : 'Hoàn thành'; ?>
+                            <?php echo $manga['status'] ? 'Đang tiến hành' : 'Hoàn thành'; ?>
                         </span>
                     </div>
 

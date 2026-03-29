@@ -53,23 +53,121 @@ ADD COLUMN slug VARCHAR(255) NULL AFTER manga_name,
 ADD UNIQUE KEY uq_slug (slug);
 
 SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE luot_doc;
+TRUNCATE TABLE manga_theloai;
+TRUNCATE TABLE chap;
+TRUNCATE TABLE sanpham_manga;
+TRUNCATE TABLE manga;
+TRUNCATE TABLE theloai;
+SET FOREIGN_KEY_CHECKS = 1;
 
--- 1. TRUYỆN (insert manga trước, id_chap tạm để 1)
-INSERT INTO `manga` (`id_theloaimanga`, `id_taikhoan`, `id_chap`, `manga_name`, `slug`, `mota`, `tacgia`, `anh`, `sratus`) VALUES
-(1, 2, 1, 'Naruto', 'naruto', 'Naruto Uzumaki là một ninja trẻ tuổi với ước mơ trở thành Hokage.', 'Masashi Kishimoto', 'https://picsum.photos/seed/naruto/200/280', 1);
+SET FOREIGN_KEY_CHECKS = 0;
 
--- 2. CHƯƠNG (giờ manga id=1 đã tồn tại)
+INSERT INTO `manga` (`id_theloaimanga`, `id_taikhoan`, `id_chap`, `manga_name`, `slug`, `mota`, `tacgia`, `anh`, `status`) VALUES
+(1, 2, 1, 'Naruto', 'naruto', 'Câu chuyện về ninja Naruto Uzumaki với ước mơ trở thành Hokage.', 'Masashi Kishimoto', 'https://picsum.photos/seed/naruto/200/280', 1),
+(2, 2, 1, 'One Piece', 'one-piece', 'Hành trình của Luffy tìm kho báu One Piece.', 'Eiichiro Oda', 'https://picsum.photos/seed/onepiece/200/280', 1),
+(1, 2, 1, 'Demon Slayer', 'demon-slayer', 'Tanjiro chiến đấu với ác quỷ để cứu em gái.', 'Koyoharu Gotouge', 'https://picsum.photos/seed/demonslayer/200/280', 1),
+(3, 2, 1, 'Doraemon', 'doraemon', 'Chú mèo máy đến từ tương lai giúp đỡ Nobita.', 'Fujiko F. Fujio', 'https://picsum.photos/seed/doraemon/200/280', 1);
+
 INSERT INTO `chap` (`id_manga`, `so_chuong`, `tieu_de_chuong`, `danh_sach_anh`, `ngay_dang`) VALUES
-(1, 1, 'Chương mở đầu', '["https://picsum.photos/seed/p1/800/1200","https://picsum.photos/seed/p2/800/1200","https://picsum.photos/seed/p3/800/1200"]', NOW()),
-(1, 2, 'Kẻ thù xuất hiện', '["https://picsum.photos/seed/p4/800/1200","https://picsum.photos/seed/p5/800/1200"]', NOW()),
-(1, 3, 'Trận chiến lớn', '["https://picsum.photos/seed/p6/800/1200","https://picsum.photos/seed/p7/800/1200"]', NOW());
+(1, 1, 'Uzumaki Naruto', '["https://picsum.photos/seed/n1/800/1200","https://picsum.photos/seed/n2/800/1200"]', NOW()),
+(1, 2, 'Kẻ thù đầu tiên', '["https://picsum.photos/seed/n3/800/1200","https://picsum.photos/seed/n4/800/1200"]', NOW()),
+(2, 1, 'Tôi là Luffy', '["https://picsum.photos/seed/op1/800/1200","https://picsum.photos/seed/op2/800/1200"]', NOW()),
+(3, 1, 'Tanjiro và Nezuko', '["https://picsum.photos/seed/ds1/800/1200","https://picsum.photos/seed/ds2/800/1200"]', NOW()),
+(4, 1, 'Doraemon đến!', '["https://picsum.photos/seed/dr1/800/1200","https://picsum.photos/seed/dr2/800/1200"]', NOW());
 
--- 3. GÁN THỂ LOẠI
-INSERT INTO `manga_theloai` (`id_manga`, `id_theloaimanga`) VALUES (1, 1), (1, 3);
+UPDATE `manga` SET `id_chap` = 1 WHERE `id_manga` = 1;
+UPDATE `manga` SET `id_chap` = 3 WHERE `id_manga` = 2;
+UPDATE `manga` SET `id_chap` = 4 WHERE `id_manga` = 3;
+UPDATE `manga` SET `id_chap` = 5 WHERE `id_manga` = 4;
 
--- 4. LƯỢT XEM
+INSERT INTO `manga_theloai` (`id_manga`, `id_theloaimanga`) VALUES
+(1, 1), (1, 4),
+(2, 1), (2, 4),
+(3, 1),
+(4, 3);
+
 INSERT INTO `luot_doc` (`id_manga`, `ngay`, `so_luot_doc`) VALUES
-(1, CURDATE(), 150),
-(1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 200);
+(1, CURDATE(), 500), (1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 350),
+(2, CURDATE(), 420), (2, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 280),
+(3, CURDATE(), 300),
+(4, CURDATE(), 200);
+
+INSERT INTO `sanpham_manga` (`id_manga`, `gia_ban`, `so_luong_kho`, `nha_xuat_ban`) VALUES
+(1, 45000, 50, 'NXB Kim Đồng'),
+(2, 55000, 30, 'NXB Trẻ'),
+(3, 65000, 20, 'NXB Kim Đồng'),
+(4, 35000, 100, 'NXB Trẻ');
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Lấy id_manga thực tế của từng truyện để sửa chap và luot_doc
+UPDATE chap c
+JOIN manga m ON m.slug = 'naruto'
+SET c.id_manga = m.id_manga
+WHERE c.tieu_de_chuong IN ('Uzumaki Naruto', 'Kẻ thù đầu tiên');
+
+UPDATE chap c
+JOIN manga m ON m.slug = 'one-piece'
+SET c.id_manga = m.id_manga
+WHERE c.tieu_de_chuong = 'Tôi là Luffy';
+
+UPDATE chap c
+JOIN manga m ON m.slug = 'demon-slayer'
+SET c.id_manga = m.id_manga
+WHERE c.tieu_de_chuong = 'Tanjiro và Nezuko';
+
+UPDATE chap c
+JOIN manga m ON m.slug = 'doraemon'
+SET c.id_manga = m.id_manga
+WHERE c.tieu_de_chuong = 'Doraemon đến!';
+
+-- Sửa luot_doc theo đúng id_manga
+UPDATE luot_doc ld
+JOIN manga m ON m.slug = 'naruto'
+SET ld.id_manga = m.id_manga
+WHERE ld.id_manga = 1;
+
+UPDATE luot_doc ld
+JOIN manga m ON m.slug = 'one-piece'
+SET ld.id_manga = m.id_manga
+WHERE ld.id_manga = 2;
+
+UPDATE luot_doc ld
+JOIN manga m ON m.slug = 'demon-slayer'
+SET ld.id_manga = m.id_manga
+WHERE ld.id_manga = 3;
+
+UPDATE luot_doc ld
+JOIN manga m ON m.slug = 'doraemon'
+SET ld.id_manga = m.id_manga
+WHERE ld.id_manga = 4;
+
+-- Sửa manga_theloai tương tự
+UPDATE manga_theloai mt
+JOIN manga m ON m.slug = 'naruto'
+SET mt.id_manga = m.id_manga
+WHERE mt.id_manga = 1;
+
+UPDATE manga_theloai mt
+JOIN manga m ON m.slug = 'one-piece'
+SET mt.id_manga = m.id_manga
+WHERE mt.id_manga = 2;
+
+UPDATE manga_theloai mt
+JOIN manga m ON m.slug = 'demon-slayer'
+SET mt.id_manga = m.id_manga
+WHERE mt.id_manga = 3;
+
+UPDATE manga_theloai mt
+JOIN manga m ON m.slug = 'doraemon'
+SET mt.id_manga = m.id_manga
+WHERE mt.id_manga = 4;
+
+-- Thêm UNIQUE KEY cho luot_doc (cần cho trang đọc)
+ALTER TABLE luot_doc
+  ADD UNIQUE KEY IF NOT EXISTS uq_manga_ngay (id_manga, ngay);
 
 SET FOREIGN_KEY_CHECKS = 1;

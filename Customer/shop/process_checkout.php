@@ -2,6 +2,11 @@
 session_start();
 require_once '../../include/db.php'; 
 
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
 // Chặn nếu giỏ hàng trống hoặc không phải POST
 if (empty($_SESSION['cart']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: cart.php');
@@ -51,7 +56,7 @@ foreach ($_SESSION['cart'] as $id_sp => $item) {
 $pt_text = ($payment === 'bank') ? 'Chuyển khoản' : 'COD';
 $dia_chi_giao_hang = "Nhận: $fullname | SĐT: $phone | ĐC: $address | PTTT: $pt_text";
 if ($note !== '') $dia_chi_giao_hang .= " | Note: $note";
-$id_taikhoan = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 2; 
+$id_taikhoan = $_SESSION['user_id'];
 
 try {
     $db->query("START TRANSACTION");

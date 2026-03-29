@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 if (empty($cart)) {
     header('Location: cart.php');
