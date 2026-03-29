@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($taikhoan && password_verify($password, $taikhoan['MATKHAU'])) {
             // Kiểm tra nếu tài khoản không ở trạng thái kích hoạt
             if ($taikhoan['TRANGTHAI'] != 1) {
-                header('Location: method/disabled.php');
+                header('Location: method/Notification/disabled.php');
                 exit;
             }
 
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="button" class="btn-register" href="register.php">Đăng ký</button>
             </a>
             <div class="divider">
-            <a class = "forgot_password" href="./method/forgot_password.php">
+            <a class = "forgot_password" href="./method/Password/forgot_password.php">
             Quên mật khẩu?
                 </a>
             </div>

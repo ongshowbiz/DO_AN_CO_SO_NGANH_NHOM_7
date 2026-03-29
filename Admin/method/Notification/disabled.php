@@ -1,17 +1,13 @@
 <?php
 // Customer/auth/disabled.php
-$base_url     = '../';
-$page_title   = 'Tài khoản vô hiệu hóa - Truyện Hay';
+$base_url     = '../../';
 $current_page = '';
-$extra_css    = ['../css/auth.css'];
 ?>
 
-<main class="main-content auth-page" style="min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+<main class="main-content auth-page" style="min-height: 90vh; display: flex; align-items: center; justify-content: center;">
     <div class="auth-container-box" style="text-align: center; max-width: 500px; padding: 40px 30px;">
         <div class="auth-logo">
-            <div class="logo" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 20px; color: #dc3545; border: 2px solid #dc3545; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                <i class="fas fa-user-lock"></i>
-            </div>
+            <img src="../../anh/sad.png" class="logo" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 20px; color: #dc3545; border: 2px solid #dc3545; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
             <h2 style="color: #dc3545; margin-bottom: 10px; font-size: 24px;">Tài Khoản Bị Vô Hiệu Hóa</h2>
             <p style="color: #666; font-size: 15px;">Rất tiếc, tài khoản này hiện không thể truy cập hệ thống.</p>
         </div>
@@ -27,7 +23,7 @@ $extra_css    = ['../css/auth.css'];
         </div>
 
         <div class="form-options" style="display: flex; flex-direction: column; gap: 15px;">
-            <a href="../login.php" class="btn-auth" style="display: block; text-align: center; text-decoration: none; padding: 12px; font-size: 16px;">
+            <a href="../../login.php" class="btn-auth" style="display: block; text-align: center; text-decoration: none; padding: 12px; font-size: 16px;">
                 <i class="fas fa-arrow-left"></i> Quay lại Đăng nhập
             </a>
         </div>

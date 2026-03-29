@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../include/db.php';
+require_once __DIR__ . '/../../../include/db.php';
 $db = new Database();
 
 // --- XỬ LÝ CẬP NHẬT CSDL QUA POST KHÔNG CHUYỂN TRANG ---
@@ -21,8 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 
                 $db->execute();
-                echo "<script>alert('Cập nhật quyền của User #{$id_taikhoan} thành công!'); window.location.href='index.php?page=user-list';</script>";
-                exit;
+                $_SESSION['success_msg'] = "Cập nhật quyền của User #{$id_taikhoan} thành công!";
+                // 2. Chuyển trang im lặng và mượt mà
+                header("Location: index.php?method=QL_User-user");
+                exit; // Bắt buộc phải có exit sau header
             }
         }
         
@@ -36,9 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $db->bind(':status', $new_status);
                 $db->bind(':id', $id_taikhoan);
                 $db->execute();
-                $msg = ($new_status == 1) ? 'Mở khóa' : 'Khóa';
-                echo "<script>alert('Đã {$msg} tài khoản #{$id_taikhoan} thành công!'); window.location.href='index.php?page=user-list';</script>";
-                exit;
+                $msg = ($new_status == 1) ? 'Kích hoạt' : 'Vô hiệu hóa';
+                $_SESSION['success_msg'] = "Đã {$msg} tài khoản #{$id_taikhoan} thành công!";
+                // 2. Chuyển trang im lặng và mượt mà
+                header("Location: index.php?method=QL_User-user");
+                exit; // Bắt buộc phải có exit sau header
             }
         }
     }
@@ -62,7 +66,12 @@ $users = $db->resultSet();
     <h2 class="um-title">
         <i class="fas fa-users"></i> Quản Lý Tài Khoản (Danh Sách User)
     </h2>
-
+    <?php if (isset($_SESSION['success_msg'])): ?>
+        <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+            <i class="fas fa-check-circle"></i> <?= $_SESSION['success_msg'] ?>
+        </div>
+        <?php unset($_SESSION['success_msg']); // Xóa đi để F5 không hiện lại ?>
+    <?php endif; ?>
     <div class="um-table-wrapper">
         <table class="um-table">
             <thead>

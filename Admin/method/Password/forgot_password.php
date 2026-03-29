@@ -1,16 +1,17 @@
 ﻿<?php
 session_start();
-require_once '../../config.php';
-require_once '../../include/db.php';
+$base = "../../../";
+require_once $base.'config.php';
+require_once $base.'include/db.php';
 
 // NHÚNG THƯ VIỆN PHPMAILER
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require '../../include/PHPMailer/Exception.php';
-require '../../include/PHPMailer/PHPMailer.php';
-require '../../include/PHPMailer/SMTP.php';
+require $base.'include/PHPMailer/Exception.php';
+require $base.'include/PHPMailer/PHPMailer.php';
+require $base.'include/PHPMailer/SMTP.php';
 
 $db = new Database();
 $error = '';
@@ -76,12 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Quên mật khẩu</title>
-    <link rel="stylesheet" href="../css/style-login.css">
+    <link rel="stylesheet" href="../../css/style-login.css">
 </head>
 <body>
 <div style="position: relative;">
-<a href="../index.php" style="text-decoration: none;">
-        <img src="../anh/zzz.png" class="cat-login">
+<a href="../../index.php" style="text-decoration: none;">
+        <img src="../../anh/zzz.png" class="cat-login">
         </a>
     <div class="login-card">
         <h2>Quên mật khẩu</h2>

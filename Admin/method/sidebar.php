@@ -68,13 +68,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?method=user-list" class="nav-link">
+                <a href="index.php?method=QL_User-user" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách User</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?method=role-list" class="nav-link">
+                <a href="index.php?method=QL_User-role" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Quản lý Vai trò</p>
                 </a>

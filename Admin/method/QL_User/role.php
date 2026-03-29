@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../include/db.php';
+require_once __DIR__ . '/../../../include/db.php';
 $db = new Database();
 
 // Xử lý Form POST (Thêm chức vụ hoặc Ẩn/Hiện)
@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $db->query("INSERT INTO role (TEN_VAITRO, TRANGTHAI) VALUES (:ten, 1)");
                     $db->bind(':ten', $ten_vaitro);
                     $db->execute();
-                    echo "<script>alert('Tuyệt vời! Bạn vừa cấu hình thêm chức vụ mới.'); window.location.href='index.php?page=role-list';</script>";
+                    echo "<script>alert('Tuyệt vời! Bạn vừa cấu hình thêm chức vụ mới.'); window.location.href='index.php?method=QL_User-role';</script>";
                 } catch (PDOException $e) {
-                    echo "<script>alert('Lỗi! Tên chức vụ này có thể đã tồn tại rồi.'); window.location.href='index.php?page=role-list';</script>";
+                    echo "<script>alert('Lỗi! Tên chức vụ này có thể đã tồn tại rồi.'); window.location.href='index.php?method=QL_User-role';</script>";
                 }
                 exit;
             }
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             if ($id_vaitro) {
                 if ($id_vaitro == 1 || $id_vaitro == 2) {
-                    echo "<script>alert('Từ chối! Không thể thay đổi các vai trò bảo mật mặc định (Admin, Customer).'); window.location.href='index.php?page=role-list';</script>";
+                    echo "<script>alert('Từ chối! Không thể thay đổi các vai trò bảo mật mặc định (Admin, Customer).'); window.location.href='index.php?method=QL_User-role';</script>";
                     exit;
                 }
 
@@ -38,8 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $db->bind(':status', $new_status);
                 $db->bind(':id', $id_vaitro);
                 $db->execute();
-                echo "<script>window.location.href='index.php?page=role-list';</script>";
-                exit;
+                $msg = ($new_status == 1) ? 'Kích hoạt' : 'Vô hiệu hóa';
+                $_SESSION['success_msg'] = "Đã {$msg} vai trò #{$id_vaitro} thành công!";
+                // 2. Chuyển trang im lặng và mượt mà
+                header("Location: index.php?method=QL_User-role");
+                exit; // Bắt buộc phải có exit sau header
             }
         }
     }
@@ -57,7 +60,12 @@ $roles = $db->resultSet();
         <h3 class="um-col-title">
             <i class="fas fa-plus-circle"></i> Thiết Lập Vai Trò Nhanh
         </h3>
-        
+        <?php if (isset($_SESSION['success_msg'])): ?>
+        <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+            <i class="fas fa-check-circle"></i> <?= $_SESSION['success_msg'] ?>
+        </div>
+        <?php unset($_SESSION['success_msg']); // Xóa đi để F5 không hiện lại?>
+        <?php endif; ?>
         <form method="POST">
             <input type="hidden" name="action" value="add_role">
             <div class="um-input-group">
