@@ -78,7 +78,6 @@ if ($action === 'remove') {
     if ($id_spmanga > 0 && isset($_SESSION['cart'][$id_spmanga])) {
         unset($_SESSION['cart'][$id_spmanga]);
     }
-    
     // Chuyển hướng về lại trang giỏ hàng
     header('Location: cart.php');
     exit;

@@ -27,7 +27,26 @@ foreach ($_SESSION['cart'] as $item) {
 }
 $ship = ($subtotal >= 300000) ? 0 : 30000;
 $tong_tien = $subtotal + $ship;
-
+// Kiểm tra tồn kho cho từng sản phẩm trong giỏ hàng trước khi tạo đơn hàng
+foreach ($_SESSION['cart'] as $id_sp => $item) {
+    // Truy vấn lấy số lượng thực tế trong kho của sản phẩm này
+    $db->query("SELECT so_luong_kho FROM sanpham_manga WHERE id_spmanga = :id");
+    $db->bind(':id', $id_sp);
+    $check_kho = $db->single();
+    
+    // Nếu kho rỗng hoặc số lượng khách mua lớn hơn số lượng trong kho
+    if (!$check_kho || $check_kho['so_luong_kho'] < $item['qty']) {
+        $ten_truyen = $item['manga_name']; 
+        $ton_kho = $check_kho ? $check_kho['so_luong_kho'] : 0;
+        
+        // echo lỗi
+        echo "<script>
+            alert('Xin lỗi! Truyện \"$ten_truyen\" chỉ còn $ton_kho cuốn trong kho. Vui lòng giảm số lượng!'); 
+            window.location.href = 'cart.php';
+        </script>";
+        exit; 
+    }
+}
 // Gộp thông tin
 $pt_text = ($payment === 'bank') ? 'Chuyển khoản' : 'COD';
 $dia_chi_giao_hang = "Nhận: $fullname | SĐT: $phone | ĐC: $address | PTTT: $pt_text";
@@ -72,17 +91,12 @@ try {
         $db->execute();
     }
 
-    // Xóa giỏ hàng sau khi đặt thành công
-    unset($_SESSION['cart']);
-    
     // Commit transaction 
     $db->query("COMMIT");
     $db->execute();
 
     // 3. XOÁ GIỎ HÀNG SAU KHI ĐẶT THÀNH CÔNG
     unset($_SESSION['cart']);
-
-  
     header("Location: order_success.php?id=" . $id_order);
     exit;
 

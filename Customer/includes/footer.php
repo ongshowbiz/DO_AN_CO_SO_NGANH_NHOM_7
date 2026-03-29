@@ -29,6 +29,9 @@
     <div class="footer-bottom">
         <p>&copy; <?php echo date('Y'); ?> Truyện Hay. All rights reserved.</p>
     </div>
+    <div id="cart-toast" class="cart-toast" style="display: none;">
+        <i class="fas fa-check-circle"></i> <span id="toast-message">Đã thêm vào giỏ hàng!</span>
+    </div>
 </footer>
 
 <!-- CON CHATBOX AI GÓC DƯỚI BÊN PHẢI -->
@@ -117,4 +120,55 @@
         
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
+    function addToCart(id_spmanga, name, price) {
+    // Mặc định ở trang chủ khi bấm thêm sẽ là 1 cuốn
+    const qty = 1;
+
+    // Gửi request ngầm tới file cart_action.php
+    fetch('cart_action.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ 
+            action: 'add', 
+            id_spmanga: id_spmanga, 
+            qty: qty 
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Hiện thông báo Toast xịn xò
+            const toast = document.getElementById('cart-toast');
+            const toastMsg = document.getElementById('toast-message');
+            
+            if (toast && toastMsg) {
+                toastMsg.innerText = 'Đã thêm "' + name + '" vào giỏ!';
+                toast.style.display = 'block';
+                toast.classList.add('show');
+                
+                // Tự động ẩn sau 3 giây
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.style.display = 'none';
+                }, 3000);
+            } else {
+                // Sơ cua nếu không có toast
+                alert('Đã thêm "' + name + '" vào giỏ hàng!');
+            }
+
+            // (Tuỳ chọn) Cập nhật số lượng giỏ hàng trên Header nếu bạn có ID hiển thị
+            // document.getElementById('cart-count').innerText = data.total_items;
+            
+        } else {
+            alert(data.message || "Lỗi: Không thể thêm vào giỏ hàng.");
+        }
+    })
+    .catch(error => {
+        console.error("Lỗi Fetch:", error);
+        alert("Có lỗi kết nối! Vui lòng thử lại.");
+    });
+}
 </script>
