@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <a href="index.php" class="brand-link">
     <?php if ($role_id == 1): ?>
-    <img src="./anh/admin.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
+    <img src="<?php echo !empty($_SESSION['ANH']) ? htmlspecialchars($_SESSION['ANH']) : 'Anh/admin.png'; ?>"
     <span class="brand-text font-weight-light">TRANG QUẢN TRỊ</span>
     <?php elseif ($role_id == 3): ?>
     <img src="./anh/supplier.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">

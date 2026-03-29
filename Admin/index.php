@@ -34,14 +34,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <img src="./anh/admin.png"
+                        <img src="<?php echo !empty($_SESSION['ANH']) ? htmlspecialchars($_SESSION['ANH']) : 'Anh/admin.png'; ?>"
                             class="img-circle"
                             alt="User Image"
                             style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
                         <span></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="index.php?page=profile" class="dropdown-item">
+                        <a href="index.php?method=profile" class="dropdown-item">
                             <i class="fas fa-user-cog mr-2"></i> Profile
                         </a>
                         <div class="dropdown-divider"></div>
