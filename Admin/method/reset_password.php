@@ -1,7 +1,7 @@
 ﻿<?php
 session_start();
-require_once '../config.php';
-require_once '../include/db.php';
+require_once '../../config.php';
+require_once '../../include/db.php';
 $db = new Database();
 $token = $_GET['token'] ?? '';
 $error = ''; $success = '';
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->bind(':id', $user['ID_TAIKHOAN']);
         if ($db->execute()) {
             $success = "Đổi mật khẩu thành công! Chuyển hướng về Đăng nhập...";
-            header("Refresh:3; url=login.php");
+            header("Refresh:3; url=../login.php");
         }
     }
 }
@@ -34,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- HTML Form Reset đơn giản -->
 <!DOCTYPE html>
 <html lang="vi">
-<head><meta charset="UTF-8"><title>Đặt lại mật khẩu</title><link rel="stylesheet" href="style-login.css"></head>
+<head><meta charset="UTF-8"><title>Đặt lại mật khẩu</title><link rel="stylesheet" href="../css/style-login.css"></head>
 <body>
 <div style="position: relative;">
-<a href="index.php" style="text-decoration: none;">
-        <img src="zzz.png" class="cat-login">
+<a href="//login.php" style="text-decoration: none;">
+        <img src="../../zzz.png" class="cat-login">
         </a>
     <div class="login-card">
         <h2>Mật khẩu mới</h2>

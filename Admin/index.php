@@ -55,15 +55,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <div class="content">
             <?php
             // Lấy tham số page từ giao diện, mặc định là dashboard
-            $page = $_GET['page'] ?? 'dashboard';
+            $page = isset($_GET['method']) ? $_GET['method'] : 'dashboard';
+            $path = str_replace('-', '/', $page);
+            $page_path = "method/{$path}.php";
             
             // Xử lý routing (điều hướng) các trang
-            if ($page == 'dashboard') {
-                require_once './method/dashboard.php';
-            } elseif ($page == 'user-list') {
-                require_once './method/user_list.php';
-            } elseif ($page == 'role-list') {
-                require_once './method/role_list.php';
+            if (file_exists($page_path)) {
+                include $page_path;
             } else {
                 echo '<div style="background:#fff; padding:20px; border-radius:10px;">
                         <h2>Đang phát triển...</h2>

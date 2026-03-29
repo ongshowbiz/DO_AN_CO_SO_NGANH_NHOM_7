@@ -31,25 +31,25 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?page=film-list" class="nav-link">
+                <a href="index.php?method=film-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách truyện</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=category-list" class="nav-link">
+                <a href="index.php?method=category-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Quản lý Thể Loại</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=film-list" class="nav-link">
+                <a href="index.php?method=film-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Số lượng truyện</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=film-list" class="nav-link">
+                <a href="index.php?method=film-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh hàng tồn</p>
                 </a>
@@ -68,13 +68,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?page=user-list" class="nav-link">
+                <a href="index.php?method=user-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách User</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=role-list" class="nav-link">
+                <a href="index.php?method=role-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Quản lý Vai trò</p>
                 </a>
@@ -94,13 +94,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?page=order-list" class="nav-link">
+                <a href="index.php?method=order-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách Đơn Hàng</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=order-list" class="nav-link">
+                <a href="index.php?method=order-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Quản lý Đơn Hàng</p>
                 </a>
@@ -119,13 +119,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?page=cmt-list" class="nav-link">
+                <a href="index.php?method=cmt-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>bình luận của truyện</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?page=cmt-chapter-list" class="nav-link">
+                <a href="index.php?method=cmt-chapter-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>bình luận từng chap của truyện</p>
                 </a>
