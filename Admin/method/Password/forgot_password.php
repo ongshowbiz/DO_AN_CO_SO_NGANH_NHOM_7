@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->addAddress($email);
 
                 // Nội dung
-                $resetLink = "http://localhost/DO_AN_CO_SO_NGANH_NHOM_7/Admin/method/reset_password.php?token=" . $token;
+                $resetLink = "http://localhost/DO_AN_CO_SO_NGANH_NHOM_7/Admin/method/Password/reset_password.php?token=" . $token;
                 $mail->isHTML(true);
                 $mail->Subject = 'Khôi phục mật khẩu - ReadManga';
                 $mail->Body    = "<h3>Yêu cầu đổi mật khẩu</h3>

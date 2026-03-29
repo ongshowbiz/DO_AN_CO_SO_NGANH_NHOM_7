@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <div style="position: relative;">
 <a href="../../login.php" style="text-decoration: none;">
-        <img src="../../zzz.png" class="cat-login">
+        <img src="../../Anh/zzz.png" class="cat-login">
         </a>
     <div class="login-card">
         <h2>Mật khẩu mới</h2>
