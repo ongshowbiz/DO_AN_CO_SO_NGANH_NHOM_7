@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 session_start();
 require_once '../config.php';
 require_once '../include/db.php';
@@ -20,13 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Vui lòng nhập email và mật khẩu.';
     } else {
         // Lấy thông tin tài khoản theo email
-        $db->query('SELECT ID_TAIKHOAN, ID_VAITRO, ANH, EMAIL, MATKHAU, TENTAIKHOAN 
+        $db->query('SELECT ID_TAIKHOAN, ID_VAITRO, ANH, EMAIL, MATKHAU, TENTAIKHOAN, TRANGTHAI 
                     FROM taikhoan 
                     WHERE EMAIL = :EMAIL');
         $db->bind(':EMAIL', $email);
         $taikhoan = $db->single();
 
         if ($taikhoan && password_verify($password, $taikhoan['MATKHAU'])) {
+            // Kiểm tra nếu tài khoản không ở trạng thái kích hoạt
+            if ($taikhoan['TRANGTHAI'] != 1) {
+                header('Location: method/disabled.php');
+                exit;
+            }
+
             $_SESSION['loggedin'] = true;
             $_SESSION['ID_TAIKHOAN'] = $taikhoan['ID_TAIKHOAN'];
             $_SESSION['ANH'] = $taikhoan['ANH'];

@@ -18,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db = new Database();
             
             // Sử dụng các hàm do nhóm bạn tự định nghĩa
-            $db->query("SELECT * FROM taikhoan WHERE TENTAIKHOAN = :username AND TRANGTHAI = 1");
+            // Bỏ điều kiện TRANGTHAI = 1 để kiểm tra tất cả tài khoản
+            $db->query("SELECT * FROM taikhoan WHERE TENTAIKHOAN = :username");
             $db->bind(':username', $username);
             
             // Hàm single() sẽ trả về 1 dòng dữ liệu (fetch)
@@ -27,17 +28,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Kiểm tra mật khẩu
             if ($user && password_verify($password, $user['MATKHAU'])) {
                 
-                $_SESSION['user_id']   = $user['ID_TAIKHOAN'];
-                $_SESSION['username']  = $user['TENTAIKHOAN'];
-                $_SESSION['role_id']   = $user['ID_VAITRO'];
-
-                // Chuyển hướng theo phân quyền
-                if ($user['ID_VAITRO'] == 1) {
-                    header('Location: ../../Admin/index.php');
+                // Nếu tài khoản không ở trạng thái 1 mà chưa bị đưa về vai trò 0
+                if ($user['TRANGTHAI'] != 1) {
+                    header('Location: disabled.php');
                 } else {
-                    header('Location: ../index.php'); // Về trang chủ
+                    $_SESSION['user_id']   = $user['ID_TAIKHOAN'];
+                    $_SESSION['username']  = $user['TENTAIKHOAN'];
+                    $_SESSION['role_id']   = $user['ID_VAITRO'];
+
+                    // Chuyển hướng theo phân quyền
+                    if ($user['ID_VAITRO'] == 1) {
+                        header('Location: ../../Admin/index.php');
+                    } else {
+                        header('Location: ../index.php'); // Về trang chủ
+                    }
+                    exit;
                 }
-                exit;
             } else { 
                 $error = 'Tên đăng nhập hoặc mật khẩu không đúng!'; 
             }
