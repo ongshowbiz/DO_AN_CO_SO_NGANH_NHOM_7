@@ -46,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log("Login update failed: " . $e->getMessage());
             }
             switch ($taikhoan['ID_VAITRO']) {
-            case 1: // Admin
-            case 3: // Staff
+            case 1:
+            case 3: 
                 header('Location: index.php');
                 break;
-            case 2: // Customer
+            case 2:
                 header('Location: ../Customer/index.php');
                 break;
             default:

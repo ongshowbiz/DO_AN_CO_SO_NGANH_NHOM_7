@@ -131,11 +131,10 @@ $user = $db->single();
                            onfocus="this.style.border='1px solid #007bff'" onblur="this.style.border='1px solid #ddd'">
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Email</label>
-                    <input type="email" name="EMAIL" value="<?php echo htmlspecialchars($user['EMAIL']); ?>" 
-                           style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; outline: none;"
-                           onfocus="this.style.border='1px solid #007bff'" onblur="this.style.border='1px solid #ddd'">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #888;">Email</label>
+                    <input type="text" value="<?php echo $user['EMAIL']; ?>" disabled 
+                           style="width: 100%; padding: 10px; border: 1px solid #eee; border-radius: 5px; background: #fdfdfd; color: #999; cursor: not-allowed;">
                 </div>
                  <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: bold;">Giới Tính</label>

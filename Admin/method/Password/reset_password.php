@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST">
             <input type="password" name="PASS" placeholder="Mật khẩu mới" required><br><br>
             <input type="password" name="CONFIRM" placeholder="Nhập lại mật khẩu" required><br><br>
-            <button type="submit">Xác nhận đổi</button>
+            <button type="submit" class="btn-login">Xác nhận đổi</button>
         </form>
     </div>
 </body>
