@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <a href="index.php" class="brand-link">
     <?php if ($role_id == 1): ?>
-    <img src="<?php echo !empty($_SESSION['ANH']) ? htmlspecialchars($_SESSION['ANH']) : 'Anh/admin.png'; ?>"
+    <img src="./anh/admin.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
     <span class="brand-text font-weight-light">TRANG QUẢN TRỊ</span>
     <?php elseif ($role_id == 3): ?>
     <img src="./anh/supplier.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
@@ -48,12 +48,14 @@
                   <p>Số lượng truyện</p>
                 </a>
               </li>
+              <?php if ($role_id == 3): ?>
               <li class="nav-item">
-                <a href="index.php?method=film-list" class="nav-link">
+                <a href="index.php?method=supplier-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Danh hàng tồn</p>
+                  <p>Cung cấp truyện</p>
                 </a>
               </li>
+              <?php endif; ?>
             </ul>
           </li>
           <?php if ($role_id == 1): ?>
@@ -97,12 +99,6 @@
                 <a href="index.php?method=order-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách Đơn Hàng</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="index.php?method=order-list" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Quản lý Đơn Hàng</p>
                 </a>
               </li>
             </ul>
