@@ -2,10 +2,6 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    echo"<script>
-        alert('Vui lòng đăng nhập để tiếp tục thanh toán!');
-        window.location.href = '../auth/login.php';
-    </script>";
     header('Location: ../auth/login.php');
     exit;
 }
