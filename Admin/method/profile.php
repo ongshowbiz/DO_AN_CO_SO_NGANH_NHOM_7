@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['TENTAIKHOAN'])) {
     $sdt = trim($_POST['SDT'] ?? '');
     $sex = trim($_POST['GIOITINH'] ?? '');
 
-    if (empty($ten_taikhoan) || empty($email)) {
+    if (empty($ten_taikhoan)) {
         $message = 'Tên tài khoản và Email không được để trống.';
         $message_type = 'danger';
     } else {
@@ -76,7 +76,6 @@ $db->query('SELECT * FROM taikhoan WHERE ID_TAIKHOAN = :ID');
 $db->bind(':ID', $user_id);
 $user = $db->single();
 ?>
-
 <div class="profile-container" style="background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 800px; margin: 20px auto;">
     <h2 style="border-bottom: 2px solid #f4f4f4; padding-bottom: 10px; margin-bottom: 25px;">
         <i class="fas fa-user-circle mr-2"></i> Thông tin cá nhân
@@ -133,7 +132,7 @@ $user = $db->single();
 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #888;">Email</label>
-                    <input type="text" value="<?php echo $user['EMAIL']; ?>" disabled 
+                    <input type="text" name="EMAIL" value="<?php echo htmlspecialchars($user['EMAIL'] ?? ''); ?>" readonly 
                            style="width: 100%; padding: 10px; border: 1px solid #eee; border-radius: 5px; background: #fdfdfd; color: #999; cursor: not-allowed;">
                 </div>
                  <div style="margin-bottom: 15px;">
