@@ -45,8 +45,8 @@ if (!isset($base_url))     $base_url     = '/';
                 <i class="fas fa-sign-out-alt"></i> Đăng xuất
             </a>
         <?php else: ?>
-            <a href="<?php echo $base_url; ?>auth/login.php" class="btn-login">Đăng nhập</a>
-            <a href="<?php echo $base_url; ?>auth/register.php" class="btn-register">Đăng ký</a>
+            <a href="<?php echo $base_url; ?>../Admin/login.php" class="btn-login">Đăng nhập</a>
+            <a href="<?php echo $base_url; ?>../Admin/register.php" class="btn-register">Đăng ký</a>
         <?php endif; ?>
     </div>
 
