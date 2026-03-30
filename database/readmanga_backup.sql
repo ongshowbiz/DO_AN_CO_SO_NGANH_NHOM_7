@@ -39,10 +39,10 @@ INSERT INTO `luot_doc` (`id_view`, `id_manga`, `ngay`, `so_luot_doc`) VALUES
 
 -- Dumping data for table readmanga.manga: ~4 rows (approximately)
 INSERT INTO `manga` (`id_manga`, `id_theloaimanga`, `id_taikhoan`, `id_chap`, `manga_name`, `slug`, `mota`, `tacgia`, `anh`, `status`, `create_day`) VALUES
-	(1, 1, 2, 1, 'Naruto', 'naruto', 'Câu chuyện về ninja Naruto Uzumaki với ước mơ trở thành Hokage.', 'Masashi Kishimoto', 'https://picsum.photos/seed/naruto/200/280', 1, '2026-03-30 06:07:12.1511'),
-	(2, 2, 2, 3, 'One Piece', 'one-piece', 'Hành trình của Luffy tìm kho báu One Piece.', 'Eiichiro Oda', 'https://picsum.photos/seed/onepiece/200/280', 1, '2026-03-30 06:07:12.1511'),
-	(3, 1, 2, 4, 'Demon Slayer', 'demon-slayer', 'Tanjiro chiến đấu với ác quỷ để cứu em gái.', 'Koyoharu Gotouge', 'https://picsum.photos/seed/demonslayer/200/280', 1, '2026-03-30 06:07:12.1511'),
-	(4, 3, 2, 5, 'Doraemon', 'doraemon', 'Chú mèo máy đến từ tương lai giúp đỡ Nobita.', 'Fujiko F. Fujio', 'https://picsum.photos/seed/doraemon/200/280', 1, '2026-03-30 06:07:12.1511');
+	(1, 1, 2, 1, 'Naruto', 'naruto', 'Câu chuyện về ninja Naruto Uzumaki với ước mơ trở thành Hokage.', 'Masashi Kishimoto', 'https://jumpg-assets.tokyo-cdn.com/secure/title/100018/title_thumbnail_portrait_list/313318.jpg?hash=vfQSOC-bbvsLAZyU8YSiQw&expires=2145884400', 1, '2026-03-30 06:07:12.1511'),
+	(2, 2, 2, 3, 'One Piece', 'one-piece', 'Hành trình của Luffy tìm kho báu One Piece.', 'Eiichiro Oda', 'https://jumpg-assets.tokyo-cdn.com/secure/title/1000001/title_thumbnail_portrait_list/326475.jpg?hash=2FR6gxRFLFRRIEykVugGyw&expires=2145884400', 1, '2026-03-30 06:07:12.1511'),
+	(3, 1, 2, 4, 'Demon Slayer', 'demon-slayer', 'Tanjiro chiến đấu với ác quỷ để cứu em gái.', 'Koyoharu Gotouge', 'https://m.media-amazon.com/images/I/51xmuopDo3S._SS400_.jpg', 1, '2026-03-30 06:07:12.1511'),
+	(4, 3, 2, 5, 'Doraemon', 'doraemon', 'Chú mèo máy đến từ tương lai giúp đỡ Nobita.', 'Fujiko F. Fujio', 'https://images-na.ssl-images-amazon.com/images/I/91PLt7RSaHL.jpg', 1, '2026-03-30 06:07:12.1511');
 
 -- Dumping data for table readmanga.manga_theloai: ~6 rows (approximately)
 INSERT INTO `manga_theloai` (`id_manga`, `id_theloaimanga`) VALUES
@@ -67,8 +67,8 @@ INSERT INTO `sanpham_manga` (`id_spmanga`, `id_manga`, `gia_ban`, `so_luong_kho`
 
 -- Dumping data for table readmanga.taikhoan: ~2 rows (approximately)
 INSERT INTO `taikhoan` (`ID_TAIKHOAN`, `ID_VAITRO`, `TENTAIKHOAN`, `MATKHAU`, `EMAIL`, `SDT`, `NGAYLAP`, `ANH`, `TRANGTHAI`, `GIOITINH`, `last_login`, `reset_token`, `reset_expiry`) VALUES
-	(2, 1, 'Lylinth', '$2y$10$6LZBmutF/naOb1zOIFn95uu8jKrhDVCpCP8OdP3LXNS8qS3pTnMuG', 'huuphuoc191019@gmail.com', '', '2026-03-22 10:51:05', 'assets/uploads/taikhoan/avatars_69ca15f38fb3d5.03730946.jpg', 1, 'Nam', '2026-03-30 13:31:35.000000', NULL, NULL),
-	(3, 2, 'vaalnakynth', '$2y$10$yUrz1WhXDXqd6PhNKzDj9eYaU6Ukzgrgp.sWww9jU0/uFFas7Pf6u', 'kurumitokisaki15111006@gmail.com', NULL, '2026-03-22 11:51:03', NULL, 1, NULL, '2026-03-30 13:19:59.000000', NULL, NULL);
+	(2, 1, 'Lylinth', '$2y$10$6LZBmutF/naOb1zOIFn95uu8jKrhDVCpCP8OdP3LXNS8qS3pTnMuG', 'huuphuoc191019@gmail.com', '0123456789', '2026-03-22 10:51:05', 'assets/uploads/taikhoan/avatars_69ca208fd04a04.94533180.jpg', 1, 'Nữ', '2026-03-30 14:01:50.000000', NULL, NULL),
+	(3, 2, 'vaalnakynth', '$2y$10$yUrz1WhXDXqd6PhNKzDj9eYaU6Ukzgrgp.sWww9jU0/uFFas7Pf6u', 'kurumitokisaki15111006@gmail.com', NULL, '2026-03-22 11:51:03', 'assets/uploads/taikhoan/avatars_69ca1ed97e3a37.93385478.jpg', 1, NULL, '2026-03-30 13:48:57.000000', NULL, NULL);
 
 -- Dumping data for table readmanga.theloai: ~4 rows (approximately)
 INSERT INTO `theloai` (`id_theloaimanga`, `ten_theloai`, `mota`, `status`) VALUES
