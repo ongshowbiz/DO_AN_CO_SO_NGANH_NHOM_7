@@ -1,4 +1,5 @@
 <?php
+$total = 0;
 session_start();
 require_once '../../include/db.php'; 
 $db = new Database();
@@ -124,7 +125,7 @@ require_once '../includes/header.php';
     <p style="color:#aaa; margin-bottom:20px; font-size:14px;">
         <i class="fas fa-info-circle"></i>
         Kết quả cho "<strong style="color:#e0e0e0;"><?php echo htmlspecialchars($search); ?></strong>"
-        — <?php echo $total; ?> sản phẩm
+        — <?php echo $total_products; ?> sản phẩm
     </p>
     <?php endif; ?>
     <div class="category-tags" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
