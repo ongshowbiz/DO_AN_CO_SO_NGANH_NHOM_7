@@ -1,6 +1,4 @@
 <?php
-// manga/list.php — Trang danh sách & tìm kiếm truyện (KẾT NỐI CSDL)
-
 require_once '../../include/db.php';
 
 $db      = new Database();
@@ -10,15 +8,14 @@ $sort    = trim($_GET['sort']   ?? 'new');
 $page    = max(1, (int)($_GET['page']   ?? 1));
 $per_page = 12;
 
-// -------------------------------------------------------
-// 1. LẤY DANH SÁCH THỂ LOẠI (cho dropdown & tag bar)
-// -------------------------------------------------------
+
+// LẤY DANH SÁCH THỂ LOẠI (cho dropdown & tag bar)
+
 $db->query("SELECT id_theloaimanga, ten_theloai FROM theloai WHERE status = 1 ORDER BY ten_theloai ASC");
 $genres = $db->resultSet();   // mảng [['id_theloaimanga'=>…,'ten_theloai'=>…], …]
 
-// -------------------------------------------------------
-// 2. ĐẾM TỔNG SỐ TRUYỆN (dùng để phân trang)
-// -------------------------------------------------------
+// ĐẾM TỔNG SỐ TRUYỆN (dùng để phân trang)
+
 $count_sql = "
     SELECT COUNT(DISTINCT m.id_manga) AS total
     FROM   manga m
@@ -44,9 +41,8 @@ $total_pages = $total > 0 ? ceil($total / $per_page) : 1;
 $page        = min($page, $total_pages);
 $offset      = ($page - 1) * $per_page;
 
-// -------------------------------------------------------
-// 3. LẤY DANH SÁCH TRUYỆN (có phân trang, lọc, tìm kiếm)
-// -------------------------------------------------------
+// LẤY DANH SÁCH TRUYỆN (có phân trang, lọc, tìm kiếm)
+
 $order_clause = match($sort) {
     'hot'  => 'ORDER BY tong_view DESC',
     'name' => 'ORDER BY m.manga_name ASC',

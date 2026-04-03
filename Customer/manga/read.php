@@ -10,9 +10,8 @@ if (empty($slug)) { header('Location: ../index.php'); exit; }
 
 $db = new Database();
 
-// -------------------------------------------------------
-// 1. LẤY THÔNG TIN TRUYỆN
-// -------------------------------------------------------
+// LẤY THÔNG TIN TRUYỆN
+
 $db->query("SELECT id_manga, manga_name, slug FROM manga WHERE slug = :slug LIMIT 1");
 $db->bind(':slug', $slug);
 $manga = $db->single();
@@ -20,9 +19,8 @@ if (!$manga) { header('Location: ../index.php'); exit; }
 
 $id_manga = (int)$manga['id_manga'];
 
-// -------------------------------------------------------
-// 2. LẤY THÔNG TIN CHƯƠNG HIỆN TẠI
-// -------------------------------------------------------
+// LẤY THÔNG TIN CHƯƠNG HIỆN TẠI
+
 $db->query("
     SELECT id_chap, so_chuong, tieu_de_chuong, noi_dung, danh_sach_anh
     FROM   chap
@@ -39,10 +37,9 @@ if (!$chapter) {
     exit;
 }
 
-// -------------------------------------------------------
-// 3. PARSE DANH SÁCH ẢNH (lưu dạng JSON trong CSDL)
-//    Ví dụ: ["uploads/chap/1/trang1.jpg", "uploads/chap/1/trang2.jpg"]
-// -------------------------------------------------------
+// PARSE DANH SÁCH ẢNH (lưu dạng JSON trong CSDL)
+// Ví dụ: ["uploads/chap/1/trang1.jpg", "uploads/chap/1/trang2.jpg"]
+
 $images = [];
 if (!empty($chapter['danh_sach_anh'])) {
     $decoded = json_decode($chapter['danh_sach_anh'], true);
@@ -51,9 +48,8 @@ if (!empty($chapter['danh_sach_anh'])) {
     }
 }
 
-// -------------------------------------------------------
-// 4. LẤY TẤT CẢ CHƯƠNG (dùng cho dropdown chọn chương)
-// -------------------------------------------------------
+// LẤY TẤT CẢ CHƯƠNG (dùng cho dropdown chọn chương)
+
 $db->query("
     SELECT so_chuong, tieu_de_chuong
     FROM   chap
@@ -63,9 +59,8 @@ $db->query("
 $db->bind(':mid', $id_manga);
 $all_chaps = $db->resultSet();
 
-// -------------------------------------------------------
 // 5. XÁC ĐỊNH CHƯƠNG TRƯỚC / SAU
-// -------------------------------------------------------
+
 $prev_chap = null;
 $next_chap = null;
 foreach ($all_chaps as $c) {
@@ -73,10 +68,9 @@ foreach ($all_chaps as $c) {
     if ($c['so_chuong'] > $chap_num && $next_chap === null) $next_chap = (int)$c['so_chuong'];
 }
 
-// -------------------------------------------------------
-// 6. TỰ ĐỘNG TĂNG LƯỢT XEM (upsert theo ngày)
+// TỰ ĐỘNG TĂNG LƯỢT XEM (upsert theo ngày)
 //    Mỗi phiên (session) chỉ đếm 1 lần cho mỗi chương
-// -------------------------------------------------------
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 $view_key = "viewed_chap_{$id_manga}_{$chap_num}";
 
@@ -91,9 +85,26 @@ if (empty($_SESSION[$view_key])) {
         $db->bind(':mid',   $id_manga);
         $db->bind(':today', $today);
         $db->execute();
-        $_SESSION[$view_key] = true;   // Đánh dấu đã đếm trong phiên này
+        $_SESSION[$view_key] = true;
     } catch (Exception $e) {
         error_log('luot_doc error: ' . $e->getMessage());
+    }
+}
+
+// LƯU TIẾN ĐỘ ĐỌC (chỉ khi đã đăng nhập)
+if (!empty($_SESSION['user_id'])) {
+    try {
+        $db->query("
+            INSERT INTO tiendo_doc (id_taikhoan, id_manga, so_chuong, ngay_doc)
+            VALUES (:uid, :mid, :chap, NOW())
+            ON DUPLICATE KEY UPDATE so_chuong = :chap, ngay_doc = NOW()
+        ");
+        $db->bind(':uid',  (int)$_SESSION['user_id']);
+        $db->bind(':mid',  $id_manga);
+        $db->bind(':chap', $chap_num);
+        $db->execute();
+    } catch (Exception $e) {
+        error_log('tiendo_doc error: ' . $e->getMessage());
     }
 }
 
@@ -103,6 +114,7 @@ if (empty($_SESSION[$view_key])) {
 $base_url = '../../';
 $page_title   = 'Chương ' . $chap_num . ' - ' . htmlspecialchars($manga['manga_name']) . ' - Truyện Hay';
 $current_page = '';
+$extra_body_class = 'read-page-body'; // Ẩn chatbox, hiện back-to-top ở góc phải
 require_once '../includes/header.php';
 ?>
 

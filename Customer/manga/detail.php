@@ -1,6 +1,6 @@
 <?php
-// manga/detail.php — Trang chi tiết truyện (KẾT NỐI CSDL)
 // URL: /truyen/{slug}  →  manga/detail.php?slug={slug}  (qua .htaccess)
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once '../../include/db.php';
 
@@ -9,9 +9,8 @@ if (empty($slug)) { header('Location: ../index.php'); exit; }
 
 $db = new Database();
 
-// -------------------------------------------------------
-// 1. LẤY THÔNG TIN TRUYỆN
-// -------------------------------------------------------
+// LẤY THÔNG TIN TRUYỆN
+
 $db->query("
     SELECT
         m.id_manga, m.manga_name, m.slug, m.tacgia, m.mota,
@@ -30,9 +29,8 @@ $manga = $db->single();
 
 if (!$manga) { header('Location: ../index.php'); exit; }
 
-// -------------------------------------------------------
-// 2. XỬ LÝ GỬI BÌNH LUẬN (POST)
-// -------------------------------------------------------
+// XỬ LÝ GỬI BÌNH LUẬN (POST)
+
 $comment_error   = '';
 $comment_success = false;
 
@@ -66,9 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'
     }
 }
 
-// -------------------------------------------------------
-// 3. LẤY DANH SÁCH CHƯƠNG
-// -------------------------------------------------------
+// LẤY DANH SÁCH CHƯƠNG
+
 $db->query("
     SELECT id_chap, so_chuong, tieu_de_chuong, ngay_dang
     FROM   chap
@@ -78,9 +75,8 @@ $db->query("
 $db->bind(':mid', (int)$manga['id_manga']);
 $chapters = $db->resultSet();
 
-// -------------------------------------------------------
-// 4. LẤY BÌNH LUẬN (20 bình luận mới nhất)
-// -------------------------------------------------------
+// LẤY BÌNH LUẬN (20 bình luận mới nhất)
+
 $db->query("
     SELECT c.noi_dung, c.ngay_tao,
            tk.TENTAIKHOAN, tk.ANH
@@ -93,9 +89,21 @@ $db->query("
 $db->bind(':mid', (int)$manga['id_manga']);
 $comments = $db->resultSet();
 
-// -------------------------------------------------------
-// 5. BẢNG XẾP HẠNG SIDEBAR (top 10 theo lượt xem tuần)
-// -------------------------------------------------------
+// LẤY TIẾN ĐỘ ĐỌC CỦA USER (nếu đã đăng nhập)
+$tiendo = null;
+if (!empty($_SESSION['user_id'])) {
+    $db->query("
+        SELECT so_chuong FROM tiendo_doc
+        WHERE id_taikhoan = :uid AND id_manga = :mid
+        LIMIT 1
+    ");
+    $db->bind(':uid', (int)$_SESSION['user_id']);
+    $db->bind(':mid', (int)$manga['id_manga']);
+    $tiendo = $db->single();
+}
+
+// BẢNG XẾP HẠNG SIDEBAR (top 10 theo lượt xem tuần)
+
 $db->query("
     SELECT m.manga_name, m.slug,
            COALESCE(SUM(ld.so_luot_doc), 0) AS tong_view
@@ -203,7 +211,13 @@ require_once '../includes/header.php';
                         <a href="../doc/<?php echo $slug; ?>/chuong-<?php echo $first_chap['so_chuong']; ?>"
                            class="btn-read btn-primary"><i class="fas fa-book-reader"></i> Đọc từ đầu</a>
                         <a href="../doc/<?php echo $slug; ?>/chuong-<?php echo $last_chap['so_chuong']; ?>"
-                           class="btn-read btn-secondary"><i class="fas fa-forward"></i> Đọc chương mới</a>
+                           class="btn-read btn-secondary"><i class="fas fa-forward"></i> Đọc mới nhất</a>
+                        <?php if (!empty($tiendo)): ?>
+                        <a href="../doc/<?php echo $slug; ?>/chuong-<?php echo $tiendo['so_chuong']; ?>"
+                           class="btn-read btn-continue">
+                            <i class="fas fa-play-circle"></i> Đọc tiếp &rsaquo; Chương <?php echo $tiendo['so_chuong']; ?>
+                        </a>
+                        <?php endif; ?>
                         <?php endif; ?>
                         <button class="btn-read btn-follow" id="btn-follow">
                             <i class="far fa-heart"></i> Theo dõi

@@ -70,6 +70,14 @@ INSERT INTO `taikhoan` (`ID_TAIKHOAN`, `ID_VAITRO`, `TENTAIKHOAN`, `MATKHAU`, `E
 	(2, 1, 'Lylinth', '$2y$10$6LZBmutF/naOb1zOIFn95uu8jKrhDVCpCP8OdP3LXNS8qS3pTnMuG', 'huuphuoc191019@gmail.com', '0123456789', '2026-03-22 10:51:05', 'assets/uploads/taikhoan/avatars_69ca208fd04a04.94533180.jpg', 1, 'Nữ', '2026-03-30 14:01:50.000000', NULL, NULL),
 	(3, 2, 'vaalnakynth', '$2y$10$yUrz1WhXDXqd6PhNKzDj9eYaU6Ukzgrgp.sWww9jU0/uFFas7Pf6u', 'kurumitokisaki15111006@gmail.com', NULL, '2026-03-22 11:51:03', 'assets/uploads/taikhoan/avatars_69ca1ed97e3a37.93385478.jpg', 1, NULL, '2026-03-30 13:48:57.000000', NULL, NULL);
 
+-- THỂ LOẠI
+ALTER TABLE `theloai` AUTO_INCREMENT = 1;
+INSERT INTO `theloai` (`id_theloaimanga`, `ten_theloai`, `mota`, `status`) VALUES
+(1, 'Hành Động', 'Truyện hành động gay cấn', 1),
+(2, 'Tình Cảm', 'Truyện tình cảm lãng mạn', 1),
+(3, 'Hài Hước', 'Truyện hài hước vui vẻ', 1),
+(4, 'Phiêu Lưu', 'Truyện phiêu lưu mạo hiểm', 1);
+
 -- Dumping data for table readmanga.theloai: ~4 rows (approximately)
 INSERT INTO `theloai` (`id_theloaimanga`, `ten_theloai`, `mota`, `status`) VALUES
 	(1, 'Hành Động', 'Truyện hành động gay cấn', 1),

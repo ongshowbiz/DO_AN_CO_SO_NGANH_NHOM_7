@@ -2106,3 +2106,53 @@ body {
         font-size: 1.4rem;
     }
 }
+
+/* --- NÚT ĐỌC TIẾP --- */
+.btn-continue {
+    background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-continue:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(230, 126, 34, 0.45);
+    color: #fff !important;
+    text-decoration: none;
+}
+
+/* --- NÚT BACK TO TOP --- */
+#back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 28px;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff6b6b, #ff4757);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+    z-index: 999;
+    transition: opacity 0.3s, transform 0.3s;
+}
+#back-to-top.show {
+    display: flex;
+}
+#back-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(255, 71, 87, 0.5);
+}
+
+/* --- TRANG ĐỌC TRUYỆN: ẩn chatbox --- */
+body.read-page-body .chatbox-container {
+    display: none !important;
+}

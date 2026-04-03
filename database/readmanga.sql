@@ -185,6 +185,16 @@ CREATE TABLE `theloai` (
   `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `tiendo_doc` (
+  `id_taikhoan` int(11) NOT NULL,
+  `id_manga`    int(11) NOT NULL,
+  `so_chuong`   int(11) NOT NULL,
+  `ngay_doc`    datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id_taikhoan`, `id_manga`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
 --
 -- Chỉ mục cho các bảng đã đổ
 --
@@ -396,6 +406,13 @@ ALTER TABLE `sanpham_manga`
 --
 ALTER TABLE `taikhoan`
   ADD CONSTRAINT `ibfk_vt` FOREIGN KEY (`ID_VAITRO`) REFERENCES `role` (`ID_VAITRO`);
+
+--
+-- Các ràng buộc cho bảng `tiendo_doc`
+--
+ALTER TABLE `tiendo_doc`
+  ADD CONSTRAINT `fk_td_tk` FOREIGN KEY (`id_taikhoan`) REFERENCES `taikhoan` (`ID_TAIKHOAN`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_td_mg` FOREIGN KEY (`id_manga`)    REFERENCES `manga`    (`id_manga`)    ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

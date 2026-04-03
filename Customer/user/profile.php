@@ -16,9 +16,8 @@ $user_id = $_SESSION['user_id'];
 $message = '';
 $message_type = 'success';
 
-// -------------------------------------------------------
 // CẬP NHẬT THÔNG TIN CÁ NHÂN
-// -------------------------------------------------------
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['TENTAIKHOAN'])) {
     $ten_taikhoan = trim($_POST['TENTAIKHOAN'] ?? '');
     $email        = trim($_POST['EMAIL']       ?? '');
@@ -48,9 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['TENTAIKHOAN'])) {
     }
 }
 
-// -------------------------------------------------------
 // CẬP NHẬT ẢNH ĐẠI DIỆN
-// -------------------------------------------------------
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_avatar') {
     try {
         if (empty($user_id)) {
@@ -87,16 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// -------------------------------------------------------
 // LẤY THÔNG TIN MỚI NHẤT
-// -------------------------------------------------------
+
 $db->query('SELECT * FROM taikhoan WHERE ID_TAIKHOAN = :ID');
 $db->bind(':ID', $user_id);
 $user = $db->single();
 
-// -------------------------------------------------------
 // HEADER
-// -------------------------------------------------------
+
 $base_url     = '../';
 $page_title   = 'Thông tin cá nhân - Truyện Hay';
 $current_page = '';

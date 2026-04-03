@@ -2,9 +2,8 @@
 require_once '../include/db.php';
 $db = new Database();
 
-// -------------------------------------------------------
 // TRUYỆN MỚI CẬP NHẬT (8 truyện mới nhất)
-// -------------------------------------------------------
+
 $db->query("
     SELECT
         m.id_manga, m.manga_name, m.slug, m.anh, m.status,

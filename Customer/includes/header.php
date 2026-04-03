@@ -1,9 +1,10 @@
 <?php
 // includes/header.php
 if (session_status() === PHP_SESSION_NONE) session_start();
-if (!isset($current_page)) $current_page = '';
-if (!isset($page_title))   $page_title   = 'Truyện Hay - Đọc truyện tranh online';
-if (!isset($base_url))     $base_url     = '/';
+if (!isset($current_page))    $current_page    = '';
+if (!isset($page_title))      $page_title      = 'Truyện Hay - Đọc truyện tranh online';
+if (!isset($base_url))        $base_url        = '/';
+if (!isset($extra_body_class)) $extra_body_class = '';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -17,7 +18,7 @@ if (!isset($base_url))     $base_url     = '/';
     <link rel="stylesheet" href="<?php echo htmlspecialchars($css); ?>">
     <?php endforeach; endif; ?>
 </head>
-<body>
+<body class="<?php echo htmlspecialchars($extra_body_class); ?>">
 
 <!-- PHẦN HEADER -->
 <header class="header">
@@ -78,10 +79,10 @@ if (!isset($base_url))     $base_url     = '/';
         <?php endforeach; ?>
     </div>
 </li>
-        <li><a href="<?php echo $base_url; ?>manga/list.php?search=1"
+        <li><a href="<?php echo $base_url; ?>manga/list.php"
                class="<?php echo $current_page==='search'?'active-nav':''; ?>">
             <i class="fas fa-search"></i> Tìm truyện</a></li>
-        <li><a href="<?php echo $base_url; ?>manga/list.php?filter=1"
+        <li><a href="<?php echo $base_url; ?>manga/list.php?sort=hot"
                class="<?php echo $current_page==='filter'?'active-nav':''; ?>">
             <i class="fas fa-filter"></i> Lọc truyện</a></li>
         <li><a href="<?php echo $base_url; ?>shop/index.php"

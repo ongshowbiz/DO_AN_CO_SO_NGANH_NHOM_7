@@ -167,4 +167,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ---------------------------------------------------------
+    // 4. NÚT BACK TO TOP
+    // ---------------------------------------------------------
+    // Tạo nút động và thêm vào body
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.id = 'back-to-top';
+    backToTopBtn.title = 'Lên đầu trang';
+    backToTopBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+    document.body.appendChild(backToTopBtn);
+
+    // Hiện/ẩn nút khi cuộn
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+    });
+
+    // Click để cuộn lên đầu
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 });
