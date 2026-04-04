@@ -6,6 +6,14 @@ session_start();
 require_once '../../include/db.php';
 
 $error = '';
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    if (isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1) {
+        header('Location: ../../Admin/index.php');
+    } else {
+        header('Location: ../index.php');
+    }
+    exit;
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -32,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($user['TRANGTHAI'] != 1) {
                     header('Location: disabled.php');
                 } else {
+                    $_SESSION['loggedin'] = true;
                     $_SESSION['user_id']   = $user['ID_TAIKHOAN'];
                     $_SESSION['username']  = $user['TENTAIKHOAN'];
                     $_SESSION['role_id']   = $user['ID_VAITRO'];
