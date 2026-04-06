@@ -63,11 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                   <p>Nhấn vào link: <a href='$resetLink'>$resetLink</a></p>";
 
                 $mail->send();
+                $_SESSION['success_message'] = "Yêu cầu khôi phục đã được gửi! Vui lòng kiểm tra email.";
+                header("Location:https://mailtrap.io/inboxes/4480401/messages");
+                exit();
             } catch (Exception $e) {
                 // Ghi log lỗi nếu cần: $mail->ErrorInfo;
             }
         }
-        $success = 'Nếu email tồn tại, vui lòng kiểm tra hòm thư của bạn.';
+        $success = 'Nếu email tồn tại, một liên kết khôi phục đã được gửi đi.';
     }
 }
 ?>
