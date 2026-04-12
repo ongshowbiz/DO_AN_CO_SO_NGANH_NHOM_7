@@ -2,6 +2,44 @@
 // manga/read.php — Trang đọc chương (KẾT NỐI CSDL + TỰ ĐỘNG TĂNG LƯỢT XEM)
 // URL: /doc/{slug}/chuong-{so_chuong}  →  manga/read.php?slug={slug}&chap={so_chuong}
 
+// HELPER: render thanh điều hướng chương (dùng 2 lần)
+
+function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $all, string $base): string {
+    $doc  = '/DO_AN_CO_SO_NGANH_NHOM_7/Customer/doc/';
+    $html = '<div class="chap-nav">';
+
+    // Nút chương trước
+    if ($prev !== null) {
+        $html .= "<a href='{$doc}{$slug}/chuong-{$prev}' class='ctrl-btn'>
+                      <i class='fas fa-chevron-left'></i> Chương trước</a>";
+    } else {
+        $html .= "<button class='ctrl-btn disabled' disabled>
+                      <i class='fas fa-chevron-left'></i> Chương trước</button>";
+    }
+
+    // Dropdown chọn chương
+    $html .= "<select class='chap-select'
+                      onchange=\"window.location.href='{$doc}{$slug}/chuong-'+this.value\">";
+    foreach ($all as $c) {
+        $sel   = $c['so_chuong'] == $cur ? 'selected' : '';
+        $title = htmlspecialchars($c['tieu_de_chuong']);
+        $html .= "<option value='{$c['so_chuong']}' {$sel}>Chương {$c['so_chuong']}: {$title}</option>";
+    }
+    $html .= '</select>';
+
+    // Nút chương sau
+    if ($next !== null) {
+        $html .= "<a href='{$doc}{$slug}/chuong-{$next}' class='ctrl-btn'>
+                      Chương sau <i class='fas fa-chevron-right'></i></a>";
+    } else {
+        $html .= "<button class='ctrl-btn disabled' disabled>
+                      Chương sau <i class='fas fa-chevron-right'></i></button>";
+    }
+
+    $html .= '</div>';
+    return $html;
+}
+
 require_once '../../include/db.php';
 
 $slug     = trim($_GET['slug'] ?? '');
@@ -97,7 +135,7 @@ if (!empty($_SESSION['user_id'])) {
         $db->query("
             INSERT INTO tiendo_doc (id_taikhoan, id_manga, so_chuong, ngay_doc)
             VALUES (:uid, :mid, :chap, NOW())
-            ON DUPLICATE KEY UPDATE so_chuong = :chap, ngay_doc = NOW()
+            ON DUPLICATE KEY UPDATE so_chuong = VALUES(so_chuong), ngay_doc = NOW()
         ");
         $db->bind(':uid',  (int)$_SESSION['user_id']);
         $db->bind(':mid',  $id_manga);
@@ -211,44 +249,3 @@ document.addEventListener('keydown', e => {
     <?php endif; ?>
 });
 </script>
-
-<?php
-// -------------------------------------------------------
-// HELPER: render thanh điều hướng chương (dùng 2 lần)
-// -------------------------------------------------------
-function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $all, string $base): string {
-    $doc  = '/DO_AN_CO_SO_NGANH_NHOM_7/Customer/doc/';
-    $html = '<div class="chap-nav">';
-
-    // Nút chương trước
-    if ($prev !== null) {
-        $html .= "<a href='{$doc}{$slug}/chuong-{$prev}' class='ctrl-btn'>
-                      <i class='fas fa-chevron-left'></i> Chương trước</a>";
-    } else {
-        $html .= "<button class='ctrl-btn disabled' disabled>
-                      <i class='fas fa-chevron-left'></i> Chương trước</button>";
-    }
-
-    // Dropdown chọn chương
-    $html .= "<select class='chap-select'
-                      onchange=\"window.location.href='{$doc}{$slug}/chuong-'+this.value\">";
-    foreach ($all as $c) {
-        $sel   = $c['so_chuong'] == $cur ? 'selected' : '';
-        $title = htmlspecialchars($c['tieu_de_chuong']);
-        $html .= "<option value='{$c['so_chuong']}' {$sel}>Chương {$c['so_chuong']}: {$title}</option>";
-    }
-    $html .= '</select>';
-
-    // Nút chương sau
-    if ($next !== null) {
-        $html .= "<a href='{$doc}{$slug}/chuong-{$next}' class='ctrl-btn'>
-                      Chương sau <i class='fas fa-chevron-right'></i></a>";
-    } else {
-        $html .= "<button class='ctrl-btn disabled' disabled>
-                      Chương sau <i class='fas fa-chevron-right'></i></button>";
-    }
-
-    $html .= '</div>';
-    return $html;
-}
-?>

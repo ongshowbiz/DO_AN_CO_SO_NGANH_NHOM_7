@@ -68,14 +68,16 @@ if (!isset($extra_body_class)) $extra_body_class = '';
         <i class="fas fa-chevron-down dropdown-arrow"></i>
     </a>
     <div class="dropdown-menu">
-        <?php
-        $genres = ['Hành Động','Tình Cảm','Hài Hước','Kinh Dị',
-                   'Phiêu Lưu','Trinh Thám','Xuyên Không','Học Đường',
-                   'Cổ Đại','Ngôn Tình','Hệ Thống','Võ Hiệp'];
-        foreach($genres as $g): ?>
-        <a href="<?php echo $base_url; ?>manga/list.php?genre=<?php echo urlencode($g); ?>">
-            <?php echo htmlspecialchars($g); ?>
-        </a>
+       <?php
+            $db_nav = new Database();
+            $db_nav->query("SELECT ten_theloai FROM theloai WHERE status = 1 ORDER BY ten_theloai ASC");
+            $genres_nav = $db_nav->resultSet();
+            foreach($genres_nav as $g):
+                $ten = $g['ten_theloai'];
+            ?>
+            <a href="<?php echo $base_url; ?>manga/list.php?genre=<?php echo urlencode($ten); ?>">
+                <?php echo htmlspecialchars($ten); ?>
+            </a>
         <?php endforeach; ?>
     </div>
 </li>

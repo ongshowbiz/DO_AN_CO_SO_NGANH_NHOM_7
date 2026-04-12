@@ -130,7 +130,7 @@ function generate_pagination($total_items, $items_per_page = 10,
 
 /* Thêm sản phẩm vào giỏ hàng cá nhân. */
 function add_to_cart(Database $db, int $ID_TAIKHOAN, int $variant_id, int $product_id, int $quantity, string $product_name, string $size, float $price, string $image_url) {
-    if ($quantity <= 0 || $user_id <= 0 || $variant_id <= 0) {
+    if ($quantity <= 0 || $ID_TAIKHOAN <= 0 || $variant_id <= 0) {
         return; 
     }
 
@@ -166,7 +166,7 @@ function add_to_cart(Database $db, int $ID_TAIKHOAN, int $variant_id, int $produ
             VALUES (:user_id, :variant_id, :new_quantity, NOW(), NOW())
             ON DUPLICATE KEY UPDATE quantity = :new_quantity, edit_date = NOW()
         ');
-        $db->bind(':user_id', $user_id);
+        $db->bind(':user_id', $ID_TAIKHOAN);
         $db->bind(':variant_id', $variant_id);
         $db->bind(':new_quantity', $new_quantity); // Dùng tổng số lượng
         $db->execute();
