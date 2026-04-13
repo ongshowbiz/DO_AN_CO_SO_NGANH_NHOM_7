@@ -170,12 +170,9 @@ require_once '../includes/header.php';
 
                     <?php if (!empty($manga['mota'])): ?>
                     <div class="manga-description">
-                        <p id="desc-text" class="desc-collapsed">
+                        <p id="desc-text">
                             <?php echo nl2br(htmlspecialchars($manga['mota'])); ?>
                         </p>
-                        <button class="btn-toggle-desc" id="btn-toggle-desc">
-                            Xem thêm <i class="fas fa-chevron-down"></i>
-                        </button>
                     </div>
                     <?php endif; ?>
 
@@ -370,19 +367,8 @@ require_once '../includes/header.php';
 <?php require_once '../includes/footer.php'; ?>
 
 <script>
-// Toggle mô tả
-const descText  = document.getElementById('desc-text');
-const btnToggle = document.getElementById('btn-toggle-desc');
-if (btnToggle) {
-    btnToggle.addEventListener('click', () => {
-        descText.classList.toggle('desc-collapsed');
-        btnToggle.innerHTML = descText.classList.contains('desc-collapsed')
-            ? 'Xem thêm <i class="fas fa-chevron-down"></i>'
-            : 'Thu gọn <i class="fas fa-chevron-up"></i>';
-    });
-}
 
-// Nút theo dõi (có thể kết nối API sau)
+// Nút theo dõi
 const btnFollow = document.getElementById('btn-follow');
 if (btnFollow) {
     btnFollow.addEventListener('click', () => {

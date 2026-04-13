@@ -6,14 +6,26 @@ session_start();
 require_once '../../include/db.php';
 
 $error = '';
+
+// ✅ FIX: Kiểm tra session có thực sự hợp lệ không trước khi redirect
+// Nếu session tồn tại nhưng user_id không có → session rác, xóa đi
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-    if (isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1) {
-        header('Location: ../../Admin/index.php');
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+        // Session rác → xóa sạch, cho load lại trang login bình thường
+        $_SESSION = [];
+        session_destroy();
+        session_start();
     } else {
-        header('Location: ../index.php');
+        // Session hợp lệ → redirect đúng chỗ
+        if (isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1) {
+            header('Location: ../../Admin/index.php');
+        } else {
+            header('Location: ../index.php');
+        }
+        exit;
     }
-    exit;
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -22,34 +34,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!';
     } else {
         try {
-            // Khởi tạo đối tượng Database từ class trong include/db.php
             $db = new Database();
             
-            // Sử dụng các hàm do nhóm bạn tự định nghĩa
-            // Bỏ điều kiện TRANGTHAI = 1 để kiểm tra tất cả tài khoản
             $db->query("SELECT * FROM taikhoan WHERE TENTAIKHOAN = :username");
             $db->bind(':username', $username);
-            
-            // Hàm single() sẽ trả về 1 dòng dữ liệu (fetch)
             $user = $db->single();
 
-            // Kiểm tra mật khẩu
             if ($user && password_verify($password, $user['MATKHAU'])) {
                 
-                // Nếu tài khoản không ở trạng thái 1 mà chưa bị đưa về vai trò 0
                 if ($user['TRANGTHAI'] != 1) {
                     header('Location: disabled.php');
+                    exit;
                 } else {
+                    // ✅ FIX: Tái tạo session ID mới để tránh session fixation
+                    session_regenerate_id(true);
+
                     $_SESSION['loggedin'] = true;
                     $_SESSION['user_id']   = $user['ID_TAIKHOAN'];
                     $_SESSION['username']  = $user['TENTAIKHOAN'];
                     $_SESSION['role_id']   = $user['ID_VAITRO'];
 
-                    // Chuyển hướng theo phân quyền
                     if ($user['ID_VAITRO'] == 1) {
                         header('Location: ../../Admin/index.php');
                     } else {
-                        header('Location: ../index.php'); // Về trang chủ
+                        header('Location: ../index.php');
                     }
                     exit;
                 }
