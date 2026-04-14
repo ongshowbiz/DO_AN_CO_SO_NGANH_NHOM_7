@@ -17,6 +17,23 @@ if (!isset($extra_body_class)) $extra_body_class = '';
     <?php if (!empty($extra_css)): foreach ((array)$extra_css as $css): ?>
     <link rel="stylesheet" href="<?php echo htmlspecialchars($css); ?>">
     <?php endforeach; endif; ?>
+
+    <!-- Dark mode: áp dụng theme TRƯỚC KHI render để tránh flash trắng -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('th-theme');
+            if (saved === 'dark') {
+                document.documentElement.classList.add('dark-mode-preload');
+            }
+        })();
+    </script>
+    <style>
+        /* Ngăn flash màu khi load trang */
+        .dark-mode-preload body,
+        html.dark-mode-preload body {
+            background-color: #0f1117 !important;
+        }
+    </style>
 </head>
 <body class="<?php echo htmlspecialchars($extra_body_class); ?>">
 
@@ -38,6 +55,9 @@ if (!isset($extra_body_class)) $extra_body_class = '';
     </div>
 
     <div class="auth-container">
+        <!-- NÚT DARK MODE -->
+        <button class="dark-mode-btn" id="dark-mode-toggle" title="Chuyển chế độ tối/sáng" aria-label="Toggle dark mode"></button>
+
         <?php if (isset($_SESSION['user_id'])): ?>
             <a href="<?php echo $base_url; ?>user/profile.php" class="btn-login">
                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?>

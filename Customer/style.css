@@ -99,6 +99,7 @@ body {
 .auth-container {
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 .auth-container a {
@@ -235,6 +236,9 @@ body {
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
+    text-decoration: none;  
+    color: inherit;         
+    display: block;          
 }
 
 .manga-card:hover {
@@ -274,6 +278,8 @@ body {
     font-size: 0.85rem;
     color: #ff4757;
     font-weight: 600;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 /* --- PHẦN FOOTER --- */
@@ -2155,4 +2161,770 @@ body {
 /* --- TRANG ĐỌC TRUYỆN: ẩn chatbox --- */
 body.read-page-body .chatbox-container {
     display: none !important;
+}
+
+/* --- LAYOUT TRANG CHỦ --- */
+.home-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 28px;
+    align-items: start;
+}
+.home-main { min-width: 0; }
+.home-sidebar { position: sticky; top: 80px; }
+
+/* --- SECTION TRANG CHỦ --- */
+.home-section {
+    margin-bottom: 40px;
+}
+.home-section .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    border-left: 4px solid #ff4757;
+    padding-left: 12px;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.home-section .section-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222;
+    margin: 0;
+    border-left: none;
+    padding-left: 0;
+}
+.home-section .section-header h2 i {
+    color: #ff4757;
+    margin-right: 8px;
+}
+.section-view-all {
+    font-size: 0.85rem;
+    color: #ff4757;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s;
+}
+.section-view-all:hover { gap: 8px; }
+
+/* --- MANGA GRID TRANG CHỦ (ghi đè grid mặc định) --- */
+.home-main .manga-grid {
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 16px;
+}
+.home-main .manga-card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+}
+.home-main .manga-info h3 {
+    font-size: 0.88rem;
+    margin: 0 0 4px;
+}
+.home-main .manga-info .genres {
+    font-size: 0.75rem;
+    color: #888;
+    margin: 0 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- HOT BADGE --- */
+.hot-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+}
+
+/* --- THỂ LOẠI GRID --- */
+.genre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+.genre-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 18px 10px;
+    background: #fff;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+.genre-card:hover {
+    border-color: #ff4757;
+    color: #ff4757;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255,71,87,0.12);
+}
+.genre-card i {
+    font-size: 1.5rem;
+    color: #ff4757;
+}
+.genre-card .genre-count {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-weight: 400;
+}
+
+/* --- RANK STRIP SIDEBAR --- */
+.rank-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.rank-strip-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+.rank-strip-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(255,71,87,0.12);
+}
+.rank-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.rank-num.r1 { background: #FFD700; color: #fff; }
+.rank-num.r2 { background: #C0C0C0; color: #fff; }
+.rank-num.r3 { background: #CD7F32; color: #fff; }
+.rank-num.r4, .rank-num.r5 { background: #f0f0f0; color: #888; }
+.rank-strip-item img {
+    width: 44px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+.rank-strip-info { flex: 1; overflow: hidden; }
+.rank-strip-info strong {
+    display: block;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rank-strip-info span { font-size: 0.75rem; color: #aaa; }
+.rank-strip-info span i { color: #ff4757; margin-right: 2px; }
+
+/* --- RESPONSIVE TRANG CHỦ --- */
+@media (max-width: 900px) {
+    .home-wrapper { grid-template-columns: 1fr; }
+    .home-sidebar { position: static; }
+    .home-main .manga-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+
+/* Thời gian cập nhật dưới manga-meta */
+.manga-updated {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: #a4b0be;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.manga-updated i {
+    color: #ff4757;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+/* Khi vừa cập nhật — làm nổi bật hơn */
+.manga-updated.fresh {
+    color: #2ed573;
+}
+.manga-updated.fresh i {
+    color: #2ed573;
+}
+
+/* Sửa lại manga-meta để không bị sát */
+.home-main .manga-meta {
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Tăng nhẹ kích thước card trang chủ */
+.home-main .manga-grid {
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+}
+
+/* --- NÚT TOGGLE DARK MODE TRÊN HEADER --- */
+.dark-mode-btn {
+    background: none;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    width: 52px;
+    height: 28px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.dark-mode-btn::before {
+    content: '☀️';
+    font-size: 13px;
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s;
+    line-height: 1;
+}
+
+.dark-mode-btn::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    background: #ff4757;
+    border-radius: 50%;
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s;
+}
+
+body.dark-mode .dark-mode-btn {
+    background: #2f3542;
+    border-color: #4a5568;
+}
+
+body.dark-mode .dark-mode-btn::before {
+    content: '🌙';
+    left: auto;
+    right: 4px;
+}
+
+body.dark-mode .dark-mode-btn::after {
+    right: auto;
+    left: 4px;
+    background: #a78bfa;
+}
+
+/* --- TRANSITION MỊN KHI ĐỔI THEME --- */
+body,
+body *,
+body *::before,
+body *::after {
+    transition-property: background-color, color, border-color, box-shadow;
+    transition-duration: 0.25s;
+    transition-timing-function: ease;
+}
+
+/* Ngoại lệ: không transition transform (ảnh hưởng animation) */
+body .manga-card,
+body .rank-strip-item,
+body .genre-card,
+body .btn-register,
+body #back-to-top,
+body .chatbox-toggle {
+    transition: all 0.3s ease;
+}
+
+/* DARK MODE - BIẾN MÀU CHÍNH */
+
+body.dark-mode {
+    background-color: #0f1117;
+    color: #e2e8f0;
+}
+
+/* --- HEADER --- */
+body.dark-mode .header {
+    background-color: #1a1d2e;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid #2d3748;
+}
+
+body.dark-mode .site-name {
+    color: #e2e8f0;
+}
+
+body.dark-mode .search-container input {
+    background-color: #2d3748;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .search-container input::placeholder {
+    color: #718096;
+}
+
+body.dark-mode .search-container input:focus {
+    background-color: #374151;
+    border-color: #ff4757;
+    box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.15);
+}
+
+body.dark-mode .btn-login {
+    color: #ff6b7a;
+    background-color: rgba(255, 71, 87, 0.15);
+}
+
+body.dark-mode .mobile-menu-btn {
+    color: #e2e8f0;
+}
+
+/* --- NAVBAR --- */
+body.dark-mode .navbar {
+    background-color: #111827;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .nav-links li a {
+    color: #cbd5e0;
+}
+
+body.dark-mode .nav-links li a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ff6b7a;
+}
+
+/* --- DROPDOWN MENU --- */
+body.dark-mode .dropdown-menu {
+    background: #1e2533;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2d3748;
+}
+
+body.dark-mode .nav-links li.dropdown .dropdown-menu a,
+body.dark-mode .dropdown-menu a {
+    color: #cbd5e0 !important;
+    background: none;
+}
+
+body.dark-mode .nav-links li.dropdown .dropdown-menu a:hover,
+body.dark-mode .dropdown-menu a:hover {
+    background: rgba(255, 71, 87, 0.1) !important;
+    color: #ff6b7a !important;
+}
+
+/* Mobile navbar dark */
+@media (max-width: 768px) {
+    body.dark-mode .navbar {
+        background-color: #1a1d2e;
+    }
+
+    body.dark-mode .nav-links li a {
+        color: #cbd5e0;
+        border-bottom: 1px solid #2d3748;
+    }
+
+    body.dark-mode .close-menu-btn {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+
+    body.dark-mode .dropdown-menu {
+        background: #111827;
+    }
+
+    body.dark-mode .dropdown-menu a {
+        border-bottom: 1px solid #2d3748 !important;
+    }
+}
+
+/* --- BODY / TRANG CHỦ --- */
+body.dark-mode .main-content {
+    background-color: #0f1117;
+}
+
+body.dark-mode .section-header {
+    border-bottom-color: #2d3748;
+}
+
+body.dark-mode .section-header h2 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .home-section .section-header h2 {
+    color: #e2e8f0;
+}
+
+/* --- MANGA CARD --- */
+body.dark-mode .manga-card {
+    background: #1e2533;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .manga-card:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .manga-info h3 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .genres {
+    color: #94a3b8;
+}
+
+body.dark-mode .manga-updated {
+    color: #64748b;
+}
+
+/* --- GENRE CARD --- */
+body.dark-mode .genre-card {
+    background: #1e2533;
+    color: #cbd5e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-color: transparent;
+}
+
+body.dark-mode .genre-card:hover {
+    border-color: #ff4757;
+    color: #ff6b7a;
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.2);
+}
+
+body.dark-mode .genre-card .genre-count {
+    color: #64748b;
+}
+
+/* --- RANK STRIP SIDEBAR --- */
+body.dark-mode .rank-strip-item {
+    background: #1e2533;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: #e2e8f0;
+}
+
+body.dark-mode .rank-strip-item:hover {
+    box-shadow: 0 4px 16px rgba(255, 71, 87, 0.2);
+}
+
+body.dark-mode .rank-strip-info strong {
+    color: #e2e8f0;
+}
+
+body.dark-mode .rank-strip-info span {
+    color: #64748b;
+}
+
+body.dark-mode .rank-num.r4,
+body.dark-mode .rank-num.r5 {
+    background: #2d3748;
+    color: #94a3b8;
+}
+
+/* --- CARD BOX (trang detail) --- */
+body.dark-mode .card-box {
+    background: #1e2533;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .manga-title {
+    color: #e2e8f0;
+}
+
+body.dark-mode .stat-item {
+    color: #94a3b8;
+}
+
+body.dark-mode .genre-tag {
+    background: rgba(255, 71, 87, 0.15);
+    color: #ff6b7a;
+}
+
+body.dark-mode .genre-tag:hover {
+    background: #ff4757;
+    color: white;
+}
+
+/* --- CHAPTER LIST --- */
+body.dark-mode .chapter-item {
+    color: #cbd5e0;
+    border-color: transparent;
+}
+
+body.dark-mode .chapter-item:hover {
+    background: rgba(255, 71, 87, 0.08);
+    border-color: rgba(255, 71, 87, 0.25);
+    color: #ff6b7a;
+}
+
+body.dark-mode .chap-date {
+    color: #4a5568;
+}
+
+/* --- BÌNH LUẬN --- */
+body.dark-mode .comment-item {
+    background: #16202d;
+}
+
+body.dark-mode .comment-header strong {
+    color: #e2e8f0;
+}
+
+body.dark-mode .comment-body p {
+    color: #94a3b8;
+}
+
+body.dark-mode .comment-input-wrap textarea {
+    background: #16202d;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .comment-input-wrap textarea:focus {
+    border-color: #ff4757;
+    background: #1e2533;
+}
+
+body.dark-mode .comment-login-prompt {
+    background: #16202d;
+    color: #94a3b8;
+}
+
+/* --- FILTER / LIST PAGE --- */
+body.dark-mode .list-filter-section {
+    background: #1e2533;
+    border-bottom-color: #2d3748;
+}
+
+body.dark-mode .filter-header h2 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .filter-search input,
+body.dark-mode .filter-bar select {
+    background: #16202d;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .filter-search input:focus,
+body.dark-mode .filter-bar select:focus {
+    border-color: #ff4757;
+    background: #1e2533;
+}
+
+body.dark-mode .genre-tag-btn {
+    background: #2d3748;
+    color: #94a3b8;
+}
+
+body.dark-mode .genre-tag-btn:hover,
+body.dark-mode .genre-tag-btn.active {
+    background: #ff4757;
+    color: white;
+}
+
+body.dark-mode .search-result-info {
+    background: rgba(255, 71, 87, 0.08);
+    color: #94a3b8;
+}
+
+/* --- PAGINATION --- */
+body.dark-mode .page-btn {
+    background: #1e2533;
+    color: #cbd5e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .page-btn:hover,
+body.dark-mode .page-btn.active {
+    background: #ff4757;
+    color: white;
+}
+
+/* --- AUTH PAGE --- */
+body.dark-mode .auth-container-box {
+    background: #1e2533;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .auth-logo h2 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .auth-logo p {
+    color: #94a3b8;
+}
+
+body.dark-mode .form-group label {
+    color: #cbd5e0;
+}
+
+body.dark-mode .form-group input {
+    background: #16202d;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .form-group input:focus {
+    border-color: #ff4757;
+    background: #1a2030;
+    box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
+}
+
+body.dark-mode .auth-divider span {
+    background: #1e2533;
+    color: #64748b;
+}
+
+body.dark-mode .auth-divider::before {
+    background: #2d3748;
+}
+
+body.dark-mode .auth-switch {
+    color: #94a3b8;
+}
+
+/* --- CHATBOX --- */
+body.dark-mode .chatbox-window {
+    background-color: #1e2533;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .chatbox-messages {
+    background-color: #16202d;
+}
+
+body.dark-mode .ai-message {
+    background-color: #1e2533;
+    color: #e2e8f0;
+    border-color: #2d3748;
+}
+
+body.dark-mode .chatbox-input {
+    background: #1e2533;
+    border-top-color: #2d3748;
+}
+
+body.dark-mode .chatbox-input input {
+    background-color: #16202d;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .chatbox-input input:focus {
+    border-color: #ff4757;
+    background-color: #1e2533;
+}
+
+/* --- FOOTER --- */
+body.dark-mode .footer {
+    background-color: #0a0d16;
+    color: #94a3b8;
+}
+
+body.dark-mode .footer h3 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .footer-links a {
+    color: #94a3b8;
+}
+
+body.dark-mode .footer-links a:hover {
+    color: #ff6b7a;
+}
+
+body.dark-mode .footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+/* --- RANK LIST (trang detail sidebar) --- */
+body.dark-mode .rank-item {
+    color: #cbd5e0;
+}
+
+body.dark-mode .rank-item:hover {
+    background: #16202d;
+}
+
+body.dark-mode .rank-name {
+    color: #e2e8f0;
+}
+
+body.dark-mode .rank-number {
+    background: #2d3748;
+    color: #94a3b8;
+}
+
+body.dark-mode .rank-tabs {
+    background: #16202d;
+}
+
+body.dark-mode .rank-tab {
+    color: #94a3b8;
+}
+
+body.dark-mode .rank-tab.active {
+    background: #1e2533;
+    color: #ff6b7a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* --- BREADCRUMB (trang đọc) --- */
+body.dark-mode .breadcrumb {
+    background: #111827;
+    border-bottom-color: #1f2937;
+}
+
+/* --- CHAPTER SEARCH --- */
+body.dark-mode .chapter-search-bar input {
+    background: #16202d;
+    border-color: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .chapter-search-bar input:focus {
+    border-color: #ff4757;
+    background: #1e2533;
+}
+
+body.dark-mode .btn-read-action {
+    background: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .btn-read-action:hover {
+    background: #374151;
+}
+
+/* --- OVERLAY (mobile menu) --- */
+body.dark-mode .overlay {
+    background: rgba(0, 0, 0, 0.8);
 }
