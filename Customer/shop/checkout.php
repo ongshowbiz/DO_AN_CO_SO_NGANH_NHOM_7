@@ -23,7 +23,8 @@ $base_url     = '../';
 $page_title   = 'Thanh toán - Shop Truyện Hay';
 $current_page = 'shop';
 $extra_css    = ['../shop.css'];
-require_once '../includes/header.php';
+require_once __DIR__ . '/../../include/db.php';
+require_once __DIR__ . '/../includes/header.php';
 ?>
 
 <div class="checkout-page">

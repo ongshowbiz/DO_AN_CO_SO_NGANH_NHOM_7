@@ -4,7 +4,8 @@ $base_url     = '../';
 $page_title   = 'Giỏ hàng - Shop Truyện Hay';
 $current_page = 'cart';
 $extra_css = ['../shop.css'];
-require_once '../includes/header.php';
+require_once __DIR__ . '/../../include/db.php';
+require_once __DIR__ . '/../includes/header.php';
 
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 $subtotal = 0;
