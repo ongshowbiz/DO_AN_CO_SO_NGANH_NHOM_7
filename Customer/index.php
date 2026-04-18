@@ -154,7 +154,7 @@ require_once 'includes/header.php';
                         <p class="genres">Thể loại: <?php echo htmlspecialchars($m['the_loai'] ?? 'Chưa phân loại'); ?></p>
                         <div class="manga-meta">
                             <span><i class="fas fa-eye"></i> <?php echo number_format((int)$m['tong_view']); ?></span>
-                            <span><i class="fas fa-book"></i> <?php echo (int)$m['so_chuong']; ?> ch</span>
+                            <span><i class="fas fa-book"></i> <?php echo (int)$m['so_chuong']; ?> Chương</span>
                         </div>
                         <div class="manga-updated">
                             <i class="fas fa-clock"></i>
