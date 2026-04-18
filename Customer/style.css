@@ -2928,3 +2928,23 @@ body.dark-mode .btn-read-action:hover {
 body.dark-mode .overlay {
     background: rgba(0, 0, 0, 0.8);
 }
+
+/* --- NỘI DUNG LIGHT NOVEL --- */
+.chapter-text {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 30px 40px;
+    color: #ffffff;      
+    font-size: 18px;
+    line-height: 1.9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: left;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}erflow-wrap: break-word;
+}
+
+/* Light mode */
+body:not(.dark-mode) .chapter-text {
+    color: #1a1a1a;
+}

@@ -29,14 +29,22 @@ $errors = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $so_chuong     = (int)($_POST['so_chuong'] ?? 0);
     $tieu_de       = trim($_POST['tieu_de_chuong'] ?? '');
-    $danh_sach_anh = trim($_POST['danh_sach_anh'] ?? ''); // Chuỗi nhiều dòng URL
+    $loai_truyen   = $_POST['loai_truyen'] ?? 'manga'; // 'manga' hoặc 'novel'
+    $danh_sach_anh = trim($_POST['danh_sach_anh'] ?? '');
+    $noi_dung      = trim($_POST['noi_dung'] ?? '');
 
-    // ① Validate
-    if ($so_chuong <= 0)    $errors[] = 'Số chương phải lớn hơn 0!';
-    if (empty($tieu_de))    $errors[] = 'Tiêu đề chương không được để trống!';
-    if (empty($danh_sach_anh)) $errors[] = 'Phải nhập ít nhất 1 URL ảnh!';
+    // ① Validate chung
+    if ($so_chuong <= 0) $errors[] = 'Số chương phải lớn hơn 0!';
+    if (empty($tieu_de)) $errors[] = 'Tiêu đề chương không được để trống!';
 
-    // ② Kiểm tra số chương đã tồn tại chưa
+    // ② Validate theo loại
+    if ($loai_truyen === 'manga') {
+        if (empty($danh_sach_anh)) $errors[] = 'Manga ảnh phải nhập ít nhất 1 URL ảnh!';
+    } else {
+        if (empty($noi_dung)) $errors[] = 'Light novel phải nhập nội dung chương!';
+    }
+
+    // ③ Kiểm tra số chương đã tồn tại chưa
     if (empty($errors)) {
         $db->query("SELECT COUNT(*) AS total FROM chap WHERE id_manga = :mid AND so_chuong = :chap");
         $db->bind(':mid',  $id_manga);
@@ -47,36 +55,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // ③ Xử lý danh sách ảnh → chuyển thành JSON
-    if (empty($errors)) {
-        // Tách từng dòng, lọc dòng trống
-        $urls = array_filter(
-            array_map('trim', explode("\n", $danh_sach_anh)),
-            fn($u) => !empty($u)
-        );
-        $urls = array_values($urls); // reset index
+    // ④ Xử lý dữ liệu theo loại
+    $json_anh      = null;
+    $noi_dung_luu  = null;
 
-        if (empty($urls)) {
-            $errors[] = 'Danh sách ảnh không hợp lệ!';
+    if (empty($errors)) {
+        if ($loai_truyen === 'manga') {
+            // Tách từng dòng URL, lọc dòng trống
+            $urls = array_filter(
+                array_map('trim', explode("\n", $danh_sach_anh)),
+                fn($u) => !empty($u)
+            );
+            $urls = array_values($urls);
+
+            if (empty($urls)) {
+                $errors[] = 'Danh sách ảnh không hợp lệ!';
+            } else {
+                $json_anh = json_encode($urls, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            // Light novel: lưu thẳng nội dung chữ, danh_sach_anh = NULL
+            $noi_dung_luu = $noi_dung;
         }
     }
 
-    // ④ INSERT vào DB
+    // ⑤ INSERT vào DB
     if (empty($errors)) {
-        $json_anh = json_encode($urls, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
         try {
             $db->beginTransaction();
 
-            // INSERT vào bảng chap
             $db->query("
                 INSERT INTO chap (id_manga, so_chuong, tieu_de_chuong, noi_dung, danh_sach_anh, ngay_dang)
-                VALUES (:mid, :chap, :tieude, NULL, :anh, NOW())
+                VALUES (:mid, :chap, :tieude, :noidung, :anh, NOW())
             ");
-            $db->bind(':mid',    $id_manga);
-            $db->bind(':chap',   $so_chuong);
-            $db->bind(':tieude', $tieu_de);
-            $db->bind(':anh',    $json_anh);
+            $db->bind(':mid',     $id_manga);
+            $db->bind(':chap',    $so_chuong);
+            $db->bind(':tieude',  $tieu_de);
+            $db->bind(':noidung', $noi_dung_luu);   // NULL nếu là manga
+            $db->bind(':anh',     $json_anh);        // NULL nếu là novel
             $db->execute();
 
             $id_chap_moi = $db->lastInsertId();
@@ -89,7 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $db->commit();
 
-            $_SESSION['success_msg'] = "Thêm chương {$so_chuong} '{$tieu_de}' thành công! ({$id_chap_moi} ảnh)";
+            $loai_label = $loai_truyen === 'manga' ? 'manga ảnh' : 'light novel';
+            $_SESSION['success_msg'] = "Thêm chương {$so_chuong} '{$tieu_de}' ({$loai_label}) thành công!";
             header("Location: index.php?method=QL_Manga-chuong&id_manga={$id_manga}");
             exit;
 
@@ -172,8 +189,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                        required>
             </div>
 
-            <!-- Danh sách URL ảnh -->
-            <div style="margin-bottom:25px;">
+            <!-- ===== CHỌN LOẠI TRUYỆN (MỚI) ===== -->
+            <div style="margin-bottom:22px;">
+                <label style="font-weight:600; display:block; margin-bottom:10px;">
+                    <i class="fas fa-layer-group"></i> Loại nội dung <span style="color:red;">*</span>
+                </label>
+                <div style="display:flex; gap:16px;">
+
+                    <!-- Manga ảnh -->
+                    <label id="label-manga"
+                           style="flex:1; border:2px solid #007bff; border-radius:10px;
+                                  padding:16px; cursor:pointer; display:flex; align-items:center;
+                                  gap:12px; background:#e8f4ff;">
+                        <input type="radio" name="loai_truyen" value="manga"
+                               <?= ($_POST['loai_truyen'] ?? 'manga') === 'manga' ? 'checked' : '' ?>
+                               onchange="chuyenLoai('manga')"
+                               style="width:18px; height:18px; cursor:pointer;">
+                        <div>
+                            <div style="font-weight:700; font-size:15px;">
+                                <i class="fas fa-images" style="color:#007bff;"></i> Manga ảnh
+                            </div>
+                            <div style="font-size:12px; color:#666; margin-top:3px;">
+                                Nhập danh sách URL ảnh từng trang
+                            </div>
+                        </div>
+                    </label>
+
+                    <!-- Light novel -->
+                    <label id="label-novel"
+                           style="flex:1; border:2px solid #dee2e6; border-radius:10px;
+                                  padding:16px; cursor:pointer; display:flex; align-items:center;
+                                  gap:12px; background:#fff;">
+                        <input type="radio" name="loai_truyen" value="novel"
+                               <?= ($_POST['loai_truyen'] ?? '') === 'novel' ? 'checked' : '' ?>
+                               onchange="chuyenLoai('novel')"
+                               style="width:18px; height:18px; cursor:pointer;">
+                        <div>
+                            <div style="font-weight:700; font-size:15px;">
+                                <i class="fas fa-align-left" style="color:#6f42c1;"></i> Light Novel
+                            </div>
+                            <div style="font-size:12px; color:#666; margin-top:3px;">
+                                Nhập nội dung chữ trực tiếp
+                            </div>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- ===== PHẦN MANGA ẢNH ===== -->
+            <div id="section-manga" style="margin-bottom:25px;">
                 <label style="font-weight:600; display:block; margin-bottom:6px;">
                     <i class="fas fa-images"></i> Danh sách URL ảnh <span style="color:red;">*</span>
                 </label>
@@ -204,6 +269,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
 
+            <!-- ===== PHẦN LIGHT NOVEL (MỚI) ===== -->
+            <div id="section-novel" style="margin-bottom:25px; display:none;">
+                <label style="font-weight:600; display:block; margin-bottom:6px;">
+                    <i class="fas fa-align-left"></i> Nội dung chương <span style="color:red;">*</span>
+                </label>
+                <p style="color:#666; font-size:13px; margin-bottom:8px;">
+                    Nhập toàn bộ nội dung chương. Xuống dòng bình thường, hệ thống sẽ tự hiển thị đúng.
+                </p>
+                <textarea name="noi_dung" rows="20"
+                          placeholder="Nhập nội dung chương tại đây...
+
+Đây là đoạn văn thứ nhất.
+
+Đây là đoạn văn thứ hai sau khi xuống dòng."
+                          style="width:100%; padding:12px; border:1px solid #ddd;
+                                 border-radius:6px; font-size:14px; line-height:1.8;
+                                 resize:vertical; font-family:inherit;"><?= htmlspecialchars($_POST['noi_dung'] ?? '') ?></textarea>
+
+                <!-- Đếm số chữ -->
+                <div style="text-align:right; font-size:12px; color:#888; margin-top:6px;">
+                    Số chữ: <span id="dem_chu">0</span>
+                </div>
+            </div>
+
             <!-- Nút submit -->
             <div style="display:flex; gap:12px;">
                 <button type="submit"
@@ -217,16 +306,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <i class="fas fa-times"></i> Hủy
                 </a>
             </div>
+
         </form>
     </div>
 </div>
 
 <script>
+// Chuyển đổi giao diện khi chọn loại truyện
+function chuyenLoai(loai) {
+    const sectionManga = document.getElementById('section-manga');
+    const sectionNovel = document.getElementById('section-novel');
+    const labelManga   = document.getElementById('label-manga');
+    const labelNovel   = document.getElementById('label-novel');
+
+    if (loai === 'manga') {
+        sectionManga.style.display = 'block';
+        sectionNovel.style.display = 'none';
+        labelManga.style.border    = '2px solid #007bff';
+        labelManga.style.background = '#e8f4ff';
+        labelNovel.style.border    = '2px solid #dee2e6';
+        labelNovel.style.background = '#fff';
+    } else {
+        sectionManga.style.display = 'none';
+        sectionNovel.style.display = 'block';
+        labelNovel.style.border    = '2px solid #6f42c1';
+        labelNovel.style.background = '#f3eeff';
+        labelManga.style.border    = '2px solid #dee2e6';
+        labelManga.style.background = '#fff';
+    }
+}
+
+// Áp dụng đúng trạng thái khi trang load (trường hợp submit lỗi giữ lại dữ liệu)
+document.addEventListener('DOMContentLoaded', function() {
+    const checked = document.querySelector('input[name="loai_truyen"]:checked');
+    if (checked) chuyenLoai(checked.value);
+});
+
+// Đếm số chữ light novel
+const textareaNoidung = document.querySelector('textarea[name="noi_dung"]');
+const demChu = document.getElementById('dem_chu');
+if (textareaNoidung && demChu) {
+    function capNhatDemChu() {
+        const text = textareaNoidung.value.trim();
+        const sochu = text === '' ? 0 : text.split(/\s+/).length;
+        demChu.textContent = sochu.toLocaleString('vi-VN');
+    }
+    textareaNoidung.addEventListener('input', capNhatDemChu);
+    capNhatDemChu(); // chạy ngay khi load (nếu có dữ liệu cũ)
+}
+
+// Xem trước ảnh manga
 function xemTruocAnh() {
-    const textarea = document.querySelector('textarea[name="danh_sach_anh"]');
-    const urls = textarea.value.split('\n').map(u => u.trim()).filter(u => u !== '');
+    const textarea  = document.querySelector('textarea[name="danh_sach_anh"]');
+    const urls      = textarea.value.split('\n').map(u => u.trim()).filter(u => u !== '');
     const container = document.getElementById('preview_container');
-    const box = document.getElementById('preview_anh');
+    const box       = document.getElementById('preview_anh');
 
     if (urls.length === 0) {
         alert('Chưa nhập URL ảnh nào!');

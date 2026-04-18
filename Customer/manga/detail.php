@@ -116,9 +116,8 @@ $db->query("
 ");
 $top_manga = $db->resultSet();
 
-// -------------------------------------------------------
 // HEADER
-// -------------------------------------------------------
+
 $base_url     = '../';
 $page_title   = htmlspecialchars($manga['manga_name']) . ' - Truyện Hay';
 $current_page = 'list';
