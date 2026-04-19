@@ -45,6 +45,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit; // Bắt buộc phải có exit sau header
             }
         }
+        
+        // 3. Xóa chức vụ
+        if ($_POST['action'] == 'delete_role') {
+            $id_vaitro = $_POST['id_vaitro'] ?? 0;
+            
+            if ($id_vaitro) {
+                if ($id_vaitro == 1 || $id_vaitro == 2) {
+                    echo "<script>alert('Từ chối! Không thể xóa các vai trò bảo mật mặc định (Admin, Customer).'); window.location.href='index.php?method=QL_User-role';</script>";
+                    exit;
+                }
+                
+                try {
+                    $db->query("DELETE FROM role WHERE ID_VAITRO = :id");
+                    $db->bind(':id', $id_vaitro);
+                    $db->execute();
+                    $_SESSION['success_msg'] = "Đã xóa vĩnh viễn vai trò #{$id_vaitro} thành công!";
+                    header("Location: index.php?method=QL_User-role");
+                    exit;
+                } catch (PDOException $e) {
+                    echo "<script>alert('Lỗi! Vai trò này đang được gán cho người dùng nên không thể xóa.'); window.location.href='index.php?method=QL_User-role';</script>";
+                    exit;
+                }
+            }
+        }
     }
 }
 
@@ -79,7 +103,7 @@ $roles = $db->resultSet();
 
         <div class="um-help-box">
             <p>
-                <strong><i class="fas fa-info-circle"></i> Trợ giúp:</strong> Sau khi vai trò được lưu vào hệ thống, bạn có thể nhảy sang góc <strong><a href="index.php?page=user-list">Quản lý Danh sách User</a></strong> để chọn cấp chức vụ này cho từng người dùng tương ứng.
+                <strong><i class="fas fa-info-circle"></i> Trợ giúp:</strong> Sau khi vai trò được lưu vào hệ thống, bạn có thể nhảy sang góc <strong><a href="index.php?method=QL_User-user">Quản lý Danh sách User</a></strong> để chọn cấp chức vụ này cho từng người dùng tương ứng.
             </p>
         </div>
     </div>
@@ -120,27 +144,35 @@ $roles = $db->resultSet();
                         </td>
 
                         <td class="text-center">
-                            <form method="POST">
-                                <input type="hidden" name="action" value="toggle_role_status">
-                                <input type="hidden" name="id_vaitro" value="<?= $r['ID_VAITRO'] ?>">
-                                <input type="hidden" name="current_status" value="<?= $r['TRANGTHAI'] ?>">
-                                
-                                <?php if ($r['ID_VAITRO'] == 1 || $r['ID_VAITRO'] == 2): ?>
-                                    <button type="button" disabled class="um-btn um-btn-disabled" title="Vai trò hệ thống cốt lõi không được phép tinh chỉnh">
-                                        <i class="fas fa-shield-alt"></i> Khóa Mặc Định
-                                    </button>
-                                <?php else: ?>
-                                    <?php if ($r['TRANGTHAI'] == 1): ?>
-                                        <button type="submit" class="um-btn um-btn-hide" onclick="return confirm('Bạn có chắc muốn Ẩn chức vụ này đi khỏi form chọn phân quyền?');">
-                                            Vô hiệu hóa
+                            <?php if ($r['ID_VAITRO'] == 1 || $r['ID_VAITRO'] == 2): ?>
+                                <button type="button" disabled class="um-btn um-btn-disabled" title="Vai trò hệ thống cốt lõi không được phép tinh chỉnh">
+                                    <i class="fas fa-shield-alt"></i> Khóa Mặc Định
+                                </button>
+                            <?php else: ?>
+                                <div style="display: flex; justify-content: center; gap: 5px;">
+                                    <form method="POST" style="margin: 0;">
+                                        <input type="hidden" name="action" value="toggle_role_status">
+                                        <input type="hidden" name="id_vaitro" value="<?= $r['ID_VAITRO'] ?>">
+                                        <input type="hidden" name="current_status" value="<?= $r['TRANGTHAI'] ?>">
+                                        <?php if ($r['TRANGTHAI'] == 1): ?>
+                                            <button type="submit" class="um-btn um-btn-hide" onclick="return confirm('Bạn có chắc muốn Ẩn chức vụ này đi khỏi form chọn phân quyền?');">
+                                                Vô hiệu hóa
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="submit" class="um-btn um-btn-show">
+                                                Bật Hiện Lại
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
+                                    <form method="POST" style="margin: 0;">
+                                        <input type="hidden" name="action" value="delete_role">
+                                        <input type="hidden" name="id_vaitro" value="<?= $r['ID_VAITRO'] ?>">
+                                        <button type="submit" class="um-btn um-btn-hide" style="background-color: #dc3545; color: white;" onclick="return confirm('CẢNH BÁO: Bạn có chắc muốn xóa VĨNH VIỄN chức vụ này? Hành động này không thể hoàn tác.');">
+                                            <i class="fas fa-trash-alt"></i> Xóa
                                         </button>
-                                    <?php else: ?>
-                                        <button type="submit" class="um-btn um-btn-show">
-                                            Bật Hiện Lại
-                                        </button>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            </form>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

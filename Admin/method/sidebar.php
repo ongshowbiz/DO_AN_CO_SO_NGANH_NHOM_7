@@ -88,7 +88,7 @@
           <li class="nav-header">QUẢN LÝ ĐƠN HÀNG</li>
           <li class="nav-item">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="nav-icon fas fa-shopping-cart"></i>
               <p>
                 Quản lý Đơn Hàng
                 <i class="right fas fa-angle-right"></i>
@@ -96,7 +96,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="index.php?method=order-list" class="nav-link">
+                <a href="index.php?method=QL_Donhang-order" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Danh sách Đơn Hàng</p>
                 </a>
@@ -128,6 +128,6 @@
               </li>
             </ul>
           </li>
+          <?php endif; ?>
     </nav>
   </div>
-<?php endif; ?>
