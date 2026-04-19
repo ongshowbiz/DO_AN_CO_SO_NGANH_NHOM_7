@@ -88,7 +88,6 @@ $latestComments = $db->resultSet();
                 <p>Đơn Hàng</p>
             </div>
         </div>
-        <?php endif; ?>
         <div class="stat-box red">
             <div class="stat-icon"><i class="fas fa-users"></i></div>
             <div class="stat-info">
@@ -96,8 +95,9 @@ $latestComments = $db->resultSet();
                 <p>Khách Hàng</p>
             </div>
         </div>
+        <?php endif; ?>
     </div>
-
+    <?php if ($role_id != 3): ?>
     <!-- 2. HÀNG BIỂU ĐỒ (2 Ô) -->
     <div class="charts-row">
         <div class="chart-card">
@@ -109,6 +109,7 @@ $latestComments = $db->resultSet();
             <canvas id="usersChart" width="400" height="220"></canvas>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- 3. HÀNG HOẠT ĐỘNG (2/3 và 1/3) -->
     <div class="bottom-row">
