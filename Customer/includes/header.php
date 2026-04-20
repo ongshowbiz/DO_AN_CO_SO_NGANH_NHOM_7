@@ -55,16 +55,27 @@ if (!isset($extra_body_class)) $extra_body_class = '';
     </div>
 
     <div class="auth-container">
-        <!-- NÚT DARK MODE -->
         <button class="dark-mode-btn" id="dark-mode-toggle" title="Chuyển chế độ tối/sáng" aria-label="Toggle dark mode"></button>
 
         <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="<?php echo $base_url; ?>user/profile.php" class="btn-login">
-                <i class="fas fa-user"></i> <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?>
-            </a>
-            <a href="<?php echo $base_url; ?>auth/logout.php" class="btn-register">
-                <i class="fas fa-sign-out-alt"></i> Đăng xuất
-            </a>
+            <div class="user-menu-dropdown">
+                <button class="btn-login dropdown-toggle">
+                    <i class="fas fa-user"></i> <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?>
+                    <i class="fas fa-caret-down" style="margin-left: 5px;"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="<?php echo $base_url; ?>user/profile.php">
+                        <i class="fas fa-id-card"></i> Thông tin tài khoản
+                    </a>
+                    <a href="<?php echo $base_url; ?>user/lich_su_don_hang.php">
+                        <i class="fas fa-shopping-bag"></i> Lịch sử đơn hàng
+                    </a>
+                    <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
+                    <a href="<?php echo $base_url; ?>auth/logout.php" class="text-danger">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </a>
+                </div>
+            </div>
         <?php else: ?>
             <a href="<?php echo $base_url; ?>auth/login.php" class="btn-login">Đăng nhập</a>
             <a href="<?php echo $base_url; ?>auth/register.php" class="btn-register">Đăng ký</a>
