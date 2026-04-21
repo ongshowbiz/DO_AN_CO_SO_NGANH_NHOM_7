@@ -1,21 +1,26 @@
 <?php
 $total = 0;
 session_start();
-require_once '../../include/db.php'; 
+require_once '../../include/db.php';
+require_once '../../include/membership.php'; 
+
 $db = new Database();
+
+// Lấy quyền membership của user hiện tại
+$perms   = MembershipHelper::get($_SESSION['user_id'] ?? 0);
+$disc    = $perms['giam_gia_mua'];   // % giảm giá (0 nếu Free)
 
 $search   = trim($_GET['search'] ?? '');
 $sort     = trim($_GET['sort'] ?? 'new');
-$type     = trim($_GET['type'] ?? '');       
-$cat_id   = trim($_GET['cat_id'] ?? '');    
+$type     = trim($_GET['type'] ?? '');
+$cat_id   = trim($_GET['cat_id'] ?? '');
 $page     = max(1, (int)($_GET['page'] ?? 1));
 $per_page = 12;
 $offset   = ($page - 1) * $per_page;
 
-$db->query("SELECT id_theloaimanga, ten_theloai FROM theloai"); 
+$db->query("SELECT id_theloaimanga, ten_theloai FROM theloai");
 $categories = $db->resultSet();
 
-// 1. TẠO CÂU LỆNH SQL CHÍNH
 $sql = "SELECT sp.id_spmanga, sp.gia_ban, sp.nha_xuat_ban, sp.so_luong_kho,
                m.id_manga, m.manga_name, m.slug, m.anh, m.tacgia,
                'physical' AS type
@@ -23,58 +28,36 @@ $sql = "SELECT sp.id_spmanga, sp.gia_ban, sp.nha_xuat_ban, sp.so_luong_kho,
         JOIN manga m ON sp.id_manga = m.id_manga
         WHERE 1=1";
 
-// 2. TẠO CÂU LỆNH ĐẾM TỔNG SỐ 
-$sql_count = "SELECT COUNT(*) as total 
-              FROM sanpham_manga sp 
-              JOIN manga m ON sp.id_manga = m.id_manga 
+$sql_count = "SELECT COUNT(*) as total
+              FROM sanpham_manga sp
+              JOIN manga m ON sp.id_manga = m.id_manga
               WHERE 1=1";
 
-// ĐIỀU KIỆN TÌM KIẾM
 if ($search !== '') {
     $sql       .= " AND m.manga_name LIKE :search";
     $sql_count .= " AND m.manga_name LIKE :search_count";
 }
-
-// ĐIỀU KIỆN THỂ LOẠI 
 if ($cat_id !== '') {
     $sql       .= " AND m.id_theloaimanga = :cat_id";
     $sql_count .= " AND m.id_theloaimanga = :cat_count";
 }
 
-// SẮP XẾP
-if ($sort === 'price_asc') {
-    $sql .= " ORDER BY sp.gia_ban ASC";
-} elseif ($sort === 'price_desc') {
-    $sql .= " ORDER BY sp.gia_ban DESC";
-} else {
-    $sql .= " ORDER BY sp.id_spmanga DESC"; 
-}
+if ($sort === 'price_asc')       $sql .= " ORDER BY sp.gia_ban ASC";
+elseif ($sort === 'price_desc')  $sql .= " ORDER BY sp.gia_ban DESC";
+else                             $sql .= " ORDER BY sp.id_spmanga DESC";
 
-// PHÂN TRANG (LIMIT & OFFSET)
 $sql .= " LIMIT $per_page OFFSET $offset";
 
-// THỰC THI SQL CHÍNH
 $db->query($sql);
-if ($search !== '') {
-    $db->bind(':search', "%$search%");
-}
-if ($cat_id !== '') {
-    $db->bind(':cat_id', $cat_id);
-}
+if ($search !== '') $db->bind(':search', "%$search%");
+if ($cat_id !== '') $db->bind(':cat_id', $cat_id);
 $products = $db->resultSet();
 
-// THỰC THI SQL ĐẾM SỐ LƯỢNG
 $db->query($sql_count);
-if ($search !== '') {
-    $db->bind(':search_count', "%$search%");
-}
-if ($cat_id !== '') {
-    $db->bind(':cat_count', $cat_id);
-}
-$total_row = $db->single();
-$total_products = $total_row['total']; 
+if ($search !== '') $db->bind(':search_count', "%$search%");
+if ($cat_id !== '') $db->bind(':cat_count', $cat_id);
+$total_products = $db->single()['total'];
 $total_pages = ceil($total_products / $per_page);
-
 
 $base_url     = '../';
 $page_title   = 'Cửa hàng - Shop Truyện Hay';
@@ -88,6 +71,14 @@ require_once '../includes/header.php';
     <p>Mua truyện giấy chính hãng hoặc mở khoá đọc truyện kỹ thuật số</p>
 </div>
 
+<?php if ($disc > 0): ?>
+<!-- BANNER GIẢM GIÁ MEMBERSHIP -->
+<div style="background:linear-gradient(135deg,#ff4757,#ff6b6b);color:#fff;text-align:center;padding:10px 20px;font-size:.95rem;font-weight:600;border-radius:8px;margin:0 0 18px;">
+    <i class="fas fa-crown"></i>
+    Ưu đãi <?= $perms['ten_goi'] ?> — Giảm <?= $disc ?>% toàn bộ sản phẩm!
+</div>
+<?php endif; ?>
+
 <!-- FILTER -->
 <div class="shop-filter">
     <form method="GET" action="index.php" style="display:contents;">
@@ -97,10 +88,10 @@ require_once '../includes/header.php';
             <button type="submit"><i class="fas fa-search"></i></button>
         </div>
         <select name="sort" onchange="this.form.submit()">
-            <option value="new"   <?php echo $sort==='new'?'selected':''; ?>>Mới nhất</option>
+            <option value="new"        <?php echo $sort==='new'?'selected':''; ?>>Mới nhất</option>
             <option value="price_asc"  <?php echo $sort==='price_asc'?'selected':''; ?>>Giá tăng dần</option>
             <option value="price_desc" <?php echo $sort==='price_desc'?'selected':''; ?>>Giá giảm dần</option>
-            <option value="hot"   <?php echo $sort==='hot'?'selected':''; ?>>Bán chạy</option>
+            <option value="hot"        <?php echo $sort==='hot'?'selected':''; ?>>Bán chạy</option>
         </select>
         <input type="hidden" name="type" value="<?php echo htmlspecialchars($type); ?>">
     </form>
@@ -128,35 +119,50 @@ require_once '../includes/header.php';
         — <?php echo $total_products; ?> sản phẩm
     </p>
     <?php endif; ?>
-    <div class="category-tags" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-        <a href="?cat_id=&type=<?php echo $type; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" 
-        class="tag <?php echo $cat_id === '' ? 'active' : ''; ?>"
-        style="padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; text-decoration: none; color: #333; font-size: 14px; transition: 0.2s;">
-        Tất cả Thể Loại
-        </a>
 
+    <!-- Tags thể loại -->
+    <div class="category-tags" style="margin-bottom:25px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+        <a href="?cat_id=&type=<?php echo $type; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>"
+           class="tag <?php echo $cat_id===''?'active':''; ?>"
+           style="padding:8px 16px;border-radius:20px;border:1px solid #ddd;text-decoration:none;color:#333;font-size:14px;">
+            Tất cả Thể Loại
+        </a>
         <?php foreach ($categories as $cat): ?>
-            <a href="?cat_id=<?php echo $cat['id_theloaimanga']; ?>&type=<?php echo $type; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>" 
-            class="tag <?php echo $cat_id == $cat['id_theloaimanga'] ? 'active' : ''; ?>"
-            style="padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; text-decoration: none; color: #333; font-size: 14px; transition: 0.2s;">
+        <a href="?cat_id=<?php echo $cat['id_theloaimanga']; ?>&type=<?php echo $type; ?>&search=<?php echo urlencode($search); ?>&sort=<?php echo $sort; ?>"
+           class="tag <?php echo $cat_id==$cat['id_theloaimanga']?'active':''; ?>"
+           style="padding:8px 16px;border-radius:20px;border:1px solid #ddd;text-decoration:none;color:#333;font-size:14px;">
             <?php echo htmlspecialchars($cat['ten_theloai']); ?>
-            </a>
+        </a>
         <?php endforeach; ?>
     </div>
+
     <div class="shop-grid">
-        <?php foreach ($products as $p): ?>
-        <?php $outOfStock = ($p['type'] === 'physical' && $p['so_luong_kho'] <= 0); ?>
-        <div class="product-card" style="cursor:pointer;" onclick="window.location='product.php?id=<?php echo $p['id_spmanga']; ?>'">
+        <?php foreach ($products as $p):
+            $outOfStock  = ($p['type'] === 'physical' && $p['so_luong_kho'] <= 0);
+            $gia_goc     = (float)$p['gia_ban'];
+            // Tính giá sau giảm membership
+            $gia_hien    = MembershipHelper::applyDiscount($gia_goc, $_SESSION['user_id'] ?? 0);
+            $co_giam     = ($gia_hien < $gia_goc);
+        ?>
+        <div class="product-card" style="cursor:pointer;"
+             onclick="window.location='product.php?id=<?php echo $p['id_spmanga']; ?>'">
             <div class="product-card-img">
-                <img src="<?php echo $p['anh']; ?>" alt="<?php echo htmlspecialchars($p['manga_name']); ?>" loading="lazy">
-
-                <!-- Badge loại -->
+                <img src="<?php echo $p['anh']; ?>"
+                     alt="<?php echo htmlspecialchars($p['manga_name']); ?>" loading="lazy">
                 <span class="badge-type <?php echo $p['type']; ?>">
-                    <?php echo $p['type']==='physical' ? '<i class="fas fa-book"></i> Giấy' : '<i class="fas fa-tablet-alt"></i> KTS'; ?>
+                    <?php echo $p['type']==='physical'
+                        ? '<i class="fas fa-book"></i> Giấy'
+                        : '<i class="fas fa-tablet-alt"></i> KTS'; ?>
                 </span>
-
                 <?php if ($outOfStock): ?>
-                <div class="badge-outstock">HẾT HÀNG</div>
+                    <div class="badge-outstock">HẾT HÀNG</div>
+                <?php endif; ?>
+                <?php if ($co_giam): ?>
+                    <!-- Badge % giảm giá -->
+                    <div style="position:absolute;top:8px;right:8px;background:#ff4757;color:#fff;
+                                font-size:.72rem;font-weight:700;padding:3px 7px;border-radius:20px;">
+                        -<?= $disc ?>%
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -164,9 +170,22 @@ require_once '../includes/header.php';
                 <div class="product-name"><?php echo htmlspecialchars($p['manga_name']); ?></div>
                 <div class="product-author"><i class="fas fa-user-edit"></i> <?php echo htmlspecialchars($p['tacgia']); ?></div>
                 <div class="product-publisher"><i class="fas fa-building"></i> <?php echo htmlspecialchars($p['nha_xuat_ban']); ?></div>
-                <div class="product-price"><?php echo number_format($p['gia_ban'], 0, ',', '.'); ?>₫</div>
-                <?php if ($p['type'] === 'physical'): ?>
-                <div class="product-stock <?php echo $p['so_luong_kho'] < 10 && $p['so_luong_kho'] > 0 ? 'low' : ''; ?>">
+
+                <!-- Giá: hiển thị giá gốc gạch ngang nếu có giảm giá -->
+                <div class="product-price">
+                    <?php if ($co_giam): ?>
+                        <span style="text-decoration:line-through;color:#999;font-size:.85rem;margin-right:4px;">
+                            <?= number_format($gia_goc, 0, ',', '.') ?>₫
+                        </span>
+                        <span style="color:#ff4757;">
+                            <?= number_format($gia_hien, 0, ',', '.') ?>₫
+                        </span>
+                    <?php else: ?>
+                        <?= number_format($gia_goc, 0, ',', '.') ?>₫
+                    <?php endif; ?>
+                </div>
+
+                <div class="product-stock <?php echo ($p['so_luong_kho'] < 10 && $p['so_luong_kho'] > 0) ? 'low' : ''; ?>">
                     <?php if ($p['so_luong_kho'] <= 0): ?>
                         <i class="fas fa-times-circle"></i> Hết hàng
                     <?php elseif ($p['so_luong_kho'] < 10): ?>
@@ -175,16 +194,11 @@ require_once '../includes/header.php';
                         <i class="fas fa-check-circle" style="color:#2ecc71"></i> Còn hàng
                     <?php endif; ?>
                 </div>
-                <?php else: ?>
-                <div class="product-stock" style="color:#3498db;">
-                    <i class="fas fa-infinity"></i> Không giới hạn
-                </div>
-                <?php endif; ?>
             </div>
 
             <?php if (!$outOfStock): ?>
             <button class="btn-add-cart"
-                    onclick="event.stopPropagation(); addToCart(<?php echo $p['id_spmanga']; ?>, '<?php echo htmlspecialchars($p['manga_name'], ENT_QUOTES); ?>', <?php echo $p['gia_ban']; ?>)"
+                    onclick="event.stopPropagation(); addToCart(<?php echo $p['id_spmanga']; ?>, '<?php echo htmlspecialchars($p['manga_name'], ENT_QUOTES); ?>', <?php echo (int)$gia_hien; ?>)"
                     title="Thêm vào giỏ">
                 <i class="fas fa-cart-plus"></i>
             </button>
@@ -216,10 +230,6 @@ require_once '../includes/header.php';
     <?php endif; ?>
 </div>
 
-<!-- Toast thông báo -->
 <div class="cart-toast" id="cart-toast"><i class="fas fa-check"></i> Đã thêm vào giỏ hàng!</div>
 
 <?php require_once '../includes/footer.php'; ?>
-
-
-

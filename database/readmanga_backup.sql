@@ -76,7 +76,22 @@ INSERT INTO `sanpham_manga` (`id_spmanga`, `id_manga`, `gia_ban`, `so_luong_kho`
 	(3, 3, 65000.00, 20, 'NXB Kim Đồng'),
 	(4, 4, 35000.00, 100, 'NXB Trẻ');
 
-
+INSERT INTO `membership_package`
+  (`ten_goi`, `gia_thang`, `mo_ta`, `doc_vo_han`, `doc_tra_phi`,
+   `giam_gia_mua`, `doc_truoc`, `he_so_diem`, `qua_tang`, `is_active`, `sort_order`)
+VALUES
+  ('Free',    0,      'Gói miễn phí cơ bản',
+   0, 0, 0,  0, 1.00, NULL, 1, 1),
+  ('Basic',   29000,  'Đọc không giới hạn truyện miễn phí',
+   1, 0, 5,  0, 1.20,
+   '{"diem":0,"ma_giam_gia":"20000","mo_ta":"Mã giảm 20k cho đơn đầu"}', 1, 2),
+  ('Premium', 79000,  'Trải nghiệm cao cấp – Phổ biến nhất',
+   1, 1, 15, 1, 1.50,
+   '{"diem":100,"ma_giam_gia":"50000","mo_ta":"100 điểm + mã giảm 50k"}', 1, 3),
+  ('VIP',     149000, 'Tất cả đặc quyền – Tiết kiệm nhất',
+   1, 1, 25, 1, 2.00,
+   '{"diem":300,"ma_giam_gia":"100000","sach_mien_phi":1,"mo_ta":"300 điểm + mã 100k + 1 sách miễn phí"}', 1, 4)
+ON DUPLICATE KEY UPDATE `gia_thang` = VALUES(`gia_thang`);
 
 -- Dumping data for table readmanga.tiendo_doc: ~0 rows (approximately)
 

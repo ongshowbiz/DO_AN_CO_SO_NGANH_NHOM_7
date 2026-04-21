@@ -3,7 +3,7 @@
 function uploadImage(array $fileInput, string $tableName): string {
     // Định nghĩa thư mục gốc cho tất cả các file upload (chỉ định nghĩa 1 lần)
     if (!defined('UPLOAD_BASE_PATH')) {
-        define('UPLOAD_BASE_PATH', 'assets/uploads/');
+       define('UPLOAD_BASE_PATH', dirname(__DIR__) . '/Customer/assets/uploads/');
     }
 
     // === XÁC ĐỊNH THƯ MỤC VÀ TIỀN TỐ CHO FILE
@@ -47,18 +47,17 @@ function uploadImage(array $fileInput, string $tableName): string {
     // 3️⃣ Tạo tên file mới và đường dẫn đích
     $file_extension = strtolower(pathinfo($fileInput['name'], PATHINFO_EXTENSION));
     $new_filename = $fileNamePrefix . uniqid('', true) . '.' . $file_extension;
-    $target_path = $targetDir . $new_filename;
-
-    // 4️⃣ Di chuyển file vào thư mục đích
+    $target_path    = $targetDir . $new_filename;        
+    $relative_path  = 'assets/uploads/' . $subDir . '/' . $new_filename; 
     if (move_uploaded_file($fileInput['tmp_name'], $target_path)) {
-        return $target_path; // Trả về đường dẫn file nếu thành công
+        return $relative_path; // trả về relative path để hiển thị ảnh đúng
     } else {
         throw new Exception('Không thể di chuyển file đã upload. Vui lòng kiểm tra quyền ghi của thư mục.');
     }
 }
 
 /**
- * Tạo HTML phân trang và tính toán các giá trị LIMIT/OFFSET.
+ * Phân trang và tính toán các giá trị LIMIT/OFFSET.
  */
 function generate_pagination($total_items, $items_per_page = 10, 
         $current_page = 1, $base_url = 'index.php', $query_params = [])
@@ -101,7 +100,7 @@ function generate_pagination($total_items, $items_per_page = 10,
             $active_class = ($i == $current_page) ? 'active' : '';
             $query_params['p'] = $i;
             $page_link = $base_url . '?' . http_build_query($query_params);
-            $pagination_html .= "<li class'page-item {$active_class}'>
+            $pagination_html .= "<li class='page-item {$active_class}'>
                     <a class='page-link' href='{$page_link}'>{$i}</a></li>";
         }
 
