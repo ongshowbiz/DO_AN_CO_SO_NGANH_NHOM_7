@@ -7,6 +7,9 @@
     <?php elseif ($role_id == 3): ?>
     <img src="./anh/supplier.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
     <span class="brand-text font-weight-light">NHÀ CUNG CẤP</span>
+    <?php elseif ($role_id == 4): ?>
+    <img src="./anh/staff.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="width: 60px; height: 60px; object-fit: cover; margin-top: -3px; margin-right: 5px;">
+    <span class="brand-text font-weight-light">NHÂN VIÊN</span>
     <?php endif; ?>
   </a>
 
@@ -48,14 +51,6 @@
                   <p>Số lượng truyện</p>
                 </a>
               </li>
-              <?php if ($role_id == 3): ?>
-              <li class="nav-item">
-                <a href="index.php?method=supplier-list" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Cung cấp truyện</p>
-                </a>
-              </li>
-              <?php endif; ?>
             </ul>
           </li>
           <?php if ($role_id == 1): ?>
@@ -101,26 +96,35 @@
                   <p>Danh sách Đơn Hàng</p>
                 </a>
               </li>
-            </ul>
-          </li>
-
-           <li class="nav-header">QUẢN LÝ COMMENT</li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fa-solid fa-comment"></i>
-              <p>
-                Quản lý Comment 
-                <i class="right fas fa-angle-right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
+              <?php if ($role_id == 1): ?>
               <li class="nav-item">
-                <a href="index.php?method=QL_Cmt-comment" class="nav-link">
+                <a href="index.php?method=QL_Donhang-report" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>bình luận của truyện</p>
+                  <p>Báo cáo doanh thu</p>
                 </a>
               </li>
+              <?php endif; ?>
             </ul>
+          </li>
+          <?php endif; ?>
+          <?php if ($role_id == 4): ?>
+          <li class="nav-header">QUẢN LÝ COMMENT</li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fa-solid fa-comment"></i>
+                <p>
+                  Quản lý Comment 
+                  <i class="right fas fa-angle-right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="index.php?method=QL_Cmt-comment" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>bình luận của truyện</p>
+                  </a>
+                </li>
+              </ul>
           </li>
           <?php endif; ?>
     </nav>

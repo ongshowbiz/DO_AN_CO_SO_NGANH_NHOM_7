@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $db->beginTransaction();
 
             $db->query("
-                INSERT INTO manga (id_theloaimanga, id_taikhoan, id_chap, manga_name, slug, mota, tacgia, anh, status, create_day)
-                VALUES (:id_tl, :id_tk, 0, :name, :slug, :mota, :tacgia, :anh, :status, NOW())
+                INSERT INTO manga (id_theloaimanga, id_taikhoan, manga_name, slug, mota, tacgia, anh, status, create_day)
+                VALUES (:id_tl, :id_tk, :name, :slug, :mota, :tacgia, :anh, :status, NOW())
             ");
             $db->bind(':id_tl',  (int)($the_loais[0]));   // thể loại chính (cột id_theloaimanga)
             $db->bind(':id_tk',  (int)($_SESSION['ID_TAIKHOAN'] ?? 1));

@@ -53,11 +53,13 @@ $mangas = $db->resultSet();
         <h2 class="um-title" style="margin:0;">
             <i class="fas fa-book"></i> Quản Lý Truyện
         </h2>
+        <?php if ($_SESSION['ID_VAITRO'] == 3): // tại chỉ có supplier mới có quyền thêm truyện, chứ admin chỉ có nhận, sửa, xóa chuyện?>
         <a href="index.php?method=QL_Manga-them_truyen"
            style="background:#28a745; color:#fff; padding:8px 18px; border-radius:6px;
                   text-decoration:none; font-weight:600;">
             <i class="fas fa-plus"></i> Thêm truyện mới
         </a>
+        <?php endif; ?>
     </div>
 
     <?php if (isset($_SESSION['success_msg'])): ?>

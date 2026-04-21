@@ -95,14 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $db->bind(':anh',     $json_anh);        // NULL nếu là novel
             $db->execute();
 
-            $id_chap_moi = $db->lastInsertId();
-
-            // UPDATE bảng manga: cập nhật id_chap về chương vừa thêm
-            $db->query("UPDATE manga SET id_chap = :id_chap WHERE id_manga = :mid");
-            $db->bind(':id_chap', (int)$id_chap_moi);
-            $db->bind(':mid',     $id_manga);
-            $db->execute();
-
             $db->commit();
 
             $loai_label = $loai_truyen === 'manga' ? 'manga ảnh' : 'light novel';

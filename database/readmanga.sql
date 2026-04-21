@@ -56,7 +56,6 @@ CREATE TABLE `manga` (
   `id_manga` int(11) NOT NULL,
   `id_theloaimanga` int(11) NOT NULL,
   `id_taikhoan` int(11) NOT NULL,
-  `id_chap` int(11) NOT NULL,
   `manga_name` varchar(255) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `mota` varchar(255) DEFAULT NULL,
@@ -100,7 +99,9 @@ CREATE TABLE `taikhoan` (
   `ANH` varchar(255) DEFAULT NULL,
   `TRANGTHAI` tinyint(4) DEFAULT 1,
   `GIOITINH` varchar(4) DEFAULT NULL,
-  `last_login` datetime(6) DEFAULT NULL
+  `last_login` datetime(6) DEFAULT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
+  `reset_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `theloai` (
