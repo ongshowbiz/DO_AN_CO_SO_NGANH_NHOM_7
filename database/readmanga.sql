@@ -333,3 +333,5 @@ ALTER TABLE `membership_reward`
 ALTER TABLE manga ADD COLUMN la_tra_phi TINYINT(1) NOT NULL DEFAULT 0;
 
 UPDATE manga SET la_tra_phi = 1 WHERE id_manga IN (1, 2);
+
+ALTER TABLE `manga` ADD COLUMN `deleted_at` DATETIME DEFAULT NULL;

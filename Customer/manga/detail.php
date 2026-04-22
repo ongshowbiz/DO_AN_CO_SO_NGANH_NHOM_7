@@ -140,7 +140,7 @@ require_once '../includes/header.php';
     <div class="detail-main">
 
         <!-- THÔNG TIN TRUYỆN -->
-        <section class="info-section card-box">
+       <section class="manga-info-section card-box">
             <div class="section-header">
                 <h2><i class="fas fa-book-open"></i> Thông tin truyện</h2>
             </div>

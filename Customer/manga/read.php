@@ -36,7 +36,7 @@ function render_chap_nav(string $slug, int $cur, ?int $prev, ?int $next, array $
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once '../../include/db.php';
-require_once '../../include/membership.php'; // ← THÊM DÒNG NÀY
+require_once '../../include/membership.php'; 
 
 $slug     = trim($_GET['slug'] ?? '');
 $chap_num = max(1, (int)($_GET['chap'] ?? 1));
