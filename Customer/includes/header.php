@@ -1,6 +1,9 @@
 <?php
-// includes/header.php
 if (session_status() === PHP_SESSION_NONE) session_start();
+
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../include/db.php';
+
 if (!isset($current_page))    $current_page    = '';
 if (!isset($page_title))      $page_title      = 'Truyện Hay - Đọc truyện tranh online';
 if (!isset($base_url))        $base_url        = '/';
@@ -58,24 +61,30 @@ if (!isset($extra_body_class)) $extra_body_class = '';
         <button class="dark-mode-btn" id="dark-mode-toggle" title="Chuyển chế độ tối/sáng" aria-label="Toggle dark mode"></button>
 
         <?php if (isset($_SESSION['user_id'])): ?>
-            <div class="user-menu-dropdown">
-                <button class="btn-login dropdown-toggle">
-                    <i class="fas fa-user"></i> <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?>
-                    <i class="fas fa-caret-down" style="margin-left: 5px;"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="<?php echo $base_url; ?>user/profile.php">
-                        <i class="fas fa-id-card"></i> Thông tin tài khoản
-                    </a>
-                    <a href="<?php echo $base_url; ?>user/lich_su_don_hang.php">
-                        <i class="fas fa-shopping-bag"></i> Lịch sử đơn hàng
-                    </a>
-                    <hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;">
-                    <a href="<?php echo $base_url; ?>auth/logout.php" class="text-danger">
-                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                    </a>
-                </div>
-            </div>
+            <?php
+            // Lấy gói membership đang active để hiển thị badge
+            $db_mem = new Database();
+            $db_mem->query("SELECT mp.ten_goi FROM user_membership um JOIN membership_package mp ON um.id_package = mp.id_package WHERE um.id_taikhoan = :uid AND um.trang_thai = 'active' AND um.ngay_het_han >= CURDATE() LIMIT 1");
+            $db_mem->bind(':uid', $_SESSION['user_id']);
+            $nav_mem = $db_mem->single();
+            $nav_rank = $nav_mem ? strtolower($nav_mem['ten_goi']) : 'free';
+            $rank_colors = ['basic'=>'#3498db','premium'=>'#ff4757','vip'=>'#f39c12','free'=>'#aaa'];
+            $rank_icons  = ['basic'=>'fa-star','premium'=>'fa-crown','vip'=>'fa-gem','free'=>'fa-book-open'];
+            $rank_color  = $rank_colors[$nav_rank] ?? '#aaa';
+            $rank_icon   = $rank_icons[$nav_rank]  ?? 'fa-user';
+            ?>
+            <a href="<?php echo $base_url; ?>user/profile.php" class="btn-login" style="display:flex;align-items:center;gap:6px;">
+                <i class="fas <?php echo $rank_icon; ?>" style="color:<?php echo $rank_color; ?>"></i>
+                <?php echo htmlspecialchars($_SESSION['username'] ?? 'Tài khoản'); ?>
+                <?php if ($nav_mem && $nav_rank !== 'free'): ?>
+                <span style="font-size:.72rem;background:<?php echo $rank_color; ?>;color:#fff;padding:1px 7px;border-radius:10px;font-weight:700;letter-spacing:.3px;">
+                    <?php echo htmlspecialchars($nav_mem['ten_goi']); ?>
+                </span>
+                <?php endif; ?>
+            </a>
+            <a href="<?php echo $base_url; ?>auth/logout.php" class="btn-register">
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </a>
         <?php else: ?>
             <a href="<?php echo $base_url; ?>auth/login.php" class="btn-login">Đăng nhập</a>
             <a href="<?php echo $base_url; ?>auth/register.php" class="btn-register">Đăng ký</a>
@@ -124,6 +133,10 @@ if (!isset($extra_body_class)) $extra_body_class = '';
         <li><a href="<?php echo $base_url; ?>shop/cart.php"
                class="<?php echo $current_page==='cart'?'active-nav':''; ?>">
             <i class="fas fa-shopping-cart"></i> Giỏ hàng</a></li>
+        <li><a href="<?php echo $base_url; ?>membership/index.php"
+               class="<?php echo $current_page==='membership'?'active-nav':''; ?>"
+               style="<?php echo $current_page==='membership'?'':''; ?>">
+            <i class="fas fa-crown" style="color:#f39c12"></i> Thành viên</a></li>
     </ul>
     <div class="close-menu-btn" id="close-menu-btn">
         <i class="fas fa-times"></i> Đóng

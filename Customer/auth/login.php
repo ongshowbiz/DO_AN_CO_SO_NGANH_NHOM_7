@@ -110,7 +110,7 @@ require_once '../includes/header.php';
                 <label class="checkbox-label">
                     <input type="checkbox" name="remember"> Ghi nhớ đăng nhập
                 </label>
-                <a href="forgot_password.php" class="forgot-link">Quên mật khẩu?</a>
+                <a href="Password/forgot_password.php" class="forgot-link">Quên mật khẩu?</a>
             </div>
             <button type="submit" class="btn-auth">
                 <i class="fas fa-sign-in-alt"></i> Đăng nhập

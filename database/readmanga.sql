@@ -236,3 +236,100 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+CREATE TABLE IF NOT EXISTS `membership_package` (
+  `id_package`   INT(11)        NOT NULL AUTO_INCREMENT,
+  `ten_goi`      VARCHAR(50)    NOT NULL COMMENT 'VD: Basic, Premium, VIP',
+  `gia_thang`    DECIMAL(12,2)  NOT NULL DEFAULT 0 COMMENT 'Giá 1 tháng (VND)',
+  `mo_ta`        VARCHAR(255)   DEFAULT NULL,
+  `doc_vo_han`   TINYINT(1)     NOT NULL DEFAULT 0 COMMENT 'Đọc không giới hạn truyện miễn phí',
+  `doc_tra_phi`  TINYINT(1)     NOT NULL DEFAULT 0 COMMENT 'Đọc truyện trả phí',
+  `giam_gia_mua` DECIMAL(5,2)   NOT NULL DEFAULT 0 COMMENT 'Phần trăm giảm giá mua sách (0-100)',
+  `doc_truoc`    TINYINT(1)     NOT NULL DEFAULT 0 COMMENT 'Đọc trước chương mới',
+  `he_so_diem`   DECIMAL(4,2)   NOT NULL DEFAULT 1.00 COMMENT 'Hệ số tích điểm: 1.0, 1.2, 1.5, 2.0',
+  `qua_tang`     VARCHAR(500)   DEFAULT NULL COMMENT 'JSON mô tả quà tặng khi đăng ký mới',
+  `is_active`    TINYINT(1)     NOT NULL DEFAULT 1,
+  `sort_order`   INT(11)        NOT NULL DEFAULT 0 COMMENT 'Thứ tự hiển thị',
+  `created_at`   DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_package`),
+  UNIQUE KEY `uq_ten_goi` (`ten_goi`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  COMMENT='Danh sách các gói thành viên';
+
+CREATE TABLE IF NOT EXISTS `user_membership` (
+  `id_membership`    INT(11)      NOT NULL AUTO_INCREMENT,
+  `id_taikhoan`      INT(11)      NOT NULL,
+  `id_package`       INT(11)      NOT NULL,
+  `chu_ky`           ENUM('month','quarter','year') NOT NULL DEFAULT 'month'
+                     COMMENT 'Chu kỳ: tháng/quý/năm',
+  `so_tien`          DECIMAL(12,2) NOT NULL COMMENT 'Số tiền thực tế đã thanh toán',
+  `ngay_bat_dau`     DATE         NOT NULL,
+  `ngay_het_han`     DATE         NOT NULL,
+  `trang_thai`       ENUM('active','expired','cancelled','pending') NOT NULL DEFAULT 'pending',
+  `tu_dong_gia_han`  TINYINT(1)   NOT NULL DEFAULT 0,
+  `pt_thanh_toan`    ENUM('qr','cod','simulate') NOT NULL DEFAULT 'simulate',
+  `ma_giao_dich`     VARCHAR(100) DEFAULT NULL,
+  `ly_do_huy`        VARCHAR(255) DEFAULT NULL,
+  `created_at`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_membership`),
+  KEY `fk_um_taikhoan` (`id_taikhoan`),
+  KEY `fk_um_package`  (`id_package`),
+  KEY `idx_trang_thai` (`trang_thai`),
+  KEY `idx_het_han`    (`ngay_het_han`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  COMMENT='Lịch sử đăng ký gói membership của user';
+
+CREATE TABLE IF NOT EXISTS `membership_promotion` (
+  `id_promo`     INT(11)       NOT NULL AUTO_INCREMENT,
+  `id_package`   INT(11)       NOT NULL,
+  `ten_promo`    VARCHAR(100)  NOT NULL,
+  `giam_phan_tram` DECIMAL(5,2) NOT NULL DEFAULT 0 COMMENT '% giảm giá',
+  `ngay_bat_dau` DATE          NOT NULL,
+  `ngay_ket_thuc` DATE         NOT NULL,
+  `dieu_kien`    VARCHAR(255)  DEFAULT NULL COMMENT 'VD: nguoi_moi, black_friday',
+  `is_active`    TINYINT(1)    NOT NULL DEFAULT 1,
+  `created_at`   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_promo`),
+  KEY `fk_promo_package` (`id_package`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  COMMENT='Chương trình ưu đãi cho từng gói';
+
+CREATE TABLE IF NOT EXISTS `membership_reward` (
+  `id_reward`      INT(11)      NOT NULL AUTO_INCREMENT,
+  `id_membership`  INT(11)      NOT NULL,
+  `id_taikhoan`    INT(11)      NOT NULL,
+  `loai_qua`       ENUM('diem','ma_giam_gia','sach_mien_phi') NOT NULL,
+  `gia_tri`        VARCHAR(100) NOT NULL COMMENT 'Điểm / mã / tên sách',
+  `da_su_dung`     TINYINT(1)   NOT NULL DEFAULT 0,
+  `created_at`     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_reward`),
+  KEY `fk_reward_membership` (`id_membership`),
+  KEY `fk_reward_user`       (`id_taikhoan`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  COMMENT='Quà tặng khi đăng ký/nâng cấp gói';
+
+ALTER TABLE `taikhoan`
+  ADD COLUMN IF NOT EXISTS `diem_tich_luy` INT(11) NOT NULL DEFAULT 0
+  COMMENT 'Điểm tích lũy của thành viên' AFTER `GIOITINH`;
+
+ALTER TABLE `user_membership`
+  ADD CONSTRAINT `fk_um_taikhoan` FOREIGN KEY (`id_taikhoan`)
+    REFERENCES `taikhoan` (`ID_TAIKHOAN`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_um_package` FOREIGN KEY (`id_package`)
+    REFERENCES `membership_package` (`id_package`);
+
+ALTER TABLE `membership_promotion`
+  ADD CONSTRAINT `fk_promo_package` FOREIGN KEY (`id_package`)
+    REFERENCES `membership_package` (`id_package`) ON DELETE CASCADE;
+
+ALTER TABLE `membership_reward`
+  ADD CONSTRAINT `fk_reward_membership` FOREIGN KEY (`id_membership`)
+    REFERENCES `user_membership` (`id_membership`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_reward_user` FOREIGN KEY (`id_taikhoan`)
+    REFERENCES `taikhoan` (`ID_TAIKHOAN`) ON DELETE CASCADE;
+
+ALTER TABLE manga ADD COLUMN la_tra_phi TINYINT(1) NOT NULL DEFAULT 0;
+
+UPDATE manga SET la_tra_phi = 1 WHERE id_manga IN (1, 2);

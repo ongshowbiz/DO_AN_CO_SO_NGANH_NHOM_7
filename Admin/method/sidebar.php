@@ -46,9 +46,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="index.php?method=film-list" class="nav-link">
+                <a href="index.php?method=listsale-list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Số lượng truyện</p>
+                  <p>Danh sách bày bán</p>
                 </a>
               </li>
             </ul>

@@ -1,4 +1,9 @@
-<?php require_once __DIR__ . '/../../include/db.php'; ?>
+<?php 
+// Chỉ require nếu class Database chưa được load
+if (!class_exists('Database')) {
+    require_once __DIR__ . '/../../include/db.php';
+}
+?>
 
 <!-- PHẦN FOOTER -->
 <footer class="footer">
@@ -125,7 +130,7 @@
     const qty = 1;
 
     // Gửi request ngầm tới file cart_action.php
-    fetch('cart_action.php', {
+    fetch('<?php echo $base_url; ?>shop/cart_action.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
