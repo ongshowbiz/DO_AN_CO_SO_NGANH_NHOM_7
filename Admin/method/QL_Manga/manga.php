@@ -133,6 +133,7 @@ $mangas = $db->resultSet();
                     </td>
 
                     <td class="text-center" style="white-space:nowrap;">
+                        <?php if ($_SESSION['ID_VAITRO'] == 3): ?>
                         <!-- Nút Quản lý chương -->
                         <a href="index.php?method=QL_Manga-chuong&id_manga=<?= $m['id_manga'] ?>"
                            style="display:inline-block; background:#17a2b8; color:#fff;
@@ -141,7 +142,6 @@ $mangas = $db->resultSet();
                            title="Quản lý chương">
                             <i class="fas fa-list"></i> Chương
                         </a>
-
                         <!-- Nút Sửa -->
                         <a href="index.php?method=QL_Manga-sua_truyen&id_manga=<?= $m['id_manga'] ?>"
                            style="display:inline-block; background:#ffc107; color:#212529;
@@ -150,8 +150,9 @@ $mangas = $db->resultSet();
                            title="Sửa truyện">
                             <i class="fas fa-edit"></i> Sửa
                         </a>
-
+                        <?php endif; ?>
                         <!-- Nút Xóa -->
+                        <?php if ($_SESSION['ID_VAITRO'] == 1 ): ?>
                         <form method="POST" style="display:inline;"
                               onsubmit="return confirm('CẢNH BÁO: Xóa truyện sẽ xóa luôn TẤT CẢ chương! Bạn chắc chắn?');">
                             <input type="hidden" name="action" value="xoa_truyen">
@@ -164,6 +165,7 @@ $mangas = $db->resultSet();
                                 <i class="fas fa-trash"></i> Xóa
                             </button>
                         </form>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
